@@ -19,10 +19,6 @@ void OpenGLRenderer::PrepareView()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 
 	InitializeProjectionMatrix(90.0f, aspect, 10.0f, 1000.0f);
 
@@ -46,6 +42,9 @@ void OpenGLRenderer::RenderObjects(IScene * scene)
 
 void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far)
 {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
 	float e = 1.f / tanf(fov / 2.0f);
 	float width = near * e;
 	glFrustum(-width, width, -aspect * width, aspect * width, near, far);
