@@ -75,6 +75,7 @@
     <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\IGame.h" />
