@@ -12,6 +12,11 @@ public:
 	virtual void RenderScene(IScene * scene);
 
 private:
+	void PrepareView();
+	void InitializeProjectionMatrix(float fov, float aspect, float near, float far);
+
+	void RenderObjects(IScene * scene);
+
 	GLFWwindow * m_Window;
 };
 

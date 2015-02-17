@@ -7,7 +7,8 @@ OpenGLRenderer::OpenGLRenderer(GLFWwindow * window)
 {
 	m_Window = window;
 }
-void OpenGLRenderer::RenderScene(IScene * scene)
+
+void OpenGLRenderer::PrepareView()
 {
 	int width, height;
 
@@ -20,19 +21,29 @@ void OpenGLRenderer::RenderScene(IScene * scene)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glOrtho(-aspect, aspect, -1.f, 1.f, 1.f, -1.f);
+	InitializeProjectionMatrix(90.0f, aspect, 10.0f, 1000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
 
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.f, 0.f, 0.f);
-	glVertex3f(-0.6f, -0.4f, 0.f);
-	glColor3f(0.f, 1.f, 0.f);
-	glVertex3f(0.6f, -0.4f, 0.f);
-	glColor3f(0.f, 0.f, 1.f);
-	glVertex3f(0.f, 0.6f, 0.f);
-	glEnd();
+void OpenGLRenderer::RenderScene(IScene * scene)
+{
+	PrepareView();
+
+	RenderObjects(scene);
 
 	glfwSwapBuffers(m_Window);
+}
+
+void OpenGLRenderer::RenderObjects(IScene * scene)
+{
+
+}
+
+void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far)
+{
+	float e = 1.f / tanf(fov / 2.0f);
+	float width = near * e;
+	glFrustum(-width, width, -aspect * width, aspect * width, near, far);
 }
