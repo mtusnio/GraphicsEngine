@@ -3,7 +3,9 @@
 
 #include "IGame.h"
 
-class Game : IGame
+class IRenderer;
+
+class Game : public IGame
 {
 public:
 	Game();
@@ -16,9 +18,11 @@ public:
 
 private:
 	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static Game * InputHandler;
+
 	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	static Game * InputHandler;
+	IRenderer * m_Renderer;
 
 	GLFWwindow * m_Window;
 	double m_StartTime;

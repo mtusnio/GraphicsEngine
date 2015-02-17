@@ -72,11 +72,14 @@
   <ItemGroup>
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
+    <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\IGame.h" />
+    <ClInclude Include="src\renderer\IRenderer.h" />
+    <ClInclude Include="src\renderer\OpenGLRenderer.h" />
     <ClInclude Include="src\scene\IScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,9 @@
 #include "Game.h"
+
 #include <GLFW\glfw3.h>
+#include <cmath>
+
+#include "../renderer/OpenGLRenderer.h"
 
 Game * Game::InputHandler = nullptr;
 
@@ -25,16 +29,24 @@ void Game::Start(GLFWwindow * window)
 	glfwSwapInterval(1);
 	m_StartTime = glfwGetTime();
 	glfwSetKeyCallback(window, &Game::GlobalKeyCallback);
+	m_Renderer = new OpenGLRenderer(m_Window);
 }
 
 void Game::End()
 {
+	if (m_Renderer)
+	{
+		delete m_Renderer;
+		m_Renderer = nullptr;
+	}
 	
 }
 
 void Game::Run()
 {
 	glfwPollEvents();
+
+	m_Renderer->RenderScene(nullptr);
 }
 
 void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

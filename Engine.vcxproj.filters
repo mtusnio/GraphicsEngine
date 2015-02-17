@@ -44,6 +44,9 @@
     <ClCompile Include="src\game\Game.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\OpenGLRenderer.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -57,6 +60,12 @@
     </ClInclude>
     <ClInclude Include="src\game\Game.h">
       <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\IRenderer.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGLRenderer.h">
+      <Filter>Header Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
