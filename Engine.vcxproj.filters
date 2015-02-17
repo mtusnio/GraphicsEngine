@@ -12,14 +12,8 @@
     <Filter Include="Source Files\main">
       <UniqueIdentifier>{1fba49ca-efcc-447d-a6bb-d250e337eaa7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\game">
-      <UniqueIdentifier>{017e5e2b-ae63-496a-8c3f-2ca0995f6ad1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\renderer">
       <UniqueIdentifier>{41a2f91f-1dbb-4a64-b143-7a017f50a185}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\game">
-      <UniqueIdentifier>{bcb3f7ea-7a52-4b91-9057-2ec3d28649ce}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\renderer">
       <UniqueIdentifier>{16924fcc-7424-4de3-9269-cb12098d5c52}</UniqueIdentifier>
@@ -30,18 +24,39 @@
     <Filter Include="Header Files\entitysystem">
       <UniqueIdentifier>{3411154b-e4be-401e-aa9d-8abfa512595b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{bcb3f7ea-7a52-4b91-9057-2ec3d28649ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{017e5e2b-ae63-496a-8c3f-2ca0995f6ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{9aaaf420-b050-4b3f-8df7-b94cf1a85d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{f7301aa5-15da-4497-90f8-581e09fc998c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\Game.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entitysystem\IEntitySystem.h">
+      <Filter>Header Files\entitysystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\IScene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\game\IGame.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="src\entitysystem\IEntitySystem.h">
-      <Filter>Header Files\entitysystem</Filter>
+    <ClInclude Include="src\game\Game.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

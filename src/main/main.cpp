@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+
+#include "../game/Game.h"
+
 void error_callback(int error, const char * description)
 {
 	std::cerr << description << std::endl;
@@ -31,14 +34,15 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 
-	glfwMakeContextCurrent(window);
+	
+
+	Game game;
+	game.Start(window);
 	while (!glfwWindowShouldClose(window))
 	{
-		glfwPollEvents();
-
-
+		game.Run();
 	}
-
+	game.End();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

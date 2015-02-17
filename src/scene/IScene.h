@@ -1,5 +1,5 @@
-#ifndef H_IGAME
-#define H_IGAME
+#ifndef H_ISCENE
+#define H_ISCENE
 
 class IEntitySystem;
 
