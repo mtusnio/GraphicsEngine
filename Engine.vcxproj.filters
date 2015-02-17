@@ -24,6 +24,12 @@
     <Filter Include="Header Files\renderer">
       <UniqueIdentifier>{16924fcc-7424-4de3-9269-cb12098d5c52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\entitysystem">
+      <UniqueIdentifier>{e4a8843c-fb03-4797-9137-3d48990b6817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\entitysystem">
+      <UniqueIdentifier>{3411154b-e4be-401e-aa9d-8abfa512595b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -33,6 +39,9 @@
   <ItemGroup>
     <ClInclude Include="src\game\IGame.h">
       <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\IEntitySystem.h">
+      <Filter>Header Files\entitysystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -73,6 +73,7 @@
     <ClCompile Include="src\main\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\IGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
