@@ -53,6 +53,9 @@
     <ClCompile Include="src\renderer\OpenGLRenderer.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\Entity.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -74,7 +77,7 @@
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\Entity.h">
-      <Filter>Source Files\entities</Filter>
+      <Filter>Header Files\entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -70,6 +70,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
