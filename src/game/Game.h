@@ -14,7 +14,7 @@ public:
 	Game();
 	virtual ~Game();
 
-	virtual void Start(GLFWwindow * window);
+	virtual void Start(GLFWwindow & window);
 	virtual void End();
 
 	virtual void Run();

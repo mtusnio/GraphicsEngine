@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 	
 
 	Game game;
-	game.Start(window);
+	game.Start(*window);
 	while (!glfwWindowShouldClose(window))
 	{
 		game.Run();

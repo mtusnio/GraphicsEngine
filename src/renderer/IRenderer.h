@@ -6,7 +6,7 @@ class IScene;
 class IRenderer
 {
 public:
-	virtual void RenderScene(IScene * scene) = 0;
+	virtual void RenderScene(const IScene & scene) = 0;
 
 };
 #endif

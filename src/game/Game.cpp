@@ -5,6 +5,8 @@
 
 #include "../renderer/OpenGLRenderer.h"
 
+#include "../scene/IScene.h"
+
 Game * Game::InputHandler = nullptr;
 
 void Game::GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -24,14 +26,14 @@ Game::~Game()
 	End();
 }
 
-void Game::Start(GLFWwindow * window)
+void Game::Start(GLFWwindow & window)
 {
-	m_Window = window;
-	glfwMakeContextCurrent(window);
+	m_Window = &window;
+	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
 	m_StartTime = glfwGetTime();
-	glfwSetKeyCallback(window, &Game::GlobalKeyCallback);
-	m_Renderer = new OpenGLRenderer(m_Window);
+	glfwSetKeyCallback(m_Window, &Game::GlobalKeyCallback);
+	m_Renderer = new OpenGLRenderer(*m_Window);
 }
 
 void Game::End()
@@ -53,7 +55,7 @@ void Game::Run()
 {
 	glfwPollEvents();
 
-	m_Renderer->RenderScene(nullptr);
+	//m_Renderer->RenderScene(nullptr);
 }
 
 void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

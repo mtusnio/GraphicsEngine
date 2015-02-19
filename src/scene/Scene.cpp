@@ -1,10 +1,8 @@
 #include "Scene.h"
 
-Scene::Scene(IGame * game)
+Scene::Scene(IGame & game)
 {
-	_ASSERT(game != nullptr);
-
-	m_ParentGame = game;
+	m_ParentGame = &game;
 }
 
 Scene::~Scene()

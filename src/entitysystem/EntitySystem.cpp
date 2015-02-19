@@ -29,36 +29,32 @@ Entity * EntitySystem::FindEntityByID(Entity::ID id) const
 	return nullptr;
 }
 
-Entity::ID EntitySystem::AddEntity(Entity * pEnt)
+Entity::ID EntitySystem::AddEntity(Entity & pEnt)
 {
-	_ASSERT(pEnt != nullptr);
-
-	if (pEnt->GetEntitySystem() == this)
-		return pEnt->GetID();
+	if (pEnt.GetEntitySystem() == this)
+		return pEnt.GetID();
 
 	DetachEntity(pEnt);
 
-	pEnt->SetEntitySystem(this);
-	pEnt->SetID(GenerateID());
+	pEnt.SetEntitySystem(this);
+	pEnt.SetID(GenerateID());
 
-	m_Entities[pEnt->GetID()] = pEnt;
+	m_Entities[pEnt.GetID()] = &pEnt;
 
-	return pEnt->GetID();
+	return pEnt.GetID();
 }
 
-bool EntitySystem::RemoveEntity(Entity * pEnt, bool shouldDelete)
+bool EntitySystem::RemoveEntity(Entity & pEnt, bool shouldDelete)
 {
-	_ASSERT(pEnt != nullptr);
-
-	if (pEnt->GetEntitySystem() != this)
+	if (pEnt.GetEntitySystem() != this)
 		return false;
 
-	_ASSERT(FindEntityByID(pEnt->GetID()) != nullptr);
+	_ASSERT(FindEntityByID(pEnt.GetID()) != nullptr);
 
 	DetachEntity(pEnt);
 
 	if (shouldDelete)
-		delete pEnt;
+		delete &pEnt;
 
 	return true;
 }
@@ -76,14 +72,14 @@ Entity::ID EntitySystem::GenerateID()
 	return ret;
 }
 
-void EntitySystem::DetachEntity(Entity * pEnt)
+void EntitySystem::DetachEntity(Entity & pEnt)
 {
-	IEntitySystem * system = pEnt->GetEntitySystem();
+	IEntitySystem * system = pEnt.GetEntitySystem();
 
 	if (system != this)
 		system->RemoveEntity(pEnt);
 	else
-		m_Entities.erase(pEnt->GetID());
-	pEnt->SetEntitySystem(nullptr);
-	pEnt->SetID(Entity::INVALID_ID);
+		m_Entities.erase(pEnt.GetID());
+	pEnt.SetEntitySystem(nullptr);
+	pEnt.SetID(Entity::INVALID_ID);
 }

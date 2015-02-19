@@ -23,12 +23,12 @@ public:
 
 	// Adds an entity to the current entitysystem, removes it from any other systems.
 	// Returns the object's assigned ID if it exists or if it's been added
-	virtual Entity::ID AddEntity(Entity * pEnt) = 0;
+	virtual Entity::ID AddEntity(Entity & pEnt) = 0;
 
 	// Removes an entity from this system, if shouldDelete is set to false
 	// it will not remove the object from memory, thus allowing it
 	// to be attached to a different entity system
-	virtual bool RemoveEntity(Entity * pEnt, bool shouldDelete = true) = 0;
+	virtual bool RemoveEntity(Entity & pEnt, bool shouldDelete = true) = 0;
 
 	// Creates a vector with all of our entities. Expensive if called frequently,
 	// use other functions unless aboslutely needed

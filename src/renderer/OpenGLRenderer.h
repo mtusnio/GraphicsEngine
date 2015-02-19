@@ -7,15 +7,15 @@ struct GLFWwindow;
 class OpenGLRenderer : public IRenderer
 {
 public:
-	OpenGLRenderer(GLFWwindow * window);
+	OpenGLRenderer(GLFWwindow & window);
 
-	virtual void RenderScene(IScene * scene);
+	virtual void RenderScene(const IScene & scene);
 
 private:
 	void PrepareView();
 	void InitializeProjectionMatrix(float fov, float aspect, float near, float far);
 
-	void RenderObjects(IScene * scene);
+	void RenderObjects(const IScene & scene);
 
 	GLFWwindow * m_Window;
 };

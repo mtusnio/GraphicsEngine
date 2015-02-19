@@ -3,9 +3,9 @@
 #include <GLFW\glfw3.h>
 #include <cmath>
 
-OpenGLRenderer::OpenGLRenderer(GLFWwindow * window)
+OpenGLRenderer::OpenGLRenderer(GLFWwindow & window)
 {
-	m_Window = window;
+	m_Window = &window;
 }
 
 void OpenGLRenderer::PrepareView()
@@ -26,7 +26,7 @@ void OpenGLRenderer::PrepareView()
 	glLoadIdentity();
 }
 
-void OpenGLRenderer::RenderScene(IScene * scene)
+void OpenGLRenderer::RenderScene(const IScene & scene)
 {
 	PrepareView();
 
@@ -35,7 +35,7 @@ void OpenGLRenderer::RenderScene(IScene * scene)
 	glfwSwapBuffers(m_Window);
 }
 
-void OpenGLRenderer::RenderObjects(IScene * scene)
+void OpenGLRenderer::RenderObjects(const IScene & scene)
 {
 
 }

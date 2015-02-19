@@ -7,7 +7,7 @@ struct GLFWwindow;
 class IGame
 {
 public:
-	virtual void Start(GLFWwindow * window) = 0;
+	virtual void Start(GLFWwindow & window) = 0;
 	virtual void End() = 0;
 
 	virtual void Run() = 0;
