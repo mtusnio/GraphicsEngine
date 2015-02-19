@@ -62,6 +62,9 @@
     <ClCompile Include="src\entitysystem\EntitySystem.cpp">
       <Filter>Source Files\entitysystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -96,6 +99,9 @@
     </ClInclude>
     <ClInclude Include="src\math\Vector.h">
       <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>Header Files\scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

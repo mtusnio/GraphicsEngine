@@ -75,6 +75,7 @@
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entities\Entity.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="src\renderer\Model.h" />
     <ClInclude Include="src\renderer\OpenGLRenderer.h" />
     <ClInclude Include="src\scene\IScene.h" />
+    <ClInclude Include="src\scene\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

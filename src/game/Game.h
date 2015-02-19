@@ -3,7 +3,10 @@
 
 #include "IGame.h"
 
+#include <vector>
+
 class IRenderer;
+class IScene;
 
 class Game : public IGame
 {
@@ -22,10 +25,13 @@ private:
 
 	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+
 	IRenderer * m_Renderer;
 
 	GLFWwindow * m_Window;
 	double m_StartTime;
+
+	std::vector<IScene*> m_Scenes;
 };
 
 

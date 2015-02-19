@@ -16,10 +16,12 @@ void Game::GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int acti
 Game::Game()
 {
 	m_Window = nullptr;
+
 }
 
 Game::~Game()
 {
+	End();
 }
 
 void Game::Start(GLFWwindow * window)
@@ -40,6 +42,11 @@ void Game::End()
 		m_Renderer = nullptr;
 	}
 	
+	for (IScene * scene : m_Scenes)
+	{
+		delete scene;
+	}
+	m_Scenes.clear();
 }
 
 void Game::Run()
