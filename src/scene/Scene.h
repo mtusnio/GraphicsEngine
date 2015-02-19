@@ -17,6 +17,7 @@ public:
 
 	// Returns our entity system
 	virtual IEntitySystem & GetEntitySystem()  { return m_EntitySystem;  }
+	virtual const IEntitySystem & GetEntitySystem() const { return m_EntitySystem; }
 
 	// Returns parent game
 	virtual IGame & GetGame() const { return *m_ParentGame; }
