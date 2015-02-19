@@ -82,7 +82,10 @@
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\IGame.h" />
+    <ClInclude Include="src\math\Vector.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
+    <ClInclude Include="src\renderer\Material.h" />
+    <ClInclude Include="src\renderer\Model.h" />
     <ClInclude Include="src\renderer\OpenGLRenderer.h" />
     <ClInclude Include="src\scene\IScene.h" />
   </ItemGroup>

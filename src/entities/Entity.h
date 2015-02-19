@@ -4,6 +4,8 @@
 #include <string>
 
 class IEntitySystem;
+struct Model;
+
 class Entity
 {
 public:
@@ -24,10 +26,13 @@ public:
 	// Changes the object's Entity ID
 	virtual void SetID(Entity::ID id) { m_EntityID = id;  }
 
+
+	virtual const Model * GetModel() const { return m_Model;  }
 private:
 	// Unique ID
 	ID m_EntityID;
 
+	Model * m_Model;
 	IEntitySystem * m_EntitySystem;
 };
 

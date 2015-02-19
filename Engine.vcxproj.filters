@@ -42,6 +42,9 @@
     <Filter Include="Source Files\entities">
       <UniqueIdentifier>{70e7cc4d-14d6-4cd5-8309-3f10b302ef46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{91573769-5b1f-4902-8f3e-bdb93c7ed832}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -84,6 +87,15 @@
     </ClInclude>
     <ClInclude Include="src\entitysystem\EntitySystem.h">
       <Filter>Header Files\entitysystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Model.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Material.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Vector.h">
+      <Filter>Header Files\math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
