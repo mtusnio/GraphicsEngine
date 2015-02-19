@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "../math/Vector.h"
+#include "../math/Angle.h"
+
 class IEntitySystem;
 struct Model;
 
@@ -19,19 +22,27 @@ public:
 	virtual void RunPostFrame() { }
 
 	// If assigned, will return entity system we are attached to. Otherwise nullptr
-	virtual IEntitySystem * GetEntitySystem() const { return m_EntitySystem;  }
+	IEntitySystem * GetEntitySystem() const { return m_EntitySystem;  }
 
 	// Only changes the pointer to this object's entity system, use IEntitySystem
 	// if you want to attach it to an entity system 
-	virtual void SetEntitySystem(IEntitySystem * system) { m_EntitySystem = system; }
+	void SetEntitySystem(IEntitySystem * system) { m_EntitySystem = system; }
 
-	virtual ID GetID() const { return m_EntityID;  }
+	ID GetID() const { return m_EntityID;  }
 	// Changes the object's Entity ID
-	virtual void SetID(Entity::ID id) { m_EntityID = id;  }
+	void SetID(Entity::ID id) { m_EntityID = id; }
 
+	const Vector & GetPosition() const { return m_Position;  }
+	void SetPosition(const Vector & pos) { m_Position = pos; }
+	
+	const Angle & GetRotation() const { return m_Rotation; }
+	void SetRotation(Angle & rotation) { m_Rotation = rotation; }
 
-	virtual const Model * GetModel() const { return m_Model;  }
+	const Model * GetModel() const { return m_Model;  }
 private:
+	Vector m_Position;
+	Angle m_Rotation;
+
 	// Unique ID
 	ID m_EntityID;
 
