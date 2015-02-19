@@ -74,7 +74,7 @@
     <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
-    <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +88,7 @@
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\Model.h" />
-    <ClInclude Include="src\renderer\OpenGLRenderer.h" />
+    <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\renderer\VertexBufferObject.h" />
     <ClInclude Include="src\scene\IScene.h" />
     <ClInclude Include="src\scene\Scene.h" />

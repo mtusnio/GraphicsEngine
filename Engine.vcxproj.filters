@@ -45,6 +45,12 @@
     <Filter Include="Header Files\math">
       <UniqueIdentifier>{91573769-5b1f-4902-8f3e-bdb93c7ed832}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\renderer\OpenGL">
+      <UniqueIdentifier>{4bb7ecc4-0edc-428d-b74d-85895cafd929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\OpenGL">
+      <UniqueIdentifier>{2bf1f4d7-d061-4633-a873-aff30909d5c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -52,9 +58,6 @@
     </ClCompile>
     <ClCompile Include="src\game\Game.cpp">
       <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderer\OpenGLRenderer.cpp">
-      <Filter>Source Files\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\Entity.cpp">
       <Filter>Source Files\entities</Filter>
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="src\scene\Scene.cpp">
       <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,9 +86,6 @@
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\IRenderer.h">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\OpenGLRenderer.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\Entity.h">
@@ -105,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="src\math\Angle.h">
       <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\VertexBufferObject.h">
       <Filter>Header Files\renderer</Filter>

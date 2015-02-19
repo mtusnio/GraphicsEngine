@@ -3,12 +3,12 @@
 #include <GLFW\glfw3.h>
 #include <cmath>
 
-#include "Model.h"
-#include "../scene/IScene.h"
-#include "../entities/Entity.h"
+#include "../Model.h"
+#include "../../scene/IScene.h"
+#include "../../entities/Entity.h"
 
-#include "../math/Vector.h"
-#include "../math/Angle.h"
+#include "../../math/Vector.h"
+#include "../../math/Angle.h"
 
 OpenGLRenderer::OpenGLRenderer(GLFWwindow & window)
 {

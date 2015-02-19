@@ -1,7 +1,7 @@
 #ifndef H_OPENGLRENDERER
 #define H_OPENGLRENDERER
 
-#include "IRenderer.h"
+#include "../IRenderer.h"
 
 struct GLFWwindow;
 
