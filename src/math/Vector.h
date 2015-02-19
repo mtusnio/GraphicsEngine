@@ -42,7 +42,7 @@ struct Vector
 
 	Vector operator-(const Vector & rhs) const
 	{
-		return Vector(x - rhs.x, y - rhs.y, z - rhs.z);
+		return *this + (-rhs);
 	}
 
 	Vector operator-() const
