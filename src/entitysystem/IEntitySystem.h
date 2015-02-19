@@ -2,7 +2,7 @@
 #define H_IENTITYSYSTEM
 
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 #include "../entities/Entity.h"
 
@@ -32,7 +32,7 @@ public:
 
 	// Creates a vector with all of our entities. Expensive if called frequently,
 	// use other functions unless aboslutely needed
-	virtual std::vector<Entity*> GetEntities() const = 0;
+	virtual const std::unordered_map<Entity::ID, Entity*> & GetEntities() const = 0;
 };
 
 

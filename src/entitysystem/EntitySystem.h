@@ -1,9 +1,9 @@
 #ifndef H_ENTITYSYSTEM
 #define H_ENTITYSYSTEM
 
-#include <unordered_map>
 
 #include "IEntitySystem.h"
+
 class EntitySystem : public IEntitySystem
 {
 public:
@@ -20,11 +20,11 @@ public:
 	virtual Entity::ID AddEntity(Entity * pEnt);
 	virtual bool RemoveEntity(Entity * pEnt, bool shouldDelete = true);
 
-	virtual std::vector<Entity*> GetEntities() const;
+	virtual const std::unordered_map<Entity::ID, Entity*> & GetEntities() const;
 
 private:
 	Entity::ID GenerateID();
-	void DetachEntity(Entity * pEnt) const;
+	void DetachEntity(Entity * pEnt);
 
 	std::unordered_map<Entity::ID, Entity*> m_Entities;
 	IScene * m_Scene;

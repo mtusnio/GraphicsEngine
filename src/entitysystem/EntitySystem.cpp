@@ -63,15 +63,9 @@ bool EntitySystem::RemoveEntity(Entity * pEnt, bool shouldDelete)
 	return true;
 }
 
-std::vector<Entity*> EntitySystem::GetEntities() const
+const std::unordered_map<Entity::ID, Entity*> & EntitySystem::GetEntities() const
 {
-	std::vector<Entity*> ents;
-	ents.reserve(m_Entities.size());
-	for (auto p : m_Entities)
-	{
-		ents.push_back(p.second);
-	}
-	return ents;
+	return m_Entities;
 }
 
 Entity::ID EntitySystem::GenerateID()
@@ -82,13 +76,14 @@ Entity::ID EntitySystem::GenerateID()
 	return ret;
 }
 
-void EntitySystem::DetachEntity(Entity * pEnt) const
+void EntitySystem::DetachEntity(Entity * pEnt)
 {
 	IEntitySystem * system = pEnt->GetEntitySystem();
 
-	_ASSERT(system != this);
-
-	system->RemoveEntity(pEnt);
+	if (system != this)
+		system->RemoveEntity(pEnt);
+	else
+		m_Entities.erase(pEnt->GetID());
 	pEnt->SetEntitySystem(nullptr);
 	pEnt->SetID(Entity::INVALID_ID);
 }
