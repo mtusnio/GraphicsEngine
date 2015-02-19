@@ -7,7 +7,7 @@ class IGame;
 class IScene
 {
 public:
-	virtual ~IScene() = 0;
+	virtual ~IScene() = 0 { };
 	// Simulates all entities before frame rendering
 	virtual void SimulatePreFrame() = 0;
 

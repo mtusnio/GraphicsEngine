@@ -15,6 +15,9 @@ public:
 	Entity();
 	virtual ~Entity();
 
+	virtual void RunPreFrame() { }
+	virtual void RunPostFrame() { }
+
 	// If assigned, will return entity system we are attached to. Otherwise nullptr
 	virtual IEntitySystem * GetEntitySystem() const { return m_EntitySystem;  }
 
