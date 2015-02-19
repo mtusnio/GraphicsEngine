@@ -5,6 +5,10 @@
 
 struct Vector
 {
+	float x;
+	float y;
+	float z;
+
 	Vector()
 	{
 		x = y = z = 0.0f;
@@ -17,11 +21,11 @@ struct Vector
 		z = rhs.z;
 	}
 
-	Vector(const Vector && rhs)
+	Vector(const Vector && rhs) : x(std::move(rhs.x)),
+		y(std::move(rhs.y)),
+		z(std::move(rhs.z))
 	{
-		x = std::move(rhs.x);
-		y = std::move(rhs.y);
-		z = std::move(rhs.z);
+
 	}
 
 	Vector(float x, float y, float z)
@@ -31,9 +35,20 @@ struct Vector
 		this->z = z;
 	}
 
-	float x;
-	float y;
-	float z;
+	Vector operator +(const Vector & rhs) const
+	{
+		return Vector(x + rhs.x, y + rhs.y, z + rhs.z);
+	}
+
+	Vector operator-(const Vector & rhs) const
+	{
+		return Vector(x - rhs.x, y - rhs.y, z - rhs.z);
+	}
+
+	Vector operator-() const
+	{
+		return Vector(-x, -y, -z);
+	}
 
 	float Length() const
 	{
