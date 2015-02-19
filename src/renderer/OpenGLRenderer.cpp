@@ -3,12 +3,19 @@
 #include <GLFW\glfw3.h>
 #include <cmath>
 
+#include "Model.h"
+#include "../scene/IScene.h"
+#include "../entities/Entity.h"
+
+#include "../math/Vector.h"
+#include "../math/Angle.h"
+
 OpenGLRenderer::OpenGLRenderer(GLFWwindow & window)
 {
 	m_Window = &window;
 }
 
-void OpenGLRenderer::PrepareView()
+void OpenGLRenderer::PrepareView() const
 {
 	int width, height;
 
@@ -26,21 +33,42 @@ void OpenGLRenderer::PrepareView()
 	glLoadIdentity();
 }
 
-void OpenGLRenderer::RenderScene(const IScene & scene)
+void OpenGLRenderer::RenderScene(const IScene & scene) const
 {
 	PrepareView();
 
-	RenderObjects(scene);
+	RenderObjects(Vector(), Angle(), scene);
 
 	glfwSwapBuffers(m_Window);
 }
 
-void OpenGLRenderer::RenderObjects(const IScene & scene)
+void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & cameraRotation, const IScene & scene) const
 {
+	auto entities = scene.GetEntitySystem().GetEntities();
 
+	for (auto pair : entities)
+	{
+		glPushMatrix();
+		Entity * ent = pair.second;
+		_ASSERT(ent != nullptr);
+
+		Vector diff = ent->GetPosition() - cameraPosition;
+
+		glTranslatef(diff.y, diff.z, -diff.x);
+		
+		const Model * pModel = pair.second->GetModel();
+		if (!pModel)
+			continue;
+
+
+
+		glPopMatrix();
+		
+
+	}
 }
 
-void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far)
+void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far) const
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

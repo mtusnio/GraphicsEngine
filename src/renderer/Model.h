@@ -6,13 +6,13 @@
 #include "Material.h"
 
 #include "../math/Vector.h"
-
+#include "VertexBufferObject.h"
 
 struct Model
 {
 	Material * m_Material;
 
-	std::vector<Vector> Vertices;
+	VertexBufferObject m_VBO;
 };
 
 

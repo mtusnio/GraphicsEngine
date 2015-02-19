@@ -1,8 +1,8 @@
 #ifndef H_ISCENE
 #define H_ISCENE
 
-class IEntitySystem;
-class IGame;
+#include "../entitysystem/IEntitySystem.h"
+#include "../game/IGame.h"
 
 class IScene
 {

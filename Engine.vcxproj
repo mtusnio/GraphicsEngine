@@ -89,6 +89,7 @@
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\Model.h" />
     <ClInclude Include="src\renderer\OpenGLRenderer.h" />
+    <ClInclude Include="src\renderer\VertexBufferObject.h" />
     <ClInclude Include="src\scene\IScene.h" />
     <ClInclude Include="src\scene\Scene.h" />
   </ItemGroup>

@@ -106,5 +106,8 @@
     <ClInclude Include="src\math\Angle.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer\VertexBufferObject.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
