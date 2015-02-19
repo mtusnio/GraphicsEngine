@@ -103,5 +103,8 @@
     <ClInclude Include="src\scene\Scene.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\Angle.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
