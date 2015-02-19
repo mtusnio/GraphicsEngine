@@ -2,6 +2,7 @@
 #define H_IENTITYSYSTEM
 
 #include <string>
+#include <vector>
 
 #include "../entities/Entity.h"
 
@@ -12,6 +13,9 @@ class IEntitySystem
 public:
 	// Returns parent scene of this entity system
 	virtual IScene * GetScene() const = 0;
+
+	// Sets current parent scene
+	virtual void SetScene(IScene * scene) = 0;
 
 	// Returns entity which identifies itself with this id
 	// nullptr if no entity found
@@ -25,6 +29,10 @@ public:
 	// it will not remove the object from memory, thus allowing it
 	// to be attached to a different entity system
 	virtual bool RemoveEntity(Entity * pEnt, bool shouldDelete = true) = 0;
+
+	// Creates a vector with all of our entities. Expensive if called frequently,
+	// use other functions unless aboslutely needed
+	virtual std::vector<Entity*> GetEntities() const = 0;
 };
 
 

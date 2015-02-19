@@ -8,7 +8,7 @@ class Entity
 {
 public:
 	typedef unsigned long long int ID;
-	const ID INVALID_ID = 0;
+	static const ID INVALID_ID = 0;
 
 	Entity();
 	virtual ~Entity();
@@ -20,7 +20,8 @@ public:
 	// if you want to attach it to an entity system 
 	virtual void SetEntitySystem(IEntitySystem * system) { m_EntitySystem = system; }
 
-	// Changes the object's ID
+	virtual ID GetID() const { return m_EntityID;  }
+	// Changes the object's Entity ID
 	virtual void SetID(Entity::ID id) { m_EntityID = id;  }
 
 private:

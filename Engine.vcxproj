@@ -71,12 +71,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\entities\Entity.cpp" />
+    <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGLRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entities\Entity.h" />
+    <ClInclude Include="src\entitysystem\EntitySystem.h" />
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\IGame.h" />
