@@ -33,11 +33,13 @@ void OpenGLRenderer::PrepareView() const
 	glLoadIdentity();
 }
 
-void OpenGLRenderer::RenderScene(const IScene & scene) const
+void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
 {
 	PrepareView();
 
-	RenderObjects(Vector(), Angle(), scene);
+	TranslateCurrentMatrix(-cameraPosition);
+
+	RenderObjects(cameraPosition, cameraRotation, scene);
 
 	glfwSwapBuffers(m_Window);
 }
@@ -54,7 +56,7 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 
 		Vector diff = ent->GetPosition() - cameraPosition;
 
-		glTranslatef(diff.y, diff.z, -diff.x);
+		TranslateCurrentMatrix(diff);
 		
 		const Model * pModel = pair.second->GetModel();
 		if (!pModel)
@@ -76,4 +78,14 @@ void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float n
 	float e = 1.f / tanf(fov / 2.0f);
 	float width = near * e;
 	glFrustum(-width, width, -aspect * width, aspect * width, near, far);
+}
+
+void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
+{
+	glTranslatef(translation.y, translation.z, -translation.x);
+}
+
+void OpenGLRenderer::RotateCurrentMatrix(const Angle & rotation) const
+{
+
 }
