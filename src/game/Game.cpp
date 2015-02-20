@@ -33,9 +33,14 @@ void Game::Start(GLFWwindow & window)
 	m_Window = &window;
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
-	m_StartTime = glfwGetTime();
 	glfwSetKeyCallback(m_Window, &Game::GlobalKeyCallback);
 	m_Renderer = new OpenGLRenderer(*m_Window);
+
+	m_Time.GameTime = 0;
+
+	// Set some basic delta to avoid divisions by zero
+	m_Time.Delta = 0.1f;
+	glfwSetTime(0.0f);
 }
 
 void Game::End()
@@ -49,6 +54,11 @@ void Game::Run()
 
 	if (m_Scenes.size() > 0)
 		m_Renderer->RenderScene(*m_Scenes[0], Vector(0, 0, 0), Angle(0, 0, 0));
+
+	// Update timers
+	double cur = glfwGetTime();
+	m_Time.Delta = (float)(cur - m_Time.GameTime);
+	m_Time.GameTime += m_Time.Delta;
 }
 
 void Game::AddScene(IScene * scene)

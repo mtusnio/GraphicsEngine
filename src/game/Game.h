@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../assetmanagers/ModelManager.h"
+#include "Time.h"
 
 class IRenderer;
 class IScene;
@@ -26,6 +27,8 @@ public:
 	virtual const std::vector<IScene*> & GetScenes() const;
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
+
+	virtual const Time & GetTime() const { return m_Time; }
 private:
 	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static Game * InputHandler;
@@ -37,11 +40,12 @@ private:
 	IRenderer * m_Renderer;
 
 	GLFWwindow * m_Window;
-	double m_StartTime;
 
 	std::vector<IScene*> m_Scenes;
 
 	ModelManager m_ModelManager;
+
+	Time m_Time;
 };
 
 

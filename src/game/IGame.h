@@ -8,6 +8,7 @@ struct GLFWwindow;
 #include "../assetmanagers/AssetManager.h"
 
 struct Model;
+struct Time;
 
 class IGame
 {
@@ -30,6 +31,7 @@ public:
 
 	virtual AssetManager<Model> & GetModelManager() = 0;
 
+	virtual const Time & GetTime() const = 0;
 };
 
 #endif
