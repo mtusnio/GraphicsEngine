@@ -1,5 +1,5 @@
 #ifndef H_ASSETMANAGER
-#define H_IASSETMANAGER
+#define H_ASSETMANAGER
 
 #include <string>
 #include <unordered_map>
