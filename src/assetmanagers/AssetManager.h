@@ -56,7 +56,7 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 	if (!asset)
 		return nullptr;
 
-	ptr = std::shared_ptr<const T>(ptr);
+	ptr = std::shared_ptr<const T>(asset);
 	m_Assets[path] = ptr;
 	return ptr;
 }
