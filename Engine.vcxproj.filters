@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files\main">
+      <UniqueIdentifier>{1fba49ca-efcc-447d-a6bb-d250e337eaa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer">
+      <UniqueIdentifier>{41a2f91f-1dbb-4a64-b143-7a017f50a185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer">
+      <UniqueIdentifier>{16924fcc-7424-4de3-9269-cb12098d5c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entitysystem">
+      <UniqueIdentifier>{e4a8843c-fb03-4797-9137-3d48990b6817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\entitysystem">
+      <UniqueIdentifier>{3411154b-e4be-401e-aa9d-8abfa512595b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{bcb3f7ea-7a52-4b91-9057-2ec3d28649ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{017e5e2b-ae63-496a-8c3f-2ca0995f6ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{9aaaf420-b050-4b3f-8df7-b94cf1a85d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{f7301aa5-15da-4497-90f8-581e09fc998c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\entities">
+      <UniqueIdentifier>{63186bf7-93e3-4e90-8751-2c6b7463ea6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities">
+      <UniqueIdentifier>{70e7cc4d-14d6-4cd5-8309-3f10b302ef46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{91573769-5b1f-4902-8f3e-bdb93c7ed832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\OpenGL">
+      <UniqueIdentifier>{4bb7ecc4-0edc-428d-b74d-85895cafd929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\OpenGL">
+      <UniqueIdentifier>{2bf1f4d7-d061-4633-a873-aff30909d5c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinyobjloader">
+      <UniqueIdentifier>{0445c052-8928-4abc-933b-d900da194b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\assetmanagers">
+      <UniqueIdentifier>{77d9723d-cdc2-488e-bafd-f54e99e55a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assetmanagers">
+      <UniqueIdentifier>{72068fcb-51db-480b-b25d-8bec4f303639}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main\main.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Game.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\Entity.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entitysystem\EntitySystem.cpp">
+      <Filter>Source Files\entitysystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLVBO.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>tinyobjloader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\assetmanagers\ModelManager.cpp">
+      <Filter>Source Files\assetmanagers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\CustomGame.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\entitysystem\IEntitySystem.h">
+      <Filter>Header Files\entitysystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\IScene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\IGame.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Game.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\IRenderer.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\Entity.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\EntitySystem.h">
+      <Filter>Header Files\entitysystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Model.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Material.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Vector.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Angle.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\VertexBufferObject.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLVBO.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h">
+      <Filter>tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\AssetManager.h">
+      <Filter>Header Files\assetmanagers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\ModelManager.h">
+      <Filter>Header Files\assetmanagers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\CustomGame.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
