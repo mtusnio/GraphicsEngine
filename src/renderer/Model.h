@@ -10,6 +10,12 @@
 
 struct Model
 {
+	Model()
+	{
+		Material = nullptr;
+		VBO = nullptr;
+	}
+
 	~Model()
 	{
 		if (Material)
