@@ -3,6 +3,8 @@
 #include <GLFW\glfw3.h>
 #include <cmath>
 
+#include <algorithm>
+
 #include "../renderer/OpenGL/OpenGLRenderer.h"
 
 #include "../scene/IScene.h"
@@ -47,6 +49,16 @@ void Game::Run()
 
 	if (m_Scenes.size() > 0)
 		m_Renderer->RenderScene(*m_Scenes[0], Vector(0, 0, 0), Angle(0, 0, 0));
+}
+
+void Game::AddScene(IScene * scene)
+{
+	if (std::find(m_Scenes.begin(), m_Scenes.end(), scene) == m_Scenes.end())
+		m_Scenes.push_back(scene);
+}
+void Game::RemoveScene(IScene * scene)
+{
+	m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());
 }
 
 const std::vector<IScene*> & Game::GetScenes() const

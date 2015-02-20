@@ -19,6 +19,12 @@ public:
 	// Runs one frame of the game
 	virtual void Run() = 0;
 
+	// Adds a scene to the game
+	virtual void AddScene(IScene * scene) = 0;
+
+	// Removes our scene from the game, but DOES NOT delete it
+	virtual void RemoveScene(IScene * scene) = 0;
+
 	// Returns all scenes simulated in the game
 	virtual const std::vector<IScene*> & GetScenes() const = 0;
 

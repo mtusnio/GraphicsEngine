@@ -20,6 +20,9 @@ public:
 
 	virtual void Run();
 
+	virtual void AddScene(IScene * scene);
+	virtual void RemoveScene(IScene * scene);
+
 	virtual const std::vector<IScene*> & GetScenes() const;
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
