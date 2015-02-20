@@ -46,18 +46,19 @@ AssetManager<T>::~AssetManager()
 template<typename T>
 std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 {
-	T * asset = GetAsset(path);
+	std::shared_ptr<const T> ptr = GetAsset(path);
 
-	if (asset)
-		return asset;
+	if (ptr.get() != nullptr)
+		return ptr;
 
-	asset = PerformCache(path);
+	T * asset = PerformCache(path);
 
 	if (!asset)
 		return nullptr;
 
-	m_Assets[path] = asset;
-	return m_Assets[path].lock();
+	ptr = std::shared_ptr<const T>(ptr);
+	m_Assets[path] = ptr;
+	return ptr;
 }
 
 template<typename T>
@@ -65,7 +66,13 @@ std::shared_ptr<const T> AssetManager<T>::GetAsset(const std::string & path)
 {
 	auto it = m_Assets.find(path);
 	if (it != m_Assets.end())
-		return it.ma
+	{
+		if (it->second.expired())
+			return nullptr;
+
+		return it->second.lock();
+	}
+		
 
 	return nullptr;
 }
