@@ -3,6 +3,7 @@
 #include <GLFW\glfw3.h>
 #include <cmath>
 
+
 #include "../Model.h"
 #include "../../scene/IScene.h"
 #include "../../entities/Entity.h"
@@ -27,7 +28,7 @@ void OpenGLRenderer::PrepareView() const
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	InitializeProjectionMatrix(90.0f, aspect, 10.0f, 1000.0f);
+	InitializeProjectionMatrix(90.0f, aspect, 2.0f, 1000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -58,11 +59,29 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 
 		TranslateCurrentMatrix(diff);
 		
+		glRotatef(45.0f, 0, 1, 0);
 		const Model * pModel = pair.second->GetModel();
-		if (!pModel)
-			continue;
 
+		_ASSERT(pModel != nullptr);
 
+		if (pModel->VBO)
+		{
+			// Render using VBO
+		}
+		else
+		{
+			// Basic rendering using glBegin/glEnd for now
+			glBegin(GL_QUADS);
+
+			for (unsigned int i = 0; i < pModel->Vertices.size(); i++)
+			{
+				Vector vec = ConvertToView(pModel->Vertices[i]);
+
+				glVertex3f(vec.x, vec.y, vec.z);
+			}
+
+			glEnd();
+		}
 
 		glPopMatrix();
 		
@@ -82,10 +101,16 @@ void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float n
 
 void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
 {
-	glTranslatef(translation.y, translation.z, -translation.x);
+	Vector v = ConvertToView(translation);
+	glTranslatef(v.x, v.y, v.z);
 }
 
 void OpenGLRenderer::RotateCurrentMatrix(const Angle & rotation) const
 {
 
+}
+
+Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
+{
+	return Vector(-vec.y, vec.z, -vec.x);
 }

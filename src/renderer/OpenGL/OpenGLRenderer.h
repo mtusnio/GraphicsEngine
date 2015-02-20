@@ -25,6 +25,8 @@ private:
 	void TranslateCurrentMatrix(const Vector & translation) const;
 	void RotateCurrentMatrix(const Angle & rotation) const;
 
+	Vector ConvertToView(const Vector & vec) const;
+
 	GLFWwindow * m_Window;
 };
 
