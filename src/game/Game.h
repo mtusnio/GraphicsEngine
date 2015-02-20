@@ -19,6 +19,9 @@ public:
 
 	virtual void Run();
 
+	virtual const std::vector<IScene*> & GetScenes() const;
+
+
 private:
 	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static Game * InputHandler;

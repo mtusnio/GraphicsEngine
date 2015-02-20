@@ -55,8 +55,15 @@ void Game::Run()
 {
 	glfwPollEvents();
 
-	//m_Renderer->RenderScene(nullptr);
+	if (m_Scenes.size() > 0)
+		m_Renderer->RenderScene(*m_Scenes[0], Vector(0, 0, 0), Angle(0, 0, 0));
 }
+
+const std::vector<IScene*> & Game::GetScenes() const
+{
+	return m_Scenes;
+}
+
 
 void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
