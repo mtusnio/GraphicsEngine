@@ -54,6 +54,12 @@
     <Filter Include="tinyobjloader">
       <UniqueIdentifier>{0445c052-8928-4abc-933b-d900da194b67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\assetmanagers">
+      <UniqueIdentifier>{77d9723d-cdc2-488e-bafd-f54e99e55a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assetmanagers">
+      <UniqueIdentifier>{72068fcb-51db-480b-b25d-8bec4f303639}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -79,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc">
       <Filter>tinyobjloader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\assetmanagers\ModelManager.cpp">
+      <Filter>Source Files\assetmanagers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +138,12 @@
     </ClInclude>
     <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h">
       <Filter>tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\AssetManager.h">
+      <Filter>Header Files\assetmanagers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\ModelManager.h">
+      <Filter>Header Files\assetmanagers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
