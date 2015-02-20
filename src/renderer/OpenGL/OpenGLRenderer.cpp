@@ -58,8 +58,7 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		Vector diff = ent->GetPosition() - cameraPosition;
 
 		TranslateCurrentMatrix(diff);
-		
-		glRotatef(45.0f, 0, 1, 0);
+		RotateCurrentMatrix(ent->GetRotation());
 		const Model * pModel = pair.second->GetModel();
 
 		_ASSERT(pModel != nullptr);
@@ -107,10 +106,18 @@ void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
 
 void OpenGLRenderer::RotateCurrentMatrix(const Angle & rotation) const
 {
-
+	Angle ang = ConvertToView(rotation);
+	glRotatef(ang.x, 1.f, 0, 0);
+	glRotatef(ang.y, 0, 1.f, 0);
+	glRotatef(ang.z, 0, 0, 1.f);
 }
 
 Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
 {
 	return Vector(-vec.y, vec.z, -vec.x);
+}
+
+Angle OpenGLRenderer::ConvertToView(const Angle & ang) const
+{
+	return Angle(-ang.y, ang.z, -ang.x);
 }

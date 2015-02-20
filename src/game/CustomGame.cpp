@@ -15,6 +15,7 @@ void CustomGame::Start(GLFWwindow & window)
 	Entity * entity = new Entity();
 
 	entity->SetModel(ptr);
-	entity->SetPosition(Vector(6.0f, -1.0f, -1.0f));
+	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
+	entity->SetRotation(Angle(0, 0, 45));
 	scene->GetEntitySystem().AddEntity(*entity);
 }
