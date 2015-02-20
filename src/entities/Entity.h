@@ -2,6 +2,7 @@
 #define H_ENTITY
 
 #include <string>
+#include <memory>
 
 #include "../math/Vector.h"
 #include "../math/Angle.h"
@@ -38,7 +39,8 @@ public:
 	const Angle & GetRotation() const { return m_Rotation; }
 	void SetRotation(Angle & rotation) { m_Rotation = rotation; }
 
-	const Model * GetModel() const { return m_Model;  }
+	const Model * GetModel() const { return m_Model.get();  }
+	void SetModel(const std::shared_ptr<const Model> & model) { m_Model = model;  }
 private:
 	Vector m_Position;
 	Angle m_Rotation;
@@ -46,7 +48,7 @@ private:
 	// Unique ID
 	ID m_EntityID;
 
-	Model * m_Model;
+	std::shared_ptr<const Model> m_Model;
 	IEntitySystem * m_EntitySystem;
 };
 
