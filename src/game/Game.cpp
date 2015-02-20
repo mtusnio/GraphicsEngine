@@ -23,7 +23,7 @@ Game::Game()
 
 Game::~Game()
 {
-	End();
+	ClearContent();
 }
 
 void Game::Start(GLFWwindow & window)
@@ -38,17 +38,7 @@ void Game::Start(GLFWwindow & window)
 
 void Game::End()
 {
-	if (m_Renderer)
-	{
-		delete m_Renderer;
-		m_Renderer = nullptr;
-	}
-	
-	for (IScene * scene : m_Scenes)
-	{
-		delete scene;
-	}
-	m_Scenes.clear();
+	ClearContent();
 }
 
 void Game::Run()
@@ -68,4 +58,19 @@ const std::vector<IScene*> & Game::GetScenes() const
 void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	
+}
+
+void Game::ClearContent()
+{
+	if (m_Renderer)
+	{
+		delete m_Renderer;
+		m_Renderer = nullptr;
+	}
+
+	for (IScene * scene : m_Scenes)
+	{
+		delete scene;
+	}
+	m_Scenes.clear();
 }

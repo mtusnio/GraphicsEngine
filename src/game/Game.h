@@ -28,6 +28,7 @@ private:
 
 	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+	void ClearContent();
 
 	IRenderer * m_Renderer;
 
