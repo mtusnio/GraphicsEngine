@@ -5,9 +5,10 @@
 
 #include <vector>
 
+#include "../assetmanagers/ModelManager.h"
+
 class IRenderer;
 class IScene;
-
 class Game : public IGame
 {
 public:
@@ -21,7 +22,7 @@ public:
 
 	virtual const std::vector<IScene*> & GetScenes() const;
 
-
+	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
 private:
 	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static Game * InputHandler;
@@ -36,6 +37,8 @@ private:
 	double m_StartTime;
 
 	std::vector<IScene*> m_Scenes;
+
+	ModelManager m_ModelManager;
 };
 
 

@@ -5,6 +5,9 @@ class IScene;
 struct GLFWwindow;
 
 #include <vector>
+#include "../assetmanagers/AssetManager.h"
+
+struct Model;
 
 class IGame
 {
@@ -18,6 +21,8 @@ public:
 
 	// Returns all scenes simulated in the game
 	virtual const std::vector<IScene*> & GetScenes() const = 0;
+
+	virtual AssetManager<Model> & GetModelManager() = 0;
 
 };
 
