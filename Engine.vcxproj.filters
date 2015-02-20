@@ -74,6 +74,9 @@
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLVBO.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc">
       <Filter>tinyobjloader</Filter>
     </ClCompile>
@@ -120,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="src\renderer\VertexBufferObject.h">
       <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLVBO.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h">
       <Filter>tinyobjloader</Filter>

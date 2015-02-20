@@ -10,9 +10,22 @@
 
 struct Model
 {
-	Material * m_Material;
+	~Model()
+	{
+		if (Material)
+			delete Material;
 
-	VertexBufferObject m_VBO;
+		if (VBO)
+			delete VBO;
+	}
+
+	Material * Material;
+	VertexBufferObject * VBO;
+
+	std::vector<Vector> Vertices;
+	std::vector<Vector> UVs;
+	std::vector<Vector> Normals;
+
 };
 
 
