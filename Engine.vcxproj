@@ -45,6 +45,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\glfw-3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,6 +61,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\glfw-3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,6 +78,7 @@
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entities\Entity.h" />
@@ -92,6 +95,7 @@
     <ClInclude Include="src\renderer\VertexBufferObject.h" />
     <ClInclude Include="src\scene\IScene.h" />
     <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -51,6 +51,9 @@
     <Filter Include="Source Files\renderer\OpenGL">
       <UniqueIdentifier>{2bf1f4d7-d061-4633-a873-aff30909d5c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tinyobjloader">
+      <UniqueIdentifier>{0445c052-8928-4abc-933b-d900da194b67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>tinyobjloader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="src\renderer\VertexBufferObject.h">
       <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h">
+      <Filter>tinyobjloader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
