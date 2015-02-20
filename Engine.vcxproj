@@ -75,6 +75,7 @@
     <ClCompile Include="src\assetmanagers\ModelManager.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
+    <ClCompile Include="src\game\CustomGame.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\EntitySystem.h" />
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
+    <ClInclude Include="src\game\CustomGame.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\IGame.h" />
     <ClInclude Include="src\math\Angle.h" />

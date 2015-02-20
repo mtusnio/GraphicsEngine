@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../game/Game.h"
+#include "../game/CustomGame.h"
 
 void error_callback(int error, const char * description)
 {
@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
 
 	
 
-	Game game;
+	CustomGame game;
 	game.Start(*window);
 	while (!glfwWindowShouldClose(window))
 	{

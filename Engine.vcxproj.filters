@@ -89,6 +89,9 @@
     <ClCompile Include="src\assetmanagers\ModelManager.cpp">
       <Filter>Source Files\assetmanagers</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\CustomGame.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -144,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="src\assetmanagers\ModelManager.h">
       <Filter>Header Files\assetmanagers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\CustomGame.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
