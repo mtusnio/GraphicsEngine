@@ -76,10 +76,14 @@ void EntitySystem::DetachEntity(Entity & pEnt)
 {
 	IEntitySystem * system = pEnt.GetEntitySystem();
 
-	if (system != this)
-		system->RemoveEntity(pEnt);
-	else
-		m_Entities.erase(pEnt.GetID());
-	pEnt.SetEntitySystem(nullptr);
+	if (system)
+	{
+		if (system != this)
+			system->RemoveEntity(pEnt);
+		else
+			m_Entities.erase(pEnt.GetID());
+		pEnt.SetEntitySystem(nullptr);
+	}
+	
 	pEnt.SetID(Entity::INVALID_ID);
 }
