@@ -9,6 +9,8 @@ Model * ModelManager::PerformCache(const std::string & path)
 	std::string error = tinyobj::LoadObj(shapes, materials, path.c_str());
 
 	_ASSERT(error == "");
+	_ASSERT(shapes.size() != 0);
+
 	if (error != "" || shapes.size() == 0)
 		return nullptr;
 
