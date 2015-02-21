@@ -3,9 +3,21 @@
 
 #include <GLFW\glfw3.h>
 
+CustomGame::CustomGame()
+{
+}
+
+CustomGame::~CustomGame()
+{
+	m_PrevX = 0;
+	m_PrevY = 0;
+}
+
 void CustomGame::Start(GLFWwindow & window)
 {
 	Game::Start(window);
+
+	glfwGetCursorPos(&window, &m_PrevX, &m_PrevY);
 
 	Scene * scene = new Scene(*this);
 
@@ -25,8 +37,31 @@ void CustomGame::Start(GLFWwindow & window)
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-
-void CustomGame::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void CustomGame::HandleInput()
 {
+	GLFWwindow * window = GetWindow();
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	const float SPEED = 4.0f;
 
+	double xDiff = xpos - m_PrevX;
+	double yDiff = ypos - m_PrevY;
+
+	m_PrevX = xpos;
+	m_PrevY = ypos;
+
+	float delta = GetTime().Delta;
+	m_RenderAngle.y += delta * SPEED * (float)yDiff;
+	m_RenderAngle.z += delta * SPEED * (float)-xDiff;
+
+	Vector dir = m_RenderAngle.ToDirection();
+	// Handle keys
+	if (glfwGetKey(window, GLFW_KEY_W))
+	{
+		m_RenderPosition += dir * delta * SPEED;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_S))
+	{
+
+	}
 }
