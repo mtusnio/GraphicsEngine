@@ -38,8 +38,8 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 {
 	PrepareView();
 
-	TranslateCurrentMatrix(-cameraPosition);
 	RotateCurrentMatrix(-cameraRotation);
+	TranslateCurrentMatrix(-cameraPosition);
 
 	RenderObjects(cameraPosition, cameraRotation, scene);
 
