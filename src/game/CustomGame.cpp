@@ -1,5 +1,8 @@
 #include "CustomGame.h"
 #include "../scene/Scene.h"
+
+#include <GLFW\glfw3.h>
+
 void CustomGame::Start(GLFWwindow & window)
 {
 	Game::Start(window);
@@ -18,4 +21,12 @@ void CustomGame::Start(GLFWwindow & window)
 	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
 	entity->SetRotation(Angle(0, 0, 45));
 	scene->GetEntitySystem().AddEntity(*entity);
+
+	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+
+void CustomGame::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
 }

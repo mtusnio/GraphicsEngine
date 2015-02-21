@@ -17,6 +17,11 @@ void Game::GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int acti
 		InputHandler->KeyCallback(window, key, scancode, action, mods);
 }
 
+void Game::GlobalCursorCallback(GLFWwindow * window, double xpos, double ypos)
+{
+	if (InputHandler)
+		InputHandler->CursorCallback(window, xpos, ypos);
+}
 Game::Game()
 {
 	m_Window = nullptr;
@@ -34,6 +39,7 @@ void Game::Start(GLFWwindow & window)
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
 	glfwSetKeyCallback(m_Window, &Game::GlobalKeyCallback);
+	glfwSetCursorPosCallback(m_Window, &Game::GlobalCursorCallback);
 	m_Renderer = new OpenGLRenderer(*m_Window);
 
 	m_Time.GameTime = 0;
@@ -41,6 +47,8 @@ void Game::Start(GLFWwindow & window)
 	// Set some basic delta to avoid divisions by zero
 	m_Time.Delta = 0.1f;
 	glfwSetTime(0.0f);
+
+	InputHandler = this;
 }
 
 void Game::End()
@@ -76,11 +84,6 @@ const std::vector<IScene*> & Game::GetScenes() const
 	return m_Scenes;
 }
 
-
-void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	
-}
 
 void Game::ClearContent()
 {

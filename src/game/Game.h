@@ -31,10 +31,11 @@ public:
 	virtual const Time & GetTime() const { return m_Time; }
 private:
 	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void GlobalCursorCallback(GLFWwindow * window, double xpos, double ypos);
 	static Game * InputHandler;
 
-	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
+	virtual void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { };
+	virtual void CursorCallback(GLFWwindow * window, double xpos, double ypos) { };
 	void ClearContent();
 
 	IRenderer * m_Renderer;
