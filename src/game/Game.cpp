@@ -2,7 +2,7 @@
 
 #include <GLFW\glfw3.h>
 #include <cmath>
-
+#include <iostream>
 #include <algorithm>
 
 #include "../renderer/OpenGL/OpenGLRenderer.h"
@@ -77,6 +77,10 @@ const std::vector<IScene*> & Game::GetScenes() const
 	return m_Scenes;
 }
 
+void Game::Log(const std::string & msg)
+{
+	std::cout << msg << std::endl;
+}
 
 void Game::ClearContent()
 {

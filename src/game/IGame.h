@@ -31,9 +31,14 @@ public:
 
 	virtual AssetManager<Model> & GetModelManager() = 0;
 
+	// Returns a structure containing all relevant time information for this frame
 	virtual const Time & GetTime() const = 0;
 
+	// Returns window this game is attached to
 	virtual GLFWwindow * GetWindow() const = 0;
+
+	// Logs a message to console
+	virtual void Log(const std::string & path) = 0;
 };
 
 #endif

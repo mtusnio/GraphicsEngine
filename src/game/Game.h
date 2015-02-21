@@ -35,6 +35,8 @@ public:
 	virtual const Time & GetTime() const { return m_Time; }
 
 	virtual GLFWwindow * GetWindow() const { return m_Window; }
+
+	virtual void Log(const std::string & msg);
 private:
 	// Allows derived classes to handle input at the time expected by the frame simulation
 	virtual void HandleInput() { };
