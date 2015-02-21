@@ -34,6 +34,11 @@ struct Angle
 	{
 
 	}
+
+	Angle operator-() const
+	{
+		return Angle(-x, -y, -z);
+	}
 };
 
 #endif
