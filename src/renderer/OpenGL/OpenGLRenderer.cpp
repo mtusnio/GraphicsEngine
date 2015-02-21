@@ -120,5 +120,5 @@ Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
 
 Angle OpenGLRenderer::ConvertToView(const Angle & ang) const
 {
-	return Angle(-ang.y, ang.z, -ang.x);
+	return Angle(ang.y, ang.z, -ang.x);
 }

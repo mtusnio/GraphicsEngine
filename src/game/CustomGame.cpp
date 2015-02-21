@@ -51,7 +51,7 @@ void CustomGame::HandleInput()
 	m_PrevY = ypos;
 
 	float delta = GetTime().Delta;
-	m_RenderAngle.y += delta * SPEED * (float)yDiff;
+	m_RenderAngle.y += delta * SPEED * (float)-yDiff;
 	m_RenderAngle.z += delta * SPEED * (float)-xDiff;
 
 	Vector dir = m_RenderAngle.ToDirection();
