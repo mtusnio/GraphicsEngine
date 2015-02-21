@@ -5,11 +5,13 @@
 #include <unordered_map>
 #include <memory>
 
+class IGame;
+
 template<typename T>
 class AssetManager
 {
 public:
-	AssetManager();
+	AssetManager(IGame & game);
 	virtual ~AssetManager();
 
 	// Caches the asset or returns it if it's already in cache.
@@ -19,6 +21,9 @@ public:
 	// Acts like the cache function, but doesn't cache, only checks
 	// for existings files
 	std::shared_ptr<const T> GetAsset(const std::string & path);
+
+protected:
+	IGame & m_Game;
 
 private:
 	// Derived classes should load the data into an object here and return it
@@ -33,8 +38,10 @@ private:
 };
 
 template<typename T>
-AssetManager<T>::AssetManager()
+AssetManager<T>::AssetManager(IGame & game) :
+m_Game(game)
 {
+
 }
 
 template<typename T>
