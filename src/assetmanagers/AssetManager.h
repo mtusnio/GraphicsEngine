@@ -53,6 +53,8 @@ AssetManager<T>::~AssetManager()
 template<typename T>
 std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 {
+	m_Game.Log("Caching attempt: " + path);
+
 	std::shared_ptr<const T> ptr = GetAsset(path);
 
 	if (ptr.get() != nullptr)
@@ -60,9 +62,14 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 
 	T * asset = PerformCache(path);
 
-	if (!asset)
-		return nullptr;
 
+	if (!asset)
+	{
+		m_Game.Log("Asset doesn't exist");
+		return nullptr;
+	}
+
+	m_Game.Log("Cached");
 	ptr = std::shared_ptr<const T>(asset);
 	m_Assets[path] = ptr;
 	return ptr;
