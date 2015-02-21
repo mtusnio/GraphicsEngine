@@ -32,6 +32,8 @@ public:
 	virtual AssetManager<Model> & GetModelManager() = 0;
 
 	virtual const Time & GetTime() const = 0;
+
+	virtual GLFWwindow * GetWindow() const = 0;
 };
 
 #endif

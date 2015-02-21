@@ -33,13 +33,11 @@ public:
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
 
 	virtual const Time & GetTime() const { return m_Time; }
-private:
-	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void GlobalCursorCallback(GLFWwindow * window, double xpos, double ypos);
-	static Game * InputHandler;
 
-	virtual void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { };
-	virtual void CursorCallback(GLFWwindow * window, double xpos, double ypos) { };
+	virtual GLFWwindow * GetWindow() const { return m_Window; }
+private:
+	// Allows derived classes to handle input at the time expected by the frame simulation
+	virtual void HandleInput() { };
 
 	virtual Vector GetRenderPosition() const;
 	virtual Angle GetRenderAngle() const;
