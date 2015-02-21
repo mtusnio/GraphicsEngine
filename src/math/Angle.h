@@ -1,6 +1,9 @@
 #ifndef H_ANGLE
 #define H_ANGLE
 
+#include <math.h>
+#include "consts.h"
+
 struct Angle
 {
 	float x;
@@ -38,6 +41,17 @@ struct Angle
 	Angle operator-() const
 	{
 		return Angle(-x, -y, -z);
+	}
+
+	Vector ToDirection() const
+	{
+		const float DEG2RAD = (float)Math::PI/180.f;
+
+		float xRad = x * DEG2RAD;
+		float yRad = y * DEG2RAD;
+		float zRad = z * DEG2RAD;
+
+		return Vector(cos(zRad)*cos(yRad), sin(zRad)*cos(yRad), sin(yRad));
 	}
 };
 
