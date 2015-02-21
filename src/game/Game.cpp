@@ -60,8 +60,14 @@ void Game::Run()
 {
 	glfwPollEvents();
 
+	for (IScene * scene : m_Scenes)
+		scene->SimulatePreFrame();
+
 	if (m_Scenes.size() > 0)
-		m_Renderer->RenderScene(*m_Scenes[0], Vector(0, 0, 0), Angle(0, 0, 0));
+		m_Renderer->RenderScene(*m_Scenes[0], GetRenderPosition(), GetRenderAngle());
+
+	for (IScene * scene : m_Scenes)
+		scene->SimulatePostFrame();
 
 	// Update timers
 	double cur = glfwGetTime();
@@ -98,4 +104,14 @@ void Game::ClearContent()
 		delete scene;
 	}
 	m_Scenes.clear();
+}
+
+Vector Game::GetRenderPosition() const
+{
+	return Vector(0, 0, 0);
+}
+
+Angle Game::GetRenderAngle() const
+{
+	return Angle(0, 0, 0);
 }
