@@ -50,6 +50,19 @@ struct Vector
 		return Vector(-x, -y, -z);
 	}
 
+	Vector operator*(float num) const
+	{
+		return Vector(x * num, y * num, z * num);
+	}
+
+	Vector & operator +=(const Vector & rhs)
+	{
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+		return *this;
+	}
+
 	float Length() const
 	{
 		return sqrt(x * x + y * y + z * z);
