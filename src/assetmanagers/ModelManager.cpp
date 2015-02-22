@@ -23,7 +23,7 @@ Model * ModelManager::PerformCache(const std::string & path)
 
 		// TODO: Optimize it later, i.e. by just reinterpret_casting the pointer to memory
 		// to Vector class
-		for (size_t i = 0; i < mesh.positions.size(); i += 3)
+		for (size_t i = 0; i + 2 < mesh.positions.size(); i += 3)
 		{
 			model->Vertices.push_back(Vector(mesh.positions[i], mesh.positions[i + 1], mesh.positions[i + 2]));
 		}
