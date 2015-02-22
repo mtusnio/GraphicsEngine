@@ -96,7 +96,7 @@ void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float n
 
 	float e = 1.f / tanf(fov / 2.0f);
 	float width = near * e;
-	glFrustum(-width, width, -aspect * width, aspect * width, near, far);
+	glFrustum(-width, width, -width/aspect, width/aspect, near, far);
 }
 
 void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
