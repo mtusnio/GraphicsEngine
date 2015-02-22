@@ -43,6 +43,7 @@ void CustomGame::HandleInput()
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	const float SPEED = 4.0f;
+	const float ROT_SPEED = 8.0f;
 
 	double xDiff = xpos - m_PrevX;
 	double yDiff = ypos - m_PrevY;
@@ -51,8 +52,8 @@ void CustomGame::HandleInput()
 	m_PrevY = ypos;
 
 	float delta = GetTime().Delta;
-	m_RenderAngle.y += delta * SPEED * (float)-yDiff;
-	m_RenderAngle.z += delta * SPEED * (float)-xDiff;
+	m_RenderAngle.y += delta * ROT_SPEED * (float)-yDiff;
+	m_RenderAngle.z += delta * ROT_SPEED * (float)-xDiff;
 
 	Vector dir = m_RenderAngle.ToDirection();
 	// Handle keys
@@ -62,6 +63,16 @@ void CustomGame::HandleInput()
 	}
 	else if (glfwGetKey(window, GLFW_KEY_S))
 	{
+		m_RenderPosition -= dir * delta * SPEED;
+	}
 
+	Vector left = dir.Left();
+	if (glfwGetKey(window, GLFW_KEY_A))
+	{
+		m_RenderPosition += left * delta * SPEED;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_D))
+	{
+		m_RenderPosition -= left * delta * SPEED;
 	}
 }
