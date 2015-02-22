@@ -81,13 +81,14 @@ struct Vector
 		return Vector(x / length, y / length, z / length);
 	}
 
-	void Normalize()
+	Vector & Normalize()
 	{
 		float length = Length();
 
 		x /= length;
 		y /= length;
 		z /= length;
+		return *this;
 	}
 
 	float DotProduct(const Vector & rhs)
@@ -104,7 +105,7 @@ struct Vector
 
 	Vector Left() const
 	{
-		return -CrossProduct(Vector(0, 0, 1));
+		return -CrossProduct(Vector(0, 0, 1)).Normalized();
 	}
 
 };
