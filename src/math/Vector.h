@@ -63,6 +63,12 @@ struct Vector
 		return *this;
 	}
 
+	Vector & operator -=(const Vector & rhs)
+	{
+		*this += -rhs;
+		return *this;
+	}
+
 	float Length() const
 	{
 		return sqrt(x * x + y * y + z * z);
@@ -82,6 +88,23 @@ struct Vector
 		x /= length;
 		y /= length;
 		z /= length;
+	}
+
+	float DotProduct(const Vector & rhs)
+	{
+		return x * rhs.x + y * rhs.y + z * rhs.z;
+	}
+
+	Vector CrossProduct(const Vector & rhs) const
+	{
+		return Vector(y * rhs.z - z * rhs.y,
+			z * rhs.x - x * rhs.z,
+			x * rhs.y - y * rhs.x);
+	}
+
+	Vector Left() const
+	{
+		return -CrossProduct(Vector(0, 0, 1));
 	}
 
 };
