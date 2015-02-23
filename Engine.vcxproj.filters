@@ -151,5 +151,11 @@
     <ClInclude Include="src\game\CustomGame.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\Time.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\consts.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

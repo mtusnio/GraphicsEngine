@@ -6,9 +6,14 @@
 #include <vector>
 
 #include "../assetmanagers/ModelManager.h"
+#include "Time.h"
 
 class IRenderer;
 class IScene;
+
+struct Vector;
+struct Angle;
+
 class Game : public IGame
 {
 public:
@@ -26,22 +31,30 @@ public:
 	virtual const std::vector<IScene*> & GetScenes() const;
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
-private:
-	static void GlobalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static Game * InputHandler;
 
-	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	virtual const Time & GetTime() const { return m_Time; }
+
+	virtual GLFWwindow * GetWindow() const { return m_Window; }
+
+	virtual void Log(const std::string & msg);
+private:
+	// Allows derived classes to handle input at the time expected by the frame simulation
+	virtual void HandleInput() { };
+
+	virtual Vector GetRenderPosition() const;
+	virtual Angle GetRenderAngle() const;
 
 	void ClearContent();
 
 	IRenderer * m_Renderer;
 
 	GLFWwindow * m_Window;
-	double m_StartTime;
 
 	std::vector<IScene*> m_Scenes;
 
 	ModelManager m_ModelManager;
+
+	Time m_Time;
 };
 
 

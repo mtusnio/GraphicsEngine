@@ -26,6 +26,7 @@ private:
 	void RotateCurrentMatrix(const Angle & rotation) const;
 
 	Vector ConvertToView(const Vector & vec) const;
+	Angle ConvertToView(const Angle & ang) const;
 
 	GLFWwindow * m_Window;
 };

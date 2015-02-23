@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 #include "../tinyobjloader/tiny_obj_loader.h"
 #include "../renderer/OpenGL/OpenGLVBO.h"
+#include "../game/IGame.h"
 
 Model * ModelManager::PerformCache(const std::string & path)
 {
@@ -17,15 +18,20 @@ Model * ModelManager::PerformCache(const std::string & path)
 
 	Model * model = new Model();
 
+
 	for (size_t j = 0; j < shapes.size(); j++)
 	{
 		const tinyobj::mesh_t & mesh = shapes[j].mesh;
 
-		// TODO: Optimize it later, i.e. by just reinterpret_casting the pointer to memory
-		// to Vector class
-		for (size_t i = 0; i < mesh.positions.size(); i += 3)
+		if (mesh.positions.size() % 3 != 0)
 		{
-			model->Vertices.push_back(Vector(mesh.positions[i], mesh.positions[i + 1], mesh.positions[i + 2]));
+			m_Game.Log("Error at mesh " + std::to_string(j) + " . Size: " + std::to_string(mesh.positions.size()) );
+			continue;
+		}
+
+		for (int i : mesh.indices)
+		{
+			model->Vertices.push_back(Vector(mesh.positions[i * 3], mesh.positions[i * 3 + 1], mesh.positions[i * 3+ 2]));
 		}
 
 		

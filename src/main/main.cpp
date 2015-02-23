@@ -17,8 +17,8 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	glfwSetErrorCallback(error_callback);
 
-	int width = 640;
-	int height = 480;
+	int width = 1440;
+	int height = 900;
 
 	if (argc >= 3)
 	{

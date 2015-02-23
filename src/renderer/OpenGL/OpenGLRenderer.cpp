@@ -38,6 +38,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 {
 	PrepareView();
 
+	RotateCurrentMatrix(-cameraRotation);
 	TranslateCurrentMatrix(-cameraPosition);
 
 	RenderObjects(cameraPosition, cameraRotation, scene);
@@ -58,8 +59,7 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		Vector diff = ent->GetPosition() - cameraPosition;
 
 		TranslateCurrentMatrix(diff);
-		
-		glRotatef(45.0f, 0, 1, 0);
+		RotateCurrentMatrix(ent->GetRotation());
 		const Model * pModel = pair.second->GetModel();
 
 		_ASSERT(pModel != nullptr);
@@ -71,13 +71,16 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		else
 		{
 			// Basic rendering using glBegin/glEnd for now
-			glBegin(GL_QUADS);
+			glBegin(GL_TRIANGLES);
 
 			for (unsigned int i = 0; i < pModel->Vertices.size(); i++)
 			{
 				Vector vec = ConvertToView(pModel->Vertices[i]);
 
 				glVertex3f(vec.x, vec.y, vec.z);
+				float maxVal = fmax(vec.x, fmax(vec.y, vec.z));
+				glColor3f(vec.x / maxVal, vec.y / maxVal, vec.z / maxVal);
+
 			}
 
 			glEnd();
@@ -96,7 +99,7 @@ void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float n
 
 	float e = 1.f / tanf(fov / 2.0f);
 	float width = near * e;
-	glFrustum(-width, width, -aspect * width, aspect * width, near, far);
+	glFrustum(-width, width, -width/aspect, width/aspect, near, far);
 }
 
 void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
@@ -107,10 +110,18 @@ void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
 
 void OpenGLRenderer::RotateCurrentMatrix(const Angle & rotation) const
 {
-
+	Angle ang = ConvertToView(rotation);
+	glRotatef(ang.x, 1.f, 0, 0);
+	glRotatef(ang.y, 0, 1.f, 0);
+	glRotatef(ang.z, 0, 0, 1.f);
 }
 
 Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
 {
 	return Vector(-vec.y, vec.z, -vec.x);
+}
+
+Angle OpenGLRenderer::ConvertToView(const Angle & ang) const
+{
+	return Angle(ang.y, ang.z, -ang.x);
 }
