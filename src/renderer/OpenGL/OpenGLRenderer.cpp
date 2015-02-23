@@ -71,13 +71,16 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		else
 		{
 			// Basic rendering using glBegin/glEnd for now
-			glBegin(GL_QUADS);
+			glBegin(GL_TRIANGLES);
 
 			for (unsigned int i = 0; i < pModel->Vertices.size(); i++)
 			{
 				Vector vec = ConvertToView(pModel->Vertices[i]);
 
 				glVertex3f(vec.x, vec.y, vec.z);
+				float maxVal = fmax(vec.x, fmax(vec.y, vec.z));
+				glColor3f(vec.x / maxVal, vec.y / maxVal, vec.z / maxVal);
+
 			}
 
 			glEnd();
