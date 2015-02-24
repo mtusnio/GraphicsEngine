@@ -8,31 +8,45 @@
 #include "../math/Vector.h"
 #include "VertexBufferObject.h"
 
+
+
 struct Model
 {
-	Model()
+	struct Mesh
 	{
-		Material = nullptr;
-		VBO = nullptr;
-	}
+		Mesh()
+		{
+			Material = nullptr;
+			VBO = nullptr;
+		}
+
+		~Mesh()
+		{
+			if (Material)
+				delete Material;
+
+			if (VBO)
+				delete VBO;
+		}
+		Material * Material;
+		VertexBufferObject * VBO;
+
+		std::vector<Vector> Vertices;
+		std::vector<Vector> UVs;
+		std::vector<Vector> Normals;
+
+	};
 
 	~Model()
 	{
-		if (Material)
-			delete Material;
-
-		if (VBO)
-			delete VBO;
+		for (Mesh * mesh : Meshes)
+			delete mesh;
 	}
-
-	Material * Material;
-	VertexBufferObject * VBO;
-
-	std::vector<Vector> Vertices;
-	std::vector<Vector> UVs;
-	std::vector<Vector> Normals;
-
+	std::vector<Mesh*> Meshes;
 };
+
+
+
 
 
 #endif

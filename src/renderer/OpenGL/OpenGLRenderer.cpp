@@ -64,27 +64,35 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 
 		_ASSERT(pModel != nullptr);
 
-		if (pModel->VBO)
+		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
-			// Render using VBO
-		}
-		else
-		{
-			// Basic rendering using glBegin/glEnd for now
-			glBegin(GL_TRIANGLES);
+			_ASSERT(mesh != nullptr);
 
-			for (unsigned int i = 0; i < pModel->Vertices.size(); i++)
+			if (mesh->VBO)
 			{
-				Vector vec = ConvertToView(pModel->Vertices[i]);
-
-				glVertex3f(vec.x, vec.y, vec.z);
-				float maxVal = fmax(vec.x, fmax(vec.y, vec.z));
-				glColor3f(vec.x / maxVal, vec.y / maxVal, vec.z / maxVal);
-
+				// Render using VBO
 			}
+			else
+			{
+				
+				// Basic rendering using glBegin/glEnd for now
+				glBegin(GL_TRIANGLES);
 
-			glEnd();
+				for (unsigned int i = 0; i < mesh->Vertices.size(); i++)
+				{
+					Vector vec = ConvertToView(mesh->Vertices[i]);
+
+					glVertex3f(vec.x, vec.y, vec.z);
+					float maxVal = fmax(vec.x, fmax(vec.y, vec.z));
+					glColor3f(vec.x / maxVal, vec.y / maxVal, vec.z / maxVal);
+					
+
+				}
+
+				glEnd();
+			}
 		}
+		
 
 		glPopMatrix();
 		

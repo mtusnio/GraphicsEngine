@@ -21,17 +21,35 @@ Model * ModelManager::PerformCache(const std::string & path)
 
 	for (size_t j = 0; j < shapes.size(); j++)
 	{
+
 		const tinyobj::mesh_t & mesh = shapes[j].mesh;
 
-		if (mesh.positions.size() % 3 != 0)
+		_ASSERT(mesh.positions.size() % 3 == 0);
+		_ASSERT(mesh.texcoords.size() % 2 == 0);
+		_ASSERT(mesh.positions.size() / 3 == mesh.texcoords.size() / 2);
+		if (mesh.positions.size() % 3 != 0 || mesh.texcoords.size() % 2 != 0)
 		{
-			m_Game.Log("Error at mesh " + std::to_string(j) + " . Size: " + std::to_string(mesh.positions.size()) );
+			m_Game.Log("Error at shape " + shapes[j].name);
 			continue;
 		}
 
-		for (int i : mesh.indices)
+		if (mesh.positions.size() / 3 != mesh.texcoords.size() / 2)
 		{
-			model->Vertices.push_back(Vector(mesh.positions[i * 3], mesh.positions[i * 3 + 1], mesh.positions[i * 3+ 2]));
+			m_Game.Log("Shape " + shapes[j].name + " has a mismatch between tex coords and vertices");
+			continue;
+		}
+
+		Model::Mesh * pModelMesh = new Model::Mesh();
+		model->Meshes.push_back(pModelMesh);
+		for (int indice : mesh.indices)
+		{
+			pModelMesh->Vertices.push_back(Vector(mesh.positions[indice * 3], mesh.positions[indice * 3 + 1], mesh.positions[indice * 3 + 2]));
+
+			if (mesh.normals.size() > 0)
+				pModelMesh->Normals.push_back(Vector(mesh.normals[indice * 3], mesh.normals[indice * 3 + 1], mesh.normals[indice * 3 + 2]));
+
+			if (mesh.texcoords.size() > 0)
+				pModelMesh->UVs.push_back(Vector(mesh.texcoords[indice * 2], mesh.texcoords[indice * 2 + 1], 0.0f));
 		}
 
 		
