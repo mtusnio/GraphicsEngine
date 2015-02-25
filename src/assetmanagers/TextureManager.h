@@ -4,7 +4,7 @@
 #include "AssetManager.h"
 #include "../renderer/Material.h"
 
-class TextureManager : AssetManager<Texture>
+class TextureManager : public AssetManager<Texture>
 {
 public:
 	TextureManager(IGame & game) : AssetManager<Texture>(game) { };
