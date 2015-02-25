@@ -23,10 +23,10 @@ struct Material
 
 	int IlluminationModel;
 
-	std::shared_ptr<Texture> AmbientTex;
-	std::shared_ptr<Texture> DiffuseTex;
-	std::shared_ptr<Texture> SpecularTex;
-	std::shared_ptr<Texture> NormalTex;
+	std::shared_ptr<const Texture> AmbientTex;
+	std::shared_ptr<const Texture> DiffuseTex;
+	std::shared_ptr<const Texture> SpecularTex;
+	std::shared_ptr<const Texture> NormalTex;
 	std::map<std::string, std::string> Parameters;
 
 };
