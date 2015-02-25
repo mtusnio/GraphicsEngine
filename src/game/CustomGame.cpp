@@ -23,7 +23,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	AddScene(scene);
 
-	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/cube.obj");
+	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sponza.obj");
 
 	_ASSERT(ptr.get() != nullptr);
 
@@ -31,7 +31,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	entity->SetModel(ptr);
 	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
-	entity->SetRotation(Angle(0, 0, 45));
+	entity->SetRotation(Angle(90, 0, 0));
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

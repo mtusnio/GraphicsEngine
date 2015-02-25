@@ -5,10 +5,7 @@
 #include <string>
 #include <map>
 
-struct Texture
-{
-
-};
+#include "Texture.h"
 
 struct Material
 {
