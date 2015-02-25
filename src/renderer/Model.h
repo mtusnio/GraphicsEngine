@@ -2,6 +2,7 @@
 #define H_MODEL
 
 #include <vector>
+#include <memory>
 
 #include "Material.h"
 
@@ -16,17 +17,18 @@ struct Model
 	{
 		Mesh()
 		{
-			Material = nullptr;
 			VBO = nullptr;
+			Material = nullptr;
 		}
 
 		~Mesh()
 		{
-			if (Material)
-				delete Material;
 
 			if (VBO)
 				delete VBO;
+
+			if (Material)
+				delete Material;
 		}
 		Material * Material;
 		VertexBufferObject * VBO;
