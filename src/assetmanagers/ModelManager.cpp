@@ -8,7 +8,7 @@ Model * ModelManager::PerformCache(const std::string & path) const
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
 
-	std::string error = tinyobj::LoadObj(shapes, materials, path.c_str());
+	std::string error = tinyobj::LoadObj(shapes, materials, path.c_str(), "materials/");
 
 	_ASSERT(error == "");
 	_ASSERT(shapes.size() != 0);
