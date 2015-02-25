@@ -1,4 +1,8 @@
 #include "ModelManager.h"
+
+#include <iterator>
+#include <algorithm>
+
 #include "../tinyobjloader/tiny_obj_loader.h"
 #include "../renderer/OpenGL/OpenGLVBO.h"
 #include "../game/IGame.h"
@@ -52,6 +56,28 @@ Model * ModelManager::PerformCache(const std::string & path) const
 				pModelMesh->UVs.push_back(Vector(mesh.texcoords[indice * 2], mesh.texcoords[indice * 2 + 1], 0.0f));
 		}
 
+	
+		if (mesh.material_ids.size() > 0)
+		{
+			tinyobj::material_t tinyMat = materials[mesh.material_ids[0]];
+			
+
+			Material * material = new Material();
+			pModelMesh->Material = material;
+			std::copy(std::begin(tinyMat.ambient), std::end(tinyMat.ambient), std::begin(material->Ambient));
+			std::copy(std::begin(tinyMat.diffuse), std::end(tinyMat.diffuse), std::begin(material->Diffuse));
+			std::copy(std::begin(tinyMat.specular), std::end(tinyMat.specular), std::begin(material->Specular));
+			std::copy(std::begin(tinyMat.transmittance), std::end(tinyMat.transmittance), std::begin(material->Transmittance));
+			std::copy(std::begin(tinyMat.emission), std::end(tinyMat.emission), std::begin(material->Emission));
+			material->Shininess = tinyMat.shininess;
+			material->IndexOfRefraction = tinyMat.ior;
+			material->Opaque = tinyMat.dissolve;
+
+			AssetManager<Texture> & manager = m_Game.GetTextureManager();
+
+			material->AmbientTex = manager.Cache("textures/" + tinyMat.ambient_texname);
+			material->DiffuseTex = manager.Cache("textures/" + tinyMat.diffuse_texname);
+		}
 		
 	}
 	
