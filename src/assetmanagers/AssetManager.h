@@ -28,7 +28,7 @@ protected:
 private:
 	// Derived classes should load the data into an object here and return it
 	// for it to be added to the map by the AssetManager
-	virtual T * PerformCache(const std::string & path) = 0;
+	virtual T * PerformCache(const std::string & path) const = 0;
 
 
 	// Maps our paths to loaded assets.

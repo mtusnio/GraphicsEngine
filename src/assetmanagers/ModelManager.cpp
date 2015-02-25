@@ -3,7 +3,7 @@
 #include "../renderer/OpenGL/OpenGLVBO.h"
 #include "../game/IGame.h"
 
-Model * ModelManager::PerformCache(const std::string & path)
+Model * ModelManager::PerformCache(const std::string & path) const
 {
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
