@@ -77,6 +77,9 @@ Model * ModelManager::PerformCache(const std::string & path) const
 
 			material->AmbientTex = manager.Cache("textures/" + tinyMat.ambient_texname);
 			material->DiffuseTex = manager.Cache("textures/" + tinyMat.diffuse_texname);
+			material->SpecularTex = manager.Cache("textures/" + tinyMat.specular_texname);
+			material->NormalTex = manager.Cache("textures/" + tinyMat.normal_texname);
+			material->Parameters = std::move(tinyMat.unknown_parameter);
 		}
 		
 	}
