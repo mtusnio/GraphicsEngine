@@ -2,37 +2,53 @@
 #define H_MODEL
 
 #include <vector>
+#include <memory>
 
 #include "Material.h"
 
 #include "../math/Vector.h"
 #include "VertexBufferObject.h"
 
+
+
 struct Model
 {
-	Model()
+	struct Mesh
 	{
-		Material = nullptr;
-		VBO = nullptr;
-	}
+		Mesh()
+		{
+			VBO = nullptr;
+			Material = nullptr;
+		}
+
+		~Mesh()
+		{
+
+			if (VBO)
+				delete VBO;
+
+			if (Material)
+				delete Material;
+		}
+		Material * Material;
+		VertexBufferObject * VBO;
+
+		std::vector<Vector> Vertices;
+		std::vector<Vector> UVs;
+		std::vector<Vector> Normals;
+
+	};
 
 	~Model()
 	{
-		if (Material)
-			delete Material;
-
-		if (VBO)
-			delete VBO;
+		for (Mesh * mesh : Meshes)
+			delete mesh;
 	}
-
-	Material * Material;
-	VertexBufferObject * VBO;
-
-	std::vector<Vector> Vertices;
-	std::vector<Vector> UVs;
-	std::vector<Vector> Normals;
-
+	std::vector<Mesh*> Meshes;
 };
+
+
+
 
 
 #endif

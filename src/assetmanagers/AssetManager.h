@@ -28,7 +28,7 @@ protected:
 private:
 	// Derived classes should load the data into an object here and return it
 	// for it to be added to the map by the AssetManager
-	virtual T * PerformCache(const std::string & path) = 0;
+	virtual T * PerformCache(const std::string & path) const = 0;
 
 
 	// Maps our paths to loaded assets.
@@ -53,13 +53,12 @@ AssetManager<T>::~AssetManager()
 template<typename T>
 std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 {
-	m_Game.Log("Caching attempt: " + path);
-
 	std::shared_ptr<const T> ptr = GetAsset(path);
 
 	if (ptr.get() != nullptr)
 		return ptr;
 
+	m_Game.Log("Caching attempt: " + path);
 	T * asset = PerformCache(path);
 
 

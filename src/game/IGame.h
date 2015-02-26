@@ -9,6 +9,7 @@ struct GLFWwindow;
 
 struct Model;
 struct Time;
+struct Texture;
 
 class IGame
 {
@@ -30,6 +31,7 @@ public:
 	virtual const std::vector<IScene*> & GetScenes() const = 0;
 
 	virtual AssetManager<Model> & GetModelManager() = 0;
+	virtual AssetManager<Texture> & GetTextureManager() = 0;
 
 	// Returns a structure containing all relevant time information for this frame
 	virtual const Time & GetTime() const = 0;

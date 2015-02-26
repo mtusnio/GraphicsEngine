@@ -9,7 +9,7 @@ class ModelManager : public AssetManager<Model>
 public:
 	ModelManager(IGame & game) : AssetManager<Model>(game) { }
 private:
-	virtual Model * PerformCache(const std::string & path);
+	virtual Model * PerformCache(const std::string & path) const;
 };
 
 #endif

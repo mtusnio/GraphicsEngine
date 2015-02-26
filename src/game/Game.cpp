@@ -10,7 +10,8 @@
 #include "../scene/IScene.h"
 
 Game::Game() : 
-m_ModelManager(*this)
+m_ModelManager(*this),
+m_TextureManager(*this)
 {
 	m_Window = nullptr;
 

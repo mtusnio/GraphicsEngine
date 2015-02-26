@@ -1,7 +1,9 @@
 #include "CustomGame.h"
-#include "../scene/Scene.h"
 
 #include <GLFW\glfw3.h>
+#include <cmath>
+
+#include "../scene/Scene.h"
 
 CustomGame::CustomGame()
 {
@@ -23,7 +25,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	AddScene(scene);
 
-	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/cube.obj");
+	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sponza.obj");
 
 	_ASSERT(ptr.get() != nullptr);
 
@@ -31,7 +33,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	entity->SetModel(ptr);
 	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
-	entity->SetRotation(Angle(0, 0, 45));
+	entity->SetRotation(Angle(90, 0, 0));
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -54,6 +56,8 @@ void CustomGame::HandleInput()
 	float delta = GetTime().Delta;
 	m_RenderAngle.y += delta * ROT_SPEED * (float)-yDiff;
 	m_RenderAngle.z += delta * ROT_SPEED * (float)-xDiff;
+
+	m_RenderAngle.y = fmax(-89.0f, fmin(89.0f, m_RenderAngle.y));
 
 	Vector dir = m_RenderAngle.ToDirection();
 	// Handle keys
