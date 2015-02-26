@@ -6,9 +6,14 @@
 
 Texture * TextureManager::PerformCache(const std::string & path) const
 {
-	Texture * tex = new OpenGLTexture();
+	OpenGLTexture * tex = new OpenGLTexture();
 
 	tex->Load(path);
 
+	if (tex->TextureID == 0)
+	{
+		delete tex;
+		return nullptr;
+	}
 	return tex;
 }
