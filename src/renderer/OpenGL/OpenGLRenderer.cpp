@@ -11,6 +11,8 @@
 #include "../../math/Vector.h"
 #include "../../math/Angle.h"
 
+#include "OpenGLTexture.h"
+
 OpenGLRenderer::OpenGLRenderer(GLFWwindow & window)
 {
 	m_Window = &window;
@@ -74,19 +76,26 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 			}
 			else
 			{
-				
+				if (mesh->Material->DiffuseTex)
+				{
+					glEnable(GL_TEXTURE_2D);
+					const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mesh->Material->DiffuseTex.get());
+
+					_ASSERT(tex->TextureID != 0);
+					glBindTexture(GL_TEXTURE_2D, tex->TextureID);
+				}
+				else
+					glDisable(GL_TEXTURE_2D);
+
 				// Basic rendering using glBegin/glEnd for now
 				glBegin(GL_TRIANGLES);
 
 				for (unsigned int i = 0; i < mesh->Vertices.size(); i++)
 				{
 					Vector vec = ConvertToView(mesh->Vertices[i]);
-
+					Vector uv = mesh->UVs[i];
+					glTexCoord2f(uv.x, uv.y);
 					glVertex3f(vec.x, vec.y, vec.z);
-					float maxVal = fmax(vec.x, fmax(vec.y, vec.z));
-					glColor3f(vec.x / maxVal, vec.y / maxVal, vec.z / maxVal);
-					
-
 				}
 
 				glEnd();
