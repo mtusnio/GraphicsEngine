@@ -53,7 +53,7 @@ Model * ModelManager::PerformCache(const std::string & path) const
 				pModelMesh->Normals.push_back(Vector(mesh.normals[indice * 3], mesh.normals[indice * 3 + 1], mesh.normals[indice * 3 + 2]));
 
 			if (mesh.texcoords.size() > 0)
-				pModelMesh->UVs.push_back(Vector(mesh.texcoords[indice * 2], mesh.texcoords[indice * 2 + 1], 0.0f));
+				pModelMesh->UVs.push_back(Model::Mesh::UV(mesh.texcoords[indice * 2], mesh.texcoords[indice * 2 + 1]));
 		}
 
 	

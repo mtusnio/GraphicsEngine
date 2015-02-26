@@ -15,6 +15,8 @@ struct Model
 {
 	struct Mesh
 	{
+		typedef std::pair<float, float> UV;
+
 		Mesh()
 		{
 			VBO = nullptr;
@@ -30,11 +32,12 @@ struct Model
 			if (Material)
 				delete Material;
 		}
+
 		Material * Material;
 		VertexBufferObject * VBO;
 
 		std::vector<Vector> Vertices;
-		std::vector<Vector> UVs;
+		std::vector<UV> UVs;
 		std::vector<Vector> Normals;
 
 	};

@@ -90,11 +90,19 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 				// Basic rendering using glBegin/glEnd for now
 				glBegin(GL_TRIANGLES);
 
+				bool hasUVs = !mesh->UVs.empty();
+				bool hasNormals = !mesh->Normals.empty();
+
 				for (unsigned int i = 0; i < mesh->Vertices.size(); i++)
 				{
 					Vector vec = ConvertToView(mesh->Vertices[i]);
-					Vector uv = mesh->UVs[i];
-					glTexCoord2f(uv.x, uv.y);
+
+					if (hasUVs)
+						glTexCoord2f(mesh->UVs[i].first, mesh->UVs[i].second);
+
+					if (hasNormals)
+						glNormal3f(mesh->Normals[i].x, mesh->Normals[i].y, mesh->Normals[i].z);
+
 					glVertex3f(vec.x, vec.y, vec.z);
 				}
 
