@@ -101,7 +101,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 		{
 			range.second = i;
 			if (materialId != -1)
-				pModelMesh->Materials[range] = LoadMaterial(materials[materialId]);
+				pModelMesh->Materials[range] = LoadMaterial(materials[prev]);
 			else
 				pModelMesh->Materials[range] = nullptr;
 
