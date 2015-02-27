@@ -93,14 +93,14 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	int indiceCount = pModelMesh->Indices.size();
 	Model::Mesh::Range range = { 0, indiceCount };
 
-	for (size_t i = 0; i < pModelMesh->Indices.size(); i++)
+	for (size_t i = 0; i < indiceCount; i++)
 	{
 		int indice = pModelMesh->Indices[i];
-		int materialId = mesh.material_ids[indice/3];
+		int materialId = mesh.material_ids[i/3];
 		if (prev != materialId)
 		{
 			range.second = i;
-			if (materialId != -1)
+			if (prev != -1)
 				pModelMesh->Materials[range] = LoadMaterial(materials[prev]);
 			else
 				pModelMesh->Materials[range] = nullptr;
