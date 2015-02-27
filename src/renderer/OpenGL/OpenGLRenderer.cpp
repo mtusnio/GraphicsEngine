@@ -33,7 +33,7 @@ void OpenGLRenderer::PrepareView() const
 	glShadeModel(GL_SMOOTH);
 
 
-	InitializeProjectionMatrix(90.0f, aspect, 2.0f, 1000.0f);
+	InitializeProjectionMatrix(90.0f, aspect, 0.5f, 1000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
