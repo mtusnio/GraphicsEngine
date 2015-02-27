@@ -90,7 +90,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 #endif
 
 	int prev = mesh.material_ids[0];
-	int indiceCount = pModelMesh->Indices.size();
+	size_t indiceCount = pModelMesh->Indices.size();
 	Model::Mesh::Range range = { 0, indiceCount };
 
 	for (size_t i = 0; i < indiceCount; i++)
