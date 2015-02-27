@@ -28,8 +28,10 @@ void OpenGLRenderer::PrepareView() const
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 	glShadeModel(GL_SMOOTH);
+
 
 	InitializeProjectionMatrix(90.0f, aspect, 2.0f, 1000.0f);
 
