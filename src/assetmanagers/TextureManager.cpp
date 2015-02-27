@@ -3,6 +3,7 @@
 #include <string>
 
 #include "../renderer/OpenGL/OpenGLTexture.h"
+#include "../game/IGame.h"
 
 Texture * TextureManager::PerformCache(const std::string & path) const
 {

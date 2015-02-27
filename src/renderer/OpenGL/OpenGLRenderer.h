@@ -2,11 +2,9 @@
 #define H_OPENGLRENDERER
 
 #include "../IRenderer.h"
+#include "../Model.h"
 
 struct GLFWwindow;
-
-struct Vector;
-struct Angle;
 
 class OpenGLRenderer : public IRenderer
 {
@@ -16,6 +14,9 @@ public:
 	virtual void RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const;
 
 private:
+	void DrawMesh(const Model::Mesh & mesh) const;
+	void DrawMeshVBOs(const Model::Mesh & mesh) const;
+
 	void PrepareView() const;
 	void InitializeProjectionMatrix(float fov, float aspect, float near, float far) const;
 

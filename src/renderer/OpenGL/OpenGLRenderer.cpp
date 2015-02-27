@@ -28,9 +28,12 @@ void OpenGLRenderer::PrepareView() const
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
+	glShadeModel(GL_SMOOTH);
 
-	InitializeProjectionMatrix(90.0f, aspect, 2.0f, 1000.0f);
+
+	InitializeProjectionMatrix(90.0f, aspect, 0.5f, 1000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -70,35 +73,14 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		{
 			_ASSERT(mesh != nullptr);
 
-			if (mesh->VBO)
+			if (mesh->VBOs.size() > 0)
 			{
 				// Render using VBO
+				DrawMeshVBOs(*mesh);
 			}
 			else
 			{
-				if (mesh->Material->DiffuseTex)
-				{
-					glEnable(GL_TEXTURE_2D);
-					const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mesh->Material->DiffuseTex.get());
-
-					_ASSERT(tex->TextureID != 0);
-					glBindTexture(GL_TEXTURE_2D, tex->TextureID);
-				}
-				else
-					glDisable(GL_TEXTURE_2D);
-
-				// Basic rendering using glBegin/glEnd for now
-				glBegin(GL_TRIANGLES);
-
-				for (unsigned int i = 0; i < mesh->Vertices.size(); i++)
-				{
-					Vector vec = ConvertToView(mesh->Vertices[i]);
-					Vector uv = mesh->UVs[i];
-					glTexCoord2f(uv.x, uv.y);
-					glVertex3f(vec.x, vec.y, vec.z);
-				}
-
-				glEnd();
+				DrawMesh(*mesh);
 			}
 		}
 		
@@ -107,6 +89,75 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		
 
 	}
+}
+
+void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
+{
+	// Basic rendering using glBegin/glEnd for now
+	for (auto matPair : mesh.Materials)
+	{
+		auto range = matPair.first;
+		const Material * mat = matPair.second;
+		if (mat)
+		{
+			const OpenGLTexture * diffuse = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
+
+			if (diffuse)
+			{
+				_ASSERT(diffuse->TextureID != 0);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, diffuse->TextureID);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			}
+			else
+				glDisable(GL_TEXTURE_2D);
+
+
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+		}
+
+		
+
+		bool hasUVs = !mesh.UVs.empty();
+		bool hasNormals = !mesh.Normals.empty();
+
+		glBegin(GL_TRIANGLES);
+		for (unsigned int i = range.first; i < range.second; i++)
+		{
+			int indice = mesh.Indices[i];
+
+		
+			if (hasUVs)
+				glTexCoord2f(mesh.UVs[indice].first, mesh.UVs[indice].second);
+
+			if (hasNormals)
+			{
+				Vector normal = ConvertToView(mesh.Normals[indice]);
+				glNormal3f(normal.x, normal.y, normal.z);
+			}
+				
+			Vector vec = ConvertToView(mesh.Vertices[indice]);
+			//float max = fmax(vec.x, fmax(vec.z, vec.y));
+			//glColor3f(vec.x / max, vec.y / max, vec.z / max);
+			if (mat)
+				glColor3f(mat->Diffuse[0], mat->Diffuse[1], mat->Diffuse[2]);
+			glVertex3f(vec.x, vec.y, vec.z);
+		}
+		glEnd();
+	
+	}
+
+}
+
+void OpenGLRenderer::DrawMeshVBOs(const Model::Mesh & mesh) const
+{
+
 }
 
 void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far) const
