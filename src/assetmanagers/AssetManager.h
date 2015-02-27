@@ -64,11 +64,11 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 
 	if (!asset)
 	{
-		m_Game.Log("Asset doesn't exist");
+		m_Game.Log("Asset doesn't exist: " + path);
 		return nullptr;
 	}
 
-	m_Game.Log("Cached");
+	m_Game.Log("Cached: " + path);
 	ptr = std::shared_ptr<const T>(asset);
 	m_Assets[path] = ptr;
 	return ptr;

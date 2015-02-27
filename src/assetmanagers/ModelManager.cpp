@@ -65,15 +65,15 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	Model::Mesh * pModelMesh = new Model::Mesh();
 	
 #ifndef FAST_LOAD
-	for (int i = 0; i < mesh.positions.size(); i += 3)
+	for (size_t i = 0; i < mesh.positions.size(); i += 3)
 	{
 		pModelMesh->Vertices.push_back(Vector(mesh.positions[i], mesh.positions[i + 1], mesh.positions[i + 2]));
 	}
-	for (int i = 0; i < mesh.normals.size(); i += 3)
+	for (size_t i = 0; i < mesh.normals.size(); i += 3)
 	{
 		pModelMesh->Normals.push_back(Vector(mesh.normals[i], mesh.normals[i + 1], mesh.normals[i + 2]));
 	}
-	for (int i = 0; i < mesh.texcoords.size(); i += 2)
+	for (size_t i = 0; i < mesh.texcoords.size(); i += 2)
 	{
 		pModelMesh->UVs.push_back({mesh.texcoords[i], mesh.texcoords[i+1]});
 	}
@@ -113,7 +113,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 
 	if (range.first != range.second)
 	{
-		int materialId = mesh.material_ids[(indiceCount-1) / 3];
+		int materialId = mesh.material_ids[range.first/3];
 		if (materialId != -1)
 			pModelMesh->Materials[range] = LoadMaterial(materials[materialId]);
 		else
