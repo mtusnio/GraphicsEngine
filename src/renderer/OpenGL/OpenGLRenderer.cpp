@@ -29,6 +29,7 @@ void OpenGLRenderer::PrepareView() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glShadeModel(GL_SMOOTH);
 
 	InitializeProjectionMatrix(90.0f, aspect, 2.0f, 1000.0f);
 
@@ -140,8 +141,10 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 			}
 				
 			Vector vec = ConvertToView(mesh.Vertices[indice]);
-			float max = fmax(vec.x, fmax(vec.z, vec.y));
-			glColor3f(vec.x / max, vec.y / max, vec.z / max);
+			//float max = fmax(vec.x, fmax(vec.z, vec.y));
+			//glColor3f(vec.x / max, vec.y / max, vec.z / max);
+			if (mat)
+				glColor3f(mat->Diffuse[0], mat->Diffuse[1], mat->Diffuse[2]);
 			glVertex3f(vec.x, vec.y, vec.z);
 		}
 		glEnd();
