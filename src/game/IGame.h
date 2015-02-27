@@ -14,6 +14,8 @@ struct Texture;
 class IGame
 {
 public:
+	virtual ~IGame() { };
+
 	// Used for game initializatio and deinitialization
 	virtual void Start(GLFWwindow & window) = 0;
 	virtual void End() = 0;
