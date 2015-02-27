@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <ctime>
 
 class IGame;
 
@@ -53,6 +54,8 @@ AssetManager<T>::~AssetManager()
 template<typename T>
 std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 {
+	clock_t start = clock();
+
 	std::shared_ptr<const T> ptr = GetAsset(path);
 
 	if (ptr.get() != nullptr)
@@ -68,7 +71,9 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 		return nullptr;
 	}
 
-	m_Game.Log("Cached: " + path);
+	clock_t end = clock();
+	float time = float(end - start) / CLOCKS_PER_SEC;
+	m_Game.Log("Cached (" + std::to_string(time) + "): " + path);
 	ptr = std::shared_ptr<const T>(asset);
 	m_Assets[path] = ptr;
 	return ptr;
