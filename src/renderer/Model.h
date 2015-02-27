@@ -9,37 +9,34 @@
 #include "../math/Vector.h"
 #include "VertexBufferObject.h"
 
-
-
 struct Model
 {
 	struct Mesh
 	{
 		typedef std::pair<float, float> UV;
-
-		Mesh()
-		{
-			VBO = nullptr;
-			Material = nullptr;
-		}
+		typedef std::pair<unsigned int, unsigned int> Range;
 
 		~Mesh()
 		{
+			for (VertexBufferObject * vbo : VBOs)
+			{
+				delete vbo;
+			}
 
-			if (VBO)
-				delete VBO;
-
-			if (Material)
-				delete Material;
+			for (auto mat : Materials)
+			{
+				delete mat.second;
+			}
 		}
-
-		Material * Material;
-		VertexBufferObject * VBO;
 
 		std::vector<Vector> Vertices;
 		std::vector<UV> UVs;
 		std::vector<Vector> Normals;
+		std::vector<unsigned int> Indices;
 
+		// Stores materials per indice
+		std::map<Range, Material*> Materials;
+		std::vector<VertexBufferObject*> VBOs;
 	};
 
 	~Model()

@@ -70,43 +70,14 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		{
 			_ASSERT(mesh != nullptr);
 
-			if (mesh->VBO)
+			if (mesh->VBOs.size() > 0)
 			{
 				// Render using VBO
+				DrawMeshVBOs(*mesh);
 			}
 			else
 			{
-				if (mesh->Material->DiffuseTex)
-				{
-					glEnable(GL_TEXTURE_2D);
-					const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mesh->Material->DiffuseTex.get());
-
-					_ASSERT(tex->TextureID != 0);
-					glBindTexture(GL_TEXTURE_2D, tex->TextureID);
-				}
-				else
-					glDisable(GL_TEXTURE_2D);
-
-				// Basic rendering using glBegin/glEnd for now
-				glBegin(GL_TRIANGLES);
-
-				bool hasUVs = !mesh->UVs.empty();
-				bool hasNormals = !mesh->Normals.empty();
-
-				for (unsigned int i = 0; i < mesh->Vertices.size(); i++)
-				{
-					Vector vec = ConvertToView(mesh->Vertices[i]);
-
-					if (hasUVs)
-						glTexCoord2f(mesh->UVs[i].first, mesh->UVs[i].second);
-
-					if (hasNormals)
-						glNormal3f(mesh->Normals[i].x, mesh->Normals[i].y, mesh->Normals[i].z);
-
-					glVertex3f(vec.x, vec.y, vec.z);
-				}
-
-				glEnd();
+				DrawMesh(*mesh);
 			}
 		}
 		
@@ -115,6 +86,69 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 		
 
 	}
+}
+
+void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
+{
+	// Basic rendering using glBegin/glEnd for now
+	for (auto matPair : mesh.Materials)
+	{
+		auto range = matPair.first;
+		const Material * mat = matPair.second;
+		if (mat)
+		{
+			const OpenGLTexture * diffuse = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
+
+			if (diffuse)
+			{
+				_ASSERT(diffuse->TextureID != 0);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, diffuse->TextureID);
+			}
+			else
+				glDisable(GL_TEXTURE_2D);
+
+
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+		}
+
+		
+
+		bool hasUVs = !mesh.UVs.empty();
+		bool hasNormals = !mesh.Normals.empty();
+
+		glBegin(GL_TRIANGLES);
+		for (unsigned int i = range.first; i < range.second; i++)
+		{
+			int indice = mesh.Indices[i];
+
+		
+			if (hasUVs)
+				glTexCoord2f(mesh.UVs[indice].first, mesh.UVs[indice].second);
+
+			if (hasNormals)
+			{
+				Vector normal = ConvertToView(mesh.Normals[indice]);
+				glNormal3f(normal.x, normal.y, normal.z);
+			}
+				
+			Vector vec = ConvertToView(mesh.Vertices[indice]);
+			float max = fmax(vec.x, fmax(vec.z, vec.y));
+			glColor3f(vec.x / max, vec.y / max, vec.z / max);
+			glVertex3f(vec.x, vec.y, vec.z);
+		}
+		glEnd();
+	
+	}
+
+}
+
+void OpenGLRenderer::DrawMeshVBOs(const Model::Mesh & mesh) const
+{
+
 }
 
 void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far) const
