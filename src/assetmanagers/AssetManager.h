@@ -87,6 +87,9 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 		return nullptr;
 	}
 
+	if (asset == nullptr)
+		return nullptr;
+
 	clock_t end = clock();
 	float time = float(end - start) / CLOCKS_PER_SEC;
 	m_Game.Log("Cached (" + std::to_string(time) + "): " + path);
