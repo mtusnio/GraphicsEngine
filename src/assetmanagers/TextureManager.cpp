@@ -1,6 +1,7 @@
 #include "TextureManager.h"
 
 #include <string>
+#include <SOIL.h>
 
 #include "../renderer/OpenGL/OpenGLTexture.h"
 #include "../game/IGame.h"
@@ -14,7 +15,7 @@ Texture * TextureManager::PerformCache(const std::string & path) const
 	if (tex->TextureID == 0)
 	{
 		delete tex;
-		return nullptr;
+		throw AssetError(std::string(SOIL_last_result()));
 	}
 	return tex;
 }
