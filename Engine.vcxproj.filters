@@ -98,6 +98,9 @@
     <ClCompile Include="src\renderer\OpenGL\OpenGLTexture.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\assetmanagers\ShaderManager.cpp">
+      <Filter>Source Files\assetmanagers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -171,6 +174,12 @@
     </ClInclude>
     <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h">
       <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\ShaderManager.h">
+      <Filter>Header Files\assetmanagers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Shader.h">
+      <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

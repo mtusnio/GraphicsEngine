@@ -13,6 +13,8 @@ template<typename T>
 class AssetManager
 {
 public:
+
+
 	AssetManager(IGame & game);
 	virtual ~AssetManager();
 
@@ -113,8 +115,6 @@ std::shared_ptr<const T> AssetManager<T>::GetAsset(const std::string & path)
 
 	return nullptr;
 }
-
-
 
 
 #endif
