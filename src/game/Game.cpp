@@ -37,7 +37,6 @@ void Game::Start(GLFWwindow & window)
 	m_Window = &window;
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
-	m_Renderer = new OpenGLRenderer(*this);
 
 	m_Time.GameTime = 0;
 
@@ -53,6 +52,8 @@ void Game::Start(GLFWwindow & window)
 		Log(error);
 		exit(EXIT_FAILURE);
 	}
+
+	m_Renderer = new OpenGLRenderer(*this);
 }
 
 void Game::End()

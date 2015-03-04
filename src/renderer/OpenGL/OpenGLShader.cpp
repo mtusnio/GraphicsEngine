@@ -44,8 +44,9 @@ std::string OpenGLShader::Load(const std::string & path)
 	shader << file.rdbuf();
 	
 	std::string shaderStr = shader.str();
+	const char * str = shaderStr.c_str();
 	int size = shaderStr.size();
-	glShaderSource(ShaderID, 1, (GLchar**)shaderStr.c_str(), &size);
+	glShaderSource(ShaderID, 1, &str, &size);
 
 	glCompileShader(ShaderID);
 
