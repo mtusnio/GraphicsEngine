@@ -10,6 +10,7 @@ struct GLFWwindow;
 struct Model;
 struct Time;
 struct Texture;
+struct Shader;
 
 class IGame
 {
@@ -34,6 +35,7 @@ public:
 
 	virtual AssetManager<Model> & GetModelManager() = 0;
 	virtual AssetManager<Texture> & GetTextureManager() = 0;
+	virtual AssetManager<Shader> & GetShaderManager() = 0;
 
 	// Returns a structure containing all relevant time information for this frame
 	virtual const Time & GetTime() const = 0;

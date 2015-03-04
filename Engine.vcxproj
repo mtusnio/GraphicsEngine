@@ -81,6 +81,7 @@
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLVBO.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\Model.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h" />
+    <ClInclude Include="src\renderer\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLVBO.h" />
     <ClInclude Include="src\renderer\Shader.h" />

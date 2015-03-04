@@ -7,6 +7,7 @@
 
 #include "../renderer/OpenGL/OpenGLRenderer.h"
 #include "../renderer/OpenGL/OpenGLTexture.h"
+#include "../renderer/OpenGL/OpenGLShader.h"
 
 #include "../scene/IScene.h"
 
@@ -15,6 +16,7 @@ Game::Game() :
 m_ModelManager(*this)
 {
 	m_TextureManager = new LoadablesManager<OpenGLTexture, Texture>(*this);
+	m_ShaderManager = new LoadablesManager<OpenGLShader, Shader>(*this);
 	m_Window = nullptr;
 
 }
@@ -23,6 +25,9 @@ Game::~Game()
 {
 	if (m_TextureManager)
 		delete m_TextureManager;
+
+	if (m_ShaderManager)
+		delete m_ShaderManager;
 
 	ClearContent();
 }

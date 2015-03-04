@@ -33,6 +33,7 @@ public:
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
 	virtual AssetManager<Texture> & GetTextureManager() { return *m_TextureManager; }
+	virtual AssetManager<Shader> & GetShaderManager() { return *m_ShaderManager; }
 
 	virtual const Time & GetTime() const { return m_Time; }
 
@@ -56,6 +57,7 @@ private:
 
 	ModelManager m_ModelManager;
 	AssetManager<Texture> * m_TextureManager;
+	AssetManager<Shader> * m_ShaderManager;
 
 	Time m_Time;
 };

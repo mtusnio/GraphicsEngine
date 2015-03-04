@@ -1,7 +1,10 @@
 #ifndef H_SHADER
 #define H_SHADER
 
-class Shader
+#include "Loadable.h"
+
+// Base class for all our shaders
+struct Shader : Loadable
 {
 
 };
