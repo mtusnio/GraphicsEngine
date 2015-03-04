@@ -104,6 +104,7 @@
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\Model.h" />
+    <ClInclude Include="src\renderer\OpenGL\OpenGLHeader.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h" />

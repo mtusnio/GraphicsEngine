@@ -1,8 +1,8 @@
 #include "OpenGLRenderer.h"
 
-#include <GLFW\glfw3.h>
 #include <cmath>
 
+#include "OpenGLHeader.h"
 
 #include "../Model.h"
 #include "../../scene/IScene.h"

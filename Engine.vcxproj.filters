@@ -181,5 +181,8 @@
     <ClInclude Include="src\renderer\OpenGL\OpenGLShader.h">
       <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLHeader.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 
 #include "../Texture.h"
 
-#include <glfw/glfw3.h>
+#include "OpenGLHeader.h"
 
 struct OpenGLTexture : public Texture
 {
