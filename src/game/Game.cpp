@@ -6,19 +6,24 @@
 #include <algorithm>
 
 #include "../renderer/OpenGL/OpenGLRenderer.h"
+#include "../renderer/OpenGL/OpenGLTexture.h"
 
 #include "../scene/IScene.h"
 
+
 Game::Game() : 
-m_ModelManager(*this),
-m_TextureManager(*this)
+m_ModelManager(*this)
 {
+	m_TextureManager = new LoadablesManager<OpenGLTexture, Texture>(*this);
 	m_Window = nullptr;
 
 }
 
 Game::~Game()
 {
+	if (m_TextureManager)
+		delete m_TextureManager;
+
 	ClearContent();
 }
 

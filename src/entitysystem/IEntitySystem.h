@@ -11,6 +11,8 @@ class IScene;
 class IEntitySystem
 {
 public:
+	virtual ~IEntitySystem() { };
+
 	// Returns parent scene of this entity system
 	virtual IScene * GetScene() const = 0;
 

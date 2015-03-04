@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <ctime>
+#include <stdexcept>
 
 class IGame;
 
@@ -12,6 +13,8 @@ template<typename T>
 class AssetManager
 {
 public:
+
+
 	AssetManager(IGame & game);
 	virtual ~AssetManager();
 
@@ -24,9 +27,21 @@ public:
 	std::shared_ptr<const T> GetAsset(const std::string & path);
 
 protected:
+	// Exception to throw in PerformCache with explanation of error
+	class AssetError : public std::runtime_error
+	{
+	public:
+		AssetError(const std::string & str) : std::runtime_error(str) {
+
+		}
+
+
+	};
+
 	IGame & m_Game;
 
 private:
+	
 	// Derived classes should load the data into an object here and return it
 	// for it to be added to the map by the AssetManager
 	virtual T * PerformCache(const std::string & path) const = 0;
@@ -62,14 +77,20 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 		return ptr;
 
 	m_Game.Log("Caching attempt: " + path);
-	T * asset = PerformCache(path);
 
-
-	if (!asset)
+	T * asset = nullptr;
+	try
 	{
-		m_Game.Log("Asset doesn't exist: " + path);
+		asset = PerformCache(path);
+	}
+	catch (AssetError & e)
+	{
+		m_Game.Log("Cache fail: " + std::string(e.what()));
 		return nullptr;
 	}
+
+	if (asset == nullptr)
+		return nullptr;
 
 	clock_t end = clock();
 	float time = float(end - start) / CLOCKS_PER_SEC;
@@ -94,8 +115,6 @@ std::shared_ptr<const T> AssetManager<T>::GetAsset(const std::string & path)
 
 	return nullptr;
 }
-
-
 
 
 #endif

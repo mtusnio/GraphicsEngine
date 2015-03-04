@@ -10,7 +10,7 @@ struct OpenGLTexture : public Texture
 	OpenGLTexture();
 	virtual ~OpenGLTexture();
 
-	virtual void Load(const std::string & path);
+	virtual std::string Load(const std::string & path);
 
 	GLuint TextureID;
 };

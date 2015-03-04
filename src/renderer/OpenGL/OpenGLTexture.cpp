@@ -12,7 +12,7 @@ OpenGLTexture::~OpenGLTexture()
 		glDeleteTextures(1, &TextureID);
 }
 
-void OpenGLTexture::Load(const std::string & path)
+std::string OpenGLTexture::Load(const std::string & path)
 {
 	_ASSERT(TextureID == 0);
 
@@ -23,6 +23,11 @@ void OpenGLTexture::Load(const std::string & path)
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
 		);
+
+	if (TextureID == 0)
+		return SOIL_last_result();
+
+	return "";
 
 	/*glBindTexture(GL_TEXTURE_2D, TextureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

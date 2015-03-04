@@ -74,7 +74,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\assetmanagers\TextureManager.cpp" />
     <ClCompile Include="src\assetmanagers\ModelManager.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
@@ -89,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assetmanagers\AssetManager.h" />
-    <ClInclude Include="src\assetmanagers\TextureManager.h" />
+    <ClInclude Include="src\assetmanagers\LoadablesManager.h" />
     <ClInclude Include="src\assetmanagers\ModelManager.h" />
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\EntitySystem.h" />
@@ -107,6 +106,8 @@
     <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGLVBO.h" />
+    <ClInclude Include="src\renderer\Shader.h" />
+    <ClInclude Include="src\renderer\Loadable.h" />
     <ClInclude Include="src\renderer\Texture.h" />
     <ClInclude Include="src\renderer\VertexBufferObject.h" />
     <ClInclude Include="src\scene\IScene.h" />

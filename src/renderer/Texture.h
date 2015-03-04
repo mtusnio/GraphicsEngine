@@ -1,11 +1,14 @@
 #ifndef H_TEXTURE
 #define H_TEXTURE
 
-#include <string>
 
-struct Texture
+#include "Loadable.h"
+
+// Token class for now to expand with texture info common for both
+// DX & OpenGL
+struct Texture : public Loadable
 {
-	virtual void Load(const std::string & path) = 0;
+
 };
 
 #endif

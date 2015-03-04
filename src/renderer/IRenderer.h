@@ -9,6 +9,8 @@ struct Angle;
 class IRenderer
 {
 public:
+	virtual ~IRenderer() { };
+
 	virtual void RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const = 0;
 
 };
