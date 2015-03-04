@@ -4,12 +4,12 @@
 #include "../IRenderer.h"
 #include "../Model.h"
 
-struct GLFWwindow;
+class IGame;
 
 class OpenGLRenderer : public IRenderer
 {
 public:
-	OpenGLRenderer(GLFWwindow & window);
+	OpenGLRenderer(IGame & game);
 
 	virtual void RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const;
 
@@ -29,7 +29,7 @@ private:
 	Vector ConvertToView(const Vector & vec) const;
 	Angle ConvertToView(const Angle & ang) const;
 
-	GLFWwindow * m_Window;
+	IGame * m_Game;
 };
 
 

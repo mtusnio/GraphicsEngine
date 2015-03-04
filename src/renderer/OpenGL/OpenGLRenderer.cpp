@@ -13,16 +13,16 @@
 
 #include "OpenGLTexture.h"
 
-OpenGLRenderer::OpenGLRenderer(GLFWwindow & window)
+OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
-	m_Window = &window;
+	m_Game = &game;
 }
 
 void OpenGLRenderer::PrepareView() const
 {
 	int width, height;
 
-	glfwGetFramebufferSize(m_Window, &width, &height);
+	glfwGetFramebufferSize(m_Game->GetWindow(), &width, &height);
 	float aspect = (float)width / (float)height;
 
 	glViewport(0, 0, width, height);
@@ -48,7 +48,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 	RenderObjects(cameraPosition, cameraRotation, scene);
 
-	glfwSwapBuffers(m_Window);
+	glfwSwapBuffers(m_Game->GetWindow());
 }
 
 void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & cameraRotation, const IScene & scene) const
