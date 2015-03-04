@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include <GLFW\glfw3.h>
+#include "../renderer/OpenGL/OpenGLHeader.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
@@ -45,6 +45,14 @@ void Game::Start(GLFWwindow & window)
 	m_Time.Delta = 0.1f;
 	glfwSetTime(0.0f);
 
+	glewExperimental = GL_TRUE;
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		std::string error = std::string((const char*)glewGetErrorString(err));
+		Log(error);
+		exit(EXIT_FAILURE);
+	}
 }
 
 void Game::End()

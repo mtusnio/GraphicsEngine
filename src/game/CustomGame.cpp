@@ -1,6 +1,6 @@
 #include "CustomGame.h"
 
-#include <GLFW\glfw3.h>
+#include "../renderer/OpenGL/OpenGLHeader.h"
 #include <cmath>
 
 #include "../scene/Scene.h"
