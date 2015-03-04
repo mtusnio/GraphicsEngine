@@ -24,7 +24,7 @@ public:
 
 	// Acts like the cache function, but doesn't cache, only checks
 	// for existings files
-	std::shared_ptr<const T> GetAsset(const std::string & path);
+	std::shared_ptr<const T> GetAsset(const std::string & path) const;
 
 protected:
 	// Exception to throw in PerformCache with explanation of error
@@ -101,7 +101,7 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 }
 
 template<typename T>
-std::shared_ptr<const T> AssetManager<T>::GetAsset(const std::string & path)
+std::shared_ptr<const T> AssetManager<T>::GetAsset(const std::string & path) const
 {
 	auto it = m_Assets.find(path);
 	if (it != m_Assets.end())
