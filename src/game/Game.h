@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "../assetmanagers/ModelManager.h"
-#include "../assetmanagers/TextureManager.h"
+#include "../assetmanagers/LoadablesManager.h"
 #include "Time.h"
 
 class IRenderer;
@@ -32,7 +32,7 @@ public:
 	virtual const std::vector<IScene*> & GetScenes() const;
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
-	virtual AssetManager<Texture> & GetTextureManager() { return m_TextureManager; }
+	virtual AssetManager<Texture> & GetTextureManager() { return *m_TextureManager; }
 
 	virtual const Time & GetTime() const { return m_Time; }
 
@@ -55,7 +55,7 @@ private:
 	std::vector<IScene*> m_Scenes;
 
 	ModelManager m_ModelManager;
-	TextureManager m_TextureManager;
+	AssetManager<Texture> * m_TextureManager;
 
 	Time m_Time;
 };

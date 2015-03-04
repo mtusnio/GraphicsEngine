@@ -92,14 +92,8 @@
     <ClCompile Include="src\game\CustomGame.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\assetmanagers\TextureManager.cpp">
-      <Filter>Source Files\assetmanagers</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderer\OpenGL\OpenGLTexture.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\assetmanagers\ShaderManager.cpp">
-      <Filter>Source Files\assetmanagers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,20 +160,20 @@
     <ClInclude Include="src\math\consts.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="src\assetmanagers\TextureManager.h">
+    <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Shader.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Loadable.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\assetmanagers\LoadablesManager.h">
       <Filter>Header Files\assetmanagers</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\Texture.h">
       <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h">
-      <Filter>Header Files\renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\assetmanagers\ShaderManager.h">
-      <Filter>Header Files\assetmanagers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\Shader.h">
-      <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
