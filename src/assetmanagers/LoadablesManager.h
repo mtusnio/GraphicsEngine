@@ -4,6 +4,8 @@
 #include "AssetManager.h"
 #include "../renderer/Material.h"
 
+#include "../renderer/Loadable.h"
+
 template<class T, class Derived>
 class LoadablesManager : public AssetManager<Derived>
 {
