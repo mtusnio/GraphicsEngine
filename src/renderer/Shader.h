@@ -4,7 +4,7 @@
 #include "Loadable.h"
 
 // Base class for all our shaders
-struct Shader : Loadable
+struct Shader : public Loadable
 {
 
 };
