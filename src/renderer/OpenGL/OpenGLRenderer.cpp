@@ -65,9 +65,9 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::rotate(view, glRot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	view = glm::rotate(view, glRot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	view = glm::rotate(view, glRot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	view = glm::rotate(view, glm::radians(glRot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	view = glm::rotate(view, glm::radians(glRot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::rotate(view, glm::radians(glRot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	view = glm::translate(view, glm::vec3(glPos.x, glPos.y, glPos.z));
 
 
