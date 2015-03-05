@@ -2,7 +2,9 @@
 
 #include <cmath>
 
-#include "OpenGLHeader.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "../Model.h"
 #include "../../scene/IScene.h"
@@ -16,9 +18,34 @@
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
+	m_Program = glCreateProgram();
+
+	auto & shaderMan = m_Game->GetShaderManager();
+
+	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
+	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
+
+	if (m_VertexShader && m_FragmentShader)
+	{
+		glAttachShader(m_Program, m_VertexShader->ShaderID);
+		glAttachShader(m_Program, m_FragmentShader->ShaderID);
+		glBindAttribLocation(m_Program, 0, "vertexPosition");
+		glBindAttribLocation(m_Program, 1, "vertexColor");
+	}
+	else
+		game.Log("Error loading shaders");
+
+	glLinkProgram(m_Program);
+	glUseProgram(m_Program);
 }
 
-void OpenGLRenderer::PrepareView() const
+OpenGLRenderer::~OpenGLRenderer()
+{
+	if (m_Program != 0)
+		glDeleteProgram(m_Program);
+}
+
+void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
 {
 	int width, height;
 
@@ -32,56 +59,58 @@ void OpenGLRenderer::PrepareView() const
 	glDepthFunc(GL_LESS);
 	glShadeModel(GL_SMOOTH);
 
+	Vector glPos = -ConvertToView(cameraPosition);
+	Angle glRot = -ConvertToView(cameraRotation);
 
-	InitializeProjectionMatrix(90.0f, aspect, 0.5f, 1000.0f);
+	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::rotate(view, glRot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	view = glm::rotate(view, glRot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::rotate(view, glRot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	view = glm::translate(view, glm::vec3(glPos.x, glPos.y, glPos.z));
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
 
-void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
-{
-	PrepareView();
-
-	RotateCurrentMatrix(-cameraRotation);
-	TranslateCurrentMatrix(-cameraPosition);
-
-	RenderObjects(cameraPosition, cameraRotation, scene);
+	RenderObjects(view, projection, scene);
 
 	glfwSwapBuffers(m_Game->GetWindow());
 }
 
-void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & cameraRotation, const IScene & scene) const
+void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const
 {
+	
+
 	auto entities = scene.GetEntitySystem().GetEntities();
 
+	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
 		glPushMatrix();
 		Entity * ent = pair.second;
 		_ASSERT(ent != nullptr);
 
-		Vector diff = ent->GetPosition() - cameraPosition;
+		Vector pos = ConvertToView(ent->GetPosition());
 
-		TranslateCurrentMatrix(diff);
-		RotateCurrentMatrix(ent->GetRotation());
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
 		const Model * pModel = pair.second->GetModel();
 
 		_ASSERT(pModel != nullptr);
 
+		glm::mat4 MVP = projection * view * model;
+		GLuint MVPLocation = glGetUniformLocation(m_Program, "MVP");
+
+		_ASSERT(MVPLocation != -1);
+
+		glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
 		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
-			_ASSERT(mesh != nullptr);
+			_ASSERT(mesh != nullptr && mesh->VBOs.size() > 0);
 
 			if (mesh->VBOs.size() > 0)
 			{
 				// Render using VBO
-				DrawMeshVBOs(*mesh);
-			}
-			else
-			{
 				DrawMesh(*mesh);
 			}
+		
 		}
 		
 
@@ -93,96 +122,9 @@ void OpenGLRenderer::RenderObjects(const Vector & cameraPosition, const Angle & 
 
 void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 {
-	// Basic rendering using glBegin/glEnd for now
-	for (auto matPair : mesh.Materials)
-	{
-		auto range = matPair.first;
-		const Material * mat = matPair.second;
-		if (mat)
-		{
-			const OpenGLTexture * diffuse = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
-
-			if (diffuse)
-			{
-				_ASSERT(diffuse->TextureID != 0);
-				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, diffuse->TextureID);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			}
-			else
-				glDisable(GL_TEXTURE_2D);
-
-
-		}
-		else
-		{
-			glDisable(GL_TEXTURE_2D);
-		}
-
-		
-
-		bool hasUVs = !mesh.UVs.empty();
-		bool hasNormals = !mesh.Normals.empty();
-
-		glBegin(GL_TRIANGLES);
-		for (unsigned int i = range.first; i < range.second; i++)
-		{
-			int indice = mesh.Indices[i];
-
-		
-			if (hasUVs)
-				glTexCoord2f(mesh.UVs[indice].first, mesh.UVs[indice].second);
-
-			if (hasNormals)
-			{
-				Vector normal = ConvertToView(mesh.Normals[indice]);
-				glNormal3f(normal.x, normal.y, normal.z);
-			}
-				
-			Vector vec = ConvertToView(mesh.Vertices[indice]);
-			//float max = fmax(vec.x, fmax(vec.z, vec.y));
-			//glColor3f(vec.x / max, vec.y / max, vec.z / max);
-			if (mat)
-				glColor3f(mat->Diffuse[0], mat->Diffuse[1], mat->Diffuse[2]);
-			glVertex3f(vec.x, vec.y, vec.z);
-		}
-		glEnd();
-	
-	}
 
 }
 
-void OpenGLRenderer::DrawMeshVBOs(const Model::Mesh & mesh) const
-{
-
-}
-
-void OpenGLRenderer::InitializeProjectionMatrix(float fov, float aspect, float near, float far) const
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	float e = 1.f / tanf(fov / 2.0f);
-	float width = near * e;
-	glFrustum(-width, width, -width/aspect, width/aspect, near, far);
-}
-
-void OpenGLRenderer::TranslateCurrentMatrix(const Vector & translation) const
-{
-	Vector v = ConvertToView(translation);
-	glTranslatef(v.x, v.y, v.z);
-}
-
-void OpenGLRenderer::RotateCurrentMatrix(const Angle & rotation) const
-{
-	Angle ang = ConvertToView(rotation);
-	glRotatef(ang.x, 1.f, 0, 0);
-	glRotatef(ang.y, 0, 1.f, 0);
-	glRotatef(ang.z, 0, 0, 1.f);
-}
 
 Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
 {
