@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "../tinyobjloader/tiny_obj_loader.h"
-#include "../renderer/OpenGL/OpenGLVBO.h"
+#include "../renderer/OpenGL/OpenGLVAO.h"
 #include "../game/IGame.h"
 
 Model * ModelManager::PerformCache(const std::string & path) const
@@ -52,7 +52,7 @@ Model * ModelManager::PerformCache(const std::string & path) const
 	
 
 	// Uncomment to create VBOs
-	// model->VBO = new OpenGLVBO();
+	// model->VBO = new OpenGLVAO();
 	// model->VBO->Register(*model);
 
 	return model;

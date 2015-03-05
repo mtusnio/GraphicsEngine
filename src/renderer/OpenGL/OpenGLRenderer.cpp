@@ -103,9 +103,9 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
 		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
-			_ASSERT(mesh != nullptr && mesh->VBOs.size() > 0);
+			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
-			if (mesh->VBOs.size() > 0)
+			if (mesh->VAOs.size() > 0)
 			{
 				// Render using VBO
 				DrawMesh(*mesh);
