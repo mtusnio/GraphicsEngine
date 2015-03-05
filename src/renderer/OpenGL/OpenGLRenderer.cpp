@@ -149,6 +149,8 @@ void OpenGLRenderer::InitializeShaders()
 	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
 	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
 
+	_ASSERT(m_VertexShader && m_FragmentShader);
+
 	if (m_VertexShader && m_FragmentShader)
 	{
 		glAttachShader(m_Program, m_VertexShader->ShaderID);
