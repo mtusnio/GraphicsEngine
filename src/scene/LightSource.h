@@ -8,6 +8,8 @@ struct LightSource
 {
 	Vector Position;
 	Angle Rotation;
+	float Color[3];
+	float Intensity;
 };
 
 #endif
