@@ -1,12 +1,13 @@
 #include "Game.h"
 
-#include <GLFW\glfw3.h>
+#include "../renderer/OpenGL/OpenGLHeader.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 
 #include "../renderer/OpenGL/OpenGLRenderer.h"
 #include "../renderer/OpenGL/OpenGLTexture.h"
+#include "../renderer/OpenGL/OpenGLShader.h"
 
 #include "../scene/IScene.h"
 
@@ -15,6 +16,7 @@ Game::Game() :
 m_ModelManager(*this)
 {
 	m_TextureManager = new LoadablesManager<OpenGLTexture, Texture>(*this);
+	m_ShaderManager = new LoadablesManager<OpenGLShader, Shader>(*this);
 	m_Window = nullptr;
 
 }
@@ -24,6 +26,9 @@ Game::~Game()
 	if (m_TextureManager)
 		delete m_TextureManager;
 
+	if (m_ShaderManager)
+		delete m_ShaderManager;
+
 	ClearContent();
 }
 
@@ -32,7 +37,6 @@ void Game::Start(GLFWwindow & window)
 	m_Window = &window;
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
-	m_Renderer = new OpenGLRenderer(*m_Window);
 
 	m_Time.GameTime = 0;
 
@@ -40,6 +44,16 @@ void Game::Start(GLFWwindow & window)
 	m_Time.Delta = 0.1f;
 	glfwSetTime(0.0f);
 
+	glewExperimental = GL_TRUE;
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		std::string error = std::string((const char*)glewGetErrorString(err));
+		Log(error);
+		exit(EXIT_FAILURE);
+	}
+
+	m_Renderer = new OpenGLRenderer(*this);
 }
 
 void Game::End()

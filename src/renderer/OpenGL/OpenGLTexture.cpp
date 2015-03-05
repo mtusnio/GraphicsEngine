@@ -8,7 +8,7 @@ OpenGLTexture::OpenGLTexture()
 
 OpenGLTexture::~OpenGLTexture()
 {
-	if (!TextureID)
+	if (TextureID != 0)
 		glDeleteTextures(1, &TextureID);
 }
 

@@ -1,6 +1,6 @@
 #include "CustomGame.h"
 
-#include <GLFW\glfw3.h>
+#include "../renderer/OpenGL/OpenGLHeader.h"
 #include <cmath>
 
 #include "../scene/Scene.h"
@@ -33,7 +33,6 @@ void CustomGame::Start(GLFWwindow & window)
 
 	entity->SetModel(ptr);
 	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
-	entity->SetRotation(Angle(90, 0, 0));
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

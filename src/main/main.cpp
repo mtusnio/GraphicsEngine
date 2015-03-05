@@ -1,5 +1,5 @@
+#include "../renderer/OpenGL/OpenGLHeader.h"
 
-#include <GLFW\glfw3.h>
 #include <cstdlib>
 #include <iostream>
 #include <string>

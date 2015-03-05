@@ -80,9 +80,6 @@
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\OpenGL\OpenGLVBO.cpp">
-      <Filter>Source Files\renderer\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\tinyobjloader\tiny_obj_loader.cc">
       <Filter>tinyobjloader</Filter>
     </ClCompile>
@@ -93,6 +90,12 @@
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\OpenGL\OpenGLTexture.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLShader.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLVAO.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
@@ -136,12 +139,6 @@
     <ClInclude Include="src\renderer\OpenGL\OpenGLRenderer.h">
       <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\VertexBufferObject.h">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\OpenGL\OpenGLVBO.h">
-      <Filter>Header Files\renderer\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h">
       <Filter>tinyobjloader</Filter>
     </ClInclude>
@@ -163,9 +160,6 @@
     <ClInclude Include="src\renderer\OpenGL\OpenGLTexture.h">
       <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\Shader.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderer\Loadable.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
@@ -173,6 +167,21 @@
       <Filter>Header Files\assetmanagers</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\Texture.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\Shader.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLShader.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLHeader.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLVAO.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\VertexArrayObject.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>

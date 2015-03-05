@@ -7,7 +7,7 @@
 #include "Material.h"
 
 #include "../math/Vector.h"
-#include "VertexBufferObject.h"
+#include "VertexArrayObject.h"
 
 struct Model
 {
@@ -18,9 +18,12 @@ struct Model
 
 		~Mesh()
 		{
-			for (VertexBufferObject * vbo : VBOs)
+			if (VAOs.size() > 0)
+				VAOs[0]->DestroySharedData();
+
+			for (VertexArrayObject * vao : VAOs)
 			{
-				delete vbo;
+				delete vao;
 			}
 
 			for (auto mat : Materials)
@@ -35,8 +38,8 @@ struct Model
 		std::vector<unsigned int> Indices;
 
 		// Stores materials per indice
-		std::map<Range, Material*> Materials;
-		std::vector<VertexBufferObject*> VBOs;
+		std::vector<std::pair<Range, Material*>> Materials;
+		std::vector<VertexArrayObject*> VAOs;
 	};
 
 	~Model()
@@ -44,6 +47,7 @@ struct Model
 		for (Mesh * mesh : Meshes)
 			delete mesh;
 	}
+
 	std::vector<Mesh*> Meshes;
 };
 

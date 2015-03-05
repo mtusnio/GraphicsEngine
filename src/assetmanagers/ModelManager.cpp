@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "../tinyobjloader/tiny_obj_loader.h"
-#include "../renderer/OpenGL/OpenGLVBO.h"
+#include "../renderer/OpenGL/OpenGLVAO.h"
 #include "../game/IGame.h"
 
 Model * ModelManager::PerformCache(const std::string & path) const
@@ -51,9 +51,22 @@ Model * ModelManager::PerformCache(const std::string & path) const
 	}
 	
 
-	// Uncomment to create VBOs
-	// model->VBO = new OpenGLVBO();
-	// model->VBO->Register(*model);
+	// Uncomment to create VAOs
+	int meshIndex = 0;
+	for (Model::Mesh * mesh : model->Meshes)
+	{
+		int index = 0;
+		for (auto pair : mesh->Materials)
+		{
+			VertexArrayObject * VAO = new OpenGLVAO();
+			VAO->Register(*model, meshIndex, index);
+			mesh->VAOs.push_back(VAO);
+			index++;
+		}
+		meshIndex++;
+		_ASSERT(mesh->Materials.size() == mesh->VAOs.size());
+	}
+
 
 	return model;
 }
@@ -101,9 +114,9 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 		{
 			range.second = i;
 			if (prev != -1)
-				pModelMesh->Materials[range] = LoadMaterial(materials[prev]);
+				pModelMesh->Materials.push_back({ range, LoadMaterial(materials[prev]) });
 			else
-				pModelMesh->Materials[range] = nullptr;
+				pModelMesh->Materials.push_back({ range, nullptr });
 
 			range.first = i;
 			range.second = indiceCount;
@@ -115,9 +128,9 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	{
 		int materialId = mesh.material_ids[range.first/3];
 		if (materialId != -1)
-			pModelMesh->Materials[range] = LoadMaterial(materials[materialId]);
+			pModelMesh->Materials.push_back({ range, LoadMaterial(materials[prev]) });
 		else
-			pModelMesh->Materials[range] = nullptr;
+			pModelMesh->Materials.push_back({ range, nullptr });
 	}
 
 #ifdef _DEBUG
@@ -129,7 +142,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	}
 
 	_ASSERT(sum == indiceCount);
-
+	_ASSERT(pModelMesh->UVs.size() == pModelMesh->Vertices.size());
 #endif
 
 	return pModelMesh;
