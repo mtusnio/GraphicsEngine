@@ -142,7 +142,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	}
 
 	_ASSERT(sum == indiceCount);
-
+	_ASSERT(pModelMesh->UVs.size() == pModelMesh->Vertices.size());
 #endif
 
 	return pModelMesh;

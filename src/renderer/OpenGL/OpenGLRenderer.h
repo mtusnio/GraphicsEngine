@@ -22,6 +22,12 @@ public:
 private:
 	void DrawMesh(const Model::Mesh & mesh) const;
 
+	void BindTextures(const Material * mat) const;
+
+	void InitializeShaders();
+	void InitializeBaseTexture();
+	void InitializeSampler();
+
 	void PrepareView() const;
 
 	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const;
@@ -30,7 +36,11 @@ private:
 	Angle ConvertToView(const Angle & ang) const;
 
 	IGame * m_Game;
+
 	GLuint m_Program;
+	GLuint m_LinearSampler;
+	GLuint m_BaseTexture;
+
 	std::shared_ptr<const OpenGLShader> m_VertexShader;
 	std::shared_ptr<const OpenGLShader> m_FragmentShader;
 };

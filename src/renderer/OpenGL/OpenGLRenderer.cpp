@@ -19,31 +19,23 @@
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
-	m_Program = glCreateProgram();
+	
+	InitializeShaders();
+	InitializeSampler();
+	InitializeBaseTexture();
 
-	auto & shaderMan = m_Game->GetShaderManager();
-
-	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
-	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
-
-	if (m_VertexShader && m_FragmentShader)
-	{
-		glAttachShader(m_Program, m_VertexShader->ShaderID);
-		glAttachShader(m_Program, m_FragmentShader->ShaderID);
-		glBindAttribLocation(m_Program, 0, "vertexPosition");
-		glBindAttribLocation(m_Program, 1, "vertexColor");
-	}
-	else
-		game.Log("Error loading shaders");
-
-	glLinkProgram(m_Program);
-	glUseProgram(m_Program);
 }
 
 OpenGLRenderer::~OpenGLRenderer()
 {
 	if (m_Program != 0)
 		glDeleteProgram(m_Program);
+
+	if (m_LinearSampler != 0)
+		glDeleteSamplers(1, &m_LinearSampler);
+
+	if (m_BaseTexture != 0)
+		glDeleteTextures(1, &m_BaseTexture);
 }
 
 void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
@@ -109,11 +101,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
 			if (mesh->VAOs.size() > 0)
-			{
-				// Render using VBO
 				DrawMesh(*mesh);
-			}
-		
 		}
 
 	}
@@ -121,10 +109,15 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 
 void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 {
-	for (auto it = mesh.VAOs.begin(); it != mesh.VAOs.end(); it++)
+	
+	for (size_t i = 0; i < mesh.VAOs.size(); i++)
 	{
-		OpenGLVAO * vao = static_cast<OpenGLVAO*>(*it);
+		OpenGLVAO * vao = static_cast<OpenGLVAO*>(mesh.VAOs[i]);
 		_ASSERT(vao != nullptr && vao->ID != 0);
+
+		auto pair = mesh.Materials[i];
+
+		BindTextures(pair.second);
 
 		glBindVertexArray(vao->ID);
 		glDrawElements(GL_TRIANGLES, vao->Size, GL_UNSIGNED_INT, (void*)0);
@@ -132,6 +125,70 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 	}
 }
 
+void OpenGLRenderer::BindTextures(const Material * mat) const
+{
+	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	if (!mat || mat->DiffuseTex.get() == nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, static_cast<const OpenGLTexture*>(mat->DiffuseTex.get())->TextureID);
+		
+	}
+	glBindSampler(0, m_LinearSampler);
+}
+
+void OpenGLRenderer::InitializeShaders()
+{
+	m_Program = glCreateProgram();
+
+	auto & shaderMan = m_Game->GetShaderManager();
+
+	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
+	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
+
+	if (m_VertexShader && m_FragmentShader)
+	{
+		glAttachShader(m_Program, m_VertexShader->ShaderID);
+		glAttachShader(m_Program, m_FragmentShader->ShaderID);
+		glBindAttribLocation(m_Program, 0, "vertexPosition");
+		glBindAttribLocation(m_Program, 1, "vertexColor");
+	}
+	else
+		m_Game->Log("Error loading shaders");
+
+	glLinkProgram(m_Program);
+	glUseProgram(m_Program);
+}
+
+void OpenGLRenderer::InitializeSampler()
+{
+	m_LinearSampler = 0;
+	glGenSamplers(1, &m_LinearSampler);
+	glSamplerParameteri(m_LinearSampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glSamplerParameteri(m_LinearSampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glSamplerParameteri(m_LinearSampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glSamplerParameteri(m_LinearSampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glSamplerParameterf(m_LinearSampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
+}
+
+void OpenGLRenderer::InitializeBaseTexture()
+{
+	const int TEXTURE_SIZE = 32;;
+	const int TABLE_SIZE = 4 * TEXTURE_SIZE * TEXTURE_SIZE;
+	GLfloat data[TABLE_SIZE];
+
+	for (int i = 0; i < TABLE_SIZE; i++)
+		data[i] = 1.0f;
+
+	glGenTextures(1, &m_BaseTexture);
+	glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_SIZE, TEXTURE_SIZE, 0, GL_FLOAT, GL_RGBA, &data);
+
+}
 
 Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
 {
