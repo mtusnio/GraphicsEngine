@@ -58,10 +58,10 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 		
 		if (mesh.UVs.size() > 0)
 		{
-			/*glGenBuffers(1, &Texcoords);
+			glGenBuffers(1, &Texcoords);
 			glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
 			glBufferData(GL_ARRAY_BUFFER, mesh.UVs.size() * 2 * sizeof(GLfloat), &mesh.UVs[0], GL_STATIC_DRAW);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);*/
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		
