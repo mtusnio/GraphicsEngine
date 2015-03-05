@@ -1,6 +1,8 @@
 #version 420
 
-in vec3 vertexPosition;
+layout(location = 0) in vec3 vertexPosition;
+layout(location = 1) in vec2 texCoords;
+
 uniform mat4 MVP;
 
 void main()
