@@ -100,8 +100,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		{
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
-			if (mesh->VAOs.size() > 0)
-				DrawMesh(*mesh);
+			DrawMesh(*mesh);
 		}
 
 	}
