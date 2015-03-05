@@ -11,7 +11,9 @@ public:
 	OpenGLVAO();
 	virtual ~OpenGLVAO();
 
+
 	virtual void Register(const Model & model, unsigned int meshIndex, unsigned int materialIndex);
+	virtual void DestroySharedData();
 
 	GLuint ID;
 	// VBO ids

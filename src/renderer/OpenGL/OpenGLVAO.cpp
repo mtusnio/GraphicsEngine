@@ -15,7 +15,11 @@ OpenGLVAO::OpenGLVAO()
 
 OpenGLVAO::~OpenGLVAO()
 {
+	if (ID != 0)
+		glDeleteVertexArrays(1, &ID);
 
+	if (Indice != 0)
+		glDeleteBuffers(1, &Indice);
 }
 void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned int materialIndex)
 {
@@ -63,11 +67,46 @@ void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned i
 		
 	}
 
+	_ASSERT(materialIndex < mesh.Materials.size());
 	
-	std::vector<int> indice;
+	// Find the range we are looking for
+	int index = -1;
+	Model::Mesh::Range range;
+	for (auto pair : mesh.Materials)
+	{
+		index++;
+		if (index == materialIndex)
+		{
+			range = pair.first;
+			break;
+		}
+	}
+
+	_ASSERT(index != -1);
+
+	// Not very fast at the moment, we literally copy the indices and then
+	// pass the memory index. Possibly just get the proper spot & range
+	// and use pointer arithmetics to speed it up?
+	std::vector<int> indices(range.second - range.first);
+	for (unsigned int i = range.first; i < range.second; i++)
+	{
+		indices.push_back(mesh.Indices[i]);
+	}
 	
-
-
+	glGenBuffers(1, &Indice);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Indice);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 	
 	glBindVertexArray(0);
+}
+
+
+void OpenGLVAO::DestroySharedData()
+{
+	if (Vertices != 0)
+		glDeleteBuffers(1, &Vertices);
+	if (Normals != 0)
+		glDeleteBuffers(1, &Normals);
+	if (Texcoords != 0)
+		glDeleteBuffers(1, &Texcoords);
 }
