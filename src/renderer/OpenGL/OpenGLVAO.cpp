@@ -38,6 +38,14 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 
 		// Use the same vertices, only indices change
 		Vertices = vao->Vertices;
+		glBindBuffer(GL_ARRAY_BUFFER, Vertices);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(1);
+
 		Normals = vao->Normals;
 		Texcoords = vao->Texcoords;
 	}
@@ -62,6 +70,7 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 			glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
 			glBufferData(GL_ARRAY_BUFFER, mesh.UVs.size() * 2 * sizeof(GLfloat), &mesh.UVs[0], GL_STATIC_DRAW);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+			glEnableVertexAttribArray(1);
 		}
 
 		

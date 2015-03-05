@@ -64,7 +64,9 @@ Model * ModelManager::PerformCache(const std::string & path) const
 			index++;
 		}
 		meshIndex++;
+		_ASSERT(mesh->Materials.size() == mesh->VAOs.size());
 	}
+
 
 	return model;
 }
