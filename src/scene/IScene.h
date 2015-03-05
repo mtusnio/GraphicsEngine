@@ -4,6 +4,8 @@
 #include "../entitysystem/IEntitySystem.h"
 #include "../game/IGame.h"
 
+struct LightSource;
+
 class IScene
 {
 public:
@@ -17,6 +19,19 @@ public:
 	// Returns our entity system
 	virtual IEntitySystem & GetEntitySystem() = 0;
 	virtual const IEntitySystem & GetEntitySystem() const = 0;
+
+	// Registers our light source in the scene. The object containing the LightSource
+	// structure is responsible for handling its lifetime by calling the Unregister method
+	virtual void RegisterLight(const LightSource & light) = 0;
+
+	// Call before the light is deleted or when you no longer want to use it in the scene
+	virtual void UnregisterLight(const LightSource & light) = 0;
+
+	// Returns true if this light source has already been registered
+	virtual bool HasLightSource(const LightSource & light) const = 0;
+
+	// Returns all registered LightSources
+	virtual std::vector<const LightSource*> GetLightSources() const = 0;
 
 	// Returns parent game
 	virtual IGame & GetGame() const = 0;

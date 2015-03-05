@@ -184,5 +184,8 @@
     <ClInclude Include="src\renderer\VertexArrayObject.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\scene\LightSource.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

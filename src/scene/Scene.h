@@ -19,12 +19,19 @@ public:
 	virtual IEntitySystem & GetEntitySystem()  { return m_EntitySystem;  }
 	virtual const IEntitySystem & GetEntitySystem() const { return m_EntitySystem; }
 
+	virtual void RegisterLight(const LightSource & light);
+	virtual void UnregisterLight(const LightSource & light);
+	virtual bool HasLightSource(const LightSource & light) const;
+	virtual std::vector<const LightSource*> GetLightSources() const;
+
 	// Returns parent game
 	virtual IGame & GetGame() const { return *m_ParentGame; }
 
 private:
 	IGame * m_ParentGame;
 	EntitySystem m_EntitySystem;
+
+	std::vector<const LightSource*> m_LightSources;
 };
 
 

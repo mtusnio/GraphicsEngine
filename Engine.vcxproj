@@ -114,6 +114,7 @@
     <ClInclude Include="src\renderer\Texture.h" />
     <ClInclude Include="src\renderer\VertexArrayObject.h" />
     <ClInclude Include="src\scene\IScene.h" />
+    <ClInclude Include="src\scene\LightSource.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\tinyobjloader\tiny_obj_loader.h" />
   </ItemGroup>
