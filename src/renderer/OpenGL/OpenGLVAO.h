@@ -16,6 +16,7 @@ public:
 	virtual void DestroySharedData();
 
 	GLuint ID;
+	int Size;
 	// VBO ids
 	GLuint Vertices;
 	GLuint Normals;

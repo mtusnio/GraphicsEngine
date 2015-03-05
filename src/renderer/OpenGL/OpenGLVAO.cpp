@@ -87,6 +87,7 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 	{
 		indices.push_back(mesh.Indices[i]);
 	}
+	Size = indices.size();
 	
 	glGenBuffers(1, &Indice);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Indice);
@@ -98,7 +99,6 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 	glBindBuffer(GL_ARRAY_BUFFER, Vertices);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(0);
-
 
 	glBindVertexArray(0);
 }

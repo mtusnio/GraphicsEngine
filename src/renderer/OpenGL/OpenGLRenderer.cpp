@@ -14,6 +14,7 @@
 #include "../../math/Angle.h"
 
 #include "OpenGLTexture.h"
+#include "OpenGLVAO.h"
 
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
@@ -77,8 +78,6 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const
 {
-	
-
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glDisable(GL_TEXTURE_2D);
@@ -112,17 +111,21 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 			}
 		
 		}
-		
-
-		glPopMatrix();
-		
 
 	}
 }
 
 void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 {
+	for (auto it = mesh.VAOs.begin(); it != mesh.VAOs.end(); it++)
+	{
+		OpenGLVAO * vao = static_cast<OpenGLVAO*>(*it);
+		_ASSERT(vao != nullptr && vao->ID != 0);
 
+		glBindVertexArray(vao->ID);
+		glDrawArrays(GL_TRIANGLES, 0, vao->Size);
+		glBindVertexArray(0);
+	}
 }
 
 
