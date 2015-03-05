@@ -112,9 +112,9 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 		{
 			range.second = i;
 			if (prev != -1)
-				pModelMesh->Materials[range] = LoadMaterial(materials[prev]);
+				pModelMesh->Materials.push_back({ range, LoadMaterial(materials[prev]) });
 			else
-				pModelMesh->Materials[range] = nullptr;
+				pModelMesh->Materials.push_back({ range, nullptr });
 
 			range.first = i;
 			range.second = indiceCount;
@@ -126,9 +126,9 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	{
 		int materialId = mesh.material_ids[range.first/3];
 		if (materialId != -1)
-			pModelMesh->Materials[range] = LoadMaterial(materials[materialId]);
+			pModelMesh->Materials.push_back({ range, LoadMaterial(materials[prev]) });
 		else
-			pModelMesh->Materials[range] = nullptr;
+			pModelMesh->Materials.push_back({ range, nullptr });
 	}
 
 #ifdef _DEBUG

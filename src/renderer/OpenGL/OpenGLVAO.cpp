@@ -69,25 +69,12 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 
 	_ASSERT(materialIndex < mesh.Materials.size());
 	
-	// Find the range we are looking for
-	int index = -1;
-	Model::Mesh::Range range;
-	for (auto pair : mesh.Materials)
-	{
-		index++;
-		if (index == materialIndex)
-		{
-			range = pair.first;
-			break;
-		}
-	}
-
-	_ASSERT(index != -1);
+	Model::Mesh::Range range = mesh.Materials[materialIndex].first;
 
 	// Not very fast at the moment, we literally copy the indices and then
 	// pass the memory index. Possibly just get the proper spot & range
 	// and use pointer arithmetics to speed it up?
-	std::vector<int> indices(range.second - range.first);
+	std::vector<unsigned int> indices(range.second - range.first);
 	for (unsigned int i = range.first; i < range.second; i++)
 	{
 		indices.push_back(mesh.Indices[i]);

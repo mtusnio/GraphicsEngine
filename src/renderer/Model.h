@@ -38,7 +38,7 @@ struct Model
 		std::vector<unsigned int> Indices;
 
 		// Stores materials per indice
-		std::map<Range, Material*> Materials;
+		std::vector<std::pair<Range, Material*>> Materials;
 		std::vector<VertexArrayObject*> VAOs;
 	};
 
