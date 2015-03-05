@@ -90,9 +90,9 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		Vector pos = ConvertToView(ent->GetPosition());
 		Angle ang = ConvertToView(ent->GetRotation());
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
-		model = glm::rotate(model, ang.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, ang.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, ang.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(ang.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(ang.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(ang.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		const Model * pModel = pair.second->GetModel();
 
