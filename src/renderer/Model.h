@@ -18,6 +18,9 @@ struct Model
 
 		~Mesh()
 		{
+			if (VAOs.size() > 0)
+				VAOs[0]->DestroySharedData();
+
 			for (VertexArrayObject * vao : VAOs)
 			{
 				delete vao;

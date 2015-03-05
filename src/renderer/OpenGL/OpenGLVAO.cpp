@@ -21,14 +21,11 @@ OpenGLVAO::~OpenGLVAO()
 	if (Indice != 0)
 		glDeleteBuffers(1, &Indice);
 }
-void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned int materialIndex)
+void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int materialIndex)
 {
 	_ASSERT(meshIndex < model.Meshes.size());
 	const Model::Mesh & mesh = *model.Meshes[meshIndex];
 	_ASSERT(mesh.Vertices.size() > 0);
-
-	glGenVertexArrays(1, &ID);
-	glBindVertexArray(ID);
 
 	if (mesh.VAOs.size() > 0)
 	{
@@ -46,7 +43,6 @@ void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned i
 		glBindBuffer(GL_ARRAY_BUFFER, Vertices);
 		glBufferData(GL_ARRAY_BUFFER, mesh.Vertices.size() * 3 * sizeof(GLfloat), &mesh.Vertices[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(0);
 
 		if (mesh.Normals.size() > 0)
 		{
@@ -61,7 +57,6 @@ void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned i
 			glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
 			glBufferData(GL_ARRAY_BUFFER, mesh.UVs.size() * 2 * sizeof(GLfloat), &mesh.UVs[0], GL_STATIC_DRAW);
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-			glEnableVertexAttribArray(1);
 		}
 
 		
@@ -97,6 +92,14 @@ void OpenGLVAO::Register(const Model & model, unsigned int meshIndex, unsigned i
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Indice);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 	
+	// Generate our VAO here
+	glGenVertexArrays(1, &ID);
+	glBindVertexArray(ID);
+	glBindBuffer(GL_ARRAY_BUFFER, Vertices);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+
+
 	glBindVertexArray(0);
 }
 

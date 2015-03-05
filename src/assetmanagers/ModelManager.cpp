@@ -51,9 +51,20 @@ Model * ModelManager::PerformCache(const std::string & path) const
 	}
 	
 
-	// Uncomment to create VBOs
-	// model->VBO = new OpenGLVAO();
-	// model->VBO->Register(*model);
+	// Uncomment to create VAOs
+	int meshIndex = 0;
+	for (Model::Mesh * mesh : model->Meshes)
+	{
+		int index = 0;
+		for (auto pair : mesh->Materials)
+		{
+			VertexArrayObject * VAO = new OpenGLVAO();
+			VAO->Register(*model, meshIndex, index);
+			mesh->VAOs.push_back(VAO);
+			index++;
+		}
+		meshIndex++;
+	}
 
 	return model;
 }
