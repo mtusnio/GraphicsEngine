@@ -22,6 +22,7 @@ public:
 private:
 	void DrawMesh(const Model::Mesh & mesh) const;
 
+	void BindLightSources(const IScene & scene) const;
 	void BindTextures(const Material * mat) const;
 
 	void InitializeShaders();

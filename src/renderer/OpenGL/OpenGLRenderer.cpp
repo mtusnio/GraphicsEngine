@@ -16,6 +16,8 @@
 #include "OpenGLTexture.h"
 #include "OpenGLVAO.h"
 
+#include "../../scene/LightSource.h"
+
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
@@ -100,6 +102,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		{
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
+			BindLightSources(scene);
 			DrawMesh(*mesh);
 		}
 
@@ -124,20 +127,28 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 	}
 }
 
+void OpenGLRenderer::BindLightSources(const IScene & scene) const
+{
+
+}
 void OpenGLRenderer::BindTextures(const Material * mat) const
 {
 	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
+
 	glActiveTexture(GL_TEXTURE0);
 	if (!mat || mat->DiffuseTex.get() == nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
+		glUniform3f(glGetUniformLocation(m_Program, "ambientIntensity"), 0.0f, 0.0f, 0.0f);
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, static_cast<const OpenGLTexture*>(mat->DiffuseTex.get())->TextureID);
-		
+		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
+		glBindTexture(GL_TEXTURE_2D, tex->TextureID);
+		glUniform3fv(glGetUniformLocation(m_Program, "ambientIntensity"), 1, mat->Ambient);
 	}
 	glBindSampler(0, m_LinearSampler);
+	
 }
 
 void OpenGLRenderer::InitializeShaders()
