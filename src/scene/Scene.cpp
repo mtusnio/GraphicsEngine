@@ -22,12 +22,15 @@ void Scene::SimulatePostFrame()
 
 }
 
-void Scene::RegisterLight(const LightSource & light)
+void Scene::RegisterLight(const LightSource & light, LightSource::Type type)
 {
 	if (HasLightSource(light))
 		return;
 
-	m_LightSources.push_back(&light);
+	if (m_LightSources.find(type) == m_LightSources.end())
+		m_LightSources[type] = std::vector<const LightSource*>();
+
+	m_LightSources[type].push_back(&light);
 }
 
 void Scene::UnregisterLight(const LightSource & light)
@@ -35,15 +38,22 @@ void Scene::UnregisterLight(const LightSource & light)
 	if (!HasLightSource(light))
 		return;
 
-	m_LightSources.erase(std::remove(m_LightSources.begin(), m_LightSources.end(), &light));
+	for (auto pair : m_LightSources)
+		pair.second.erase(std::remove(pair.second.begin(), pair.second.end(), &light));
 }
 
 bool Scene::HasLightSource(const LightSource & light) const
 {
-	return std::find(m_LightSources.begin(), m_LightSources.end(), &light) != m_LightSources.end();
+	for (auto pair : m_LightSources)
+		return std::find(pair.second.begin(), pair.second.end(), &light) != pair.second.end();
+	
+	return false;
 }
 
-std::vector<const LightSource*> Scene::GetLightSources() const
+std::vector<const LightSource*> Scene::GetLightSources(LightSource::Type type) const
 {
-	return m_LightSources;
+	if (m_LightSources.find(type) == m_LightSources.end())
+		return std::vector<const LightSource*>();
+
+	return m_LightSources.at(type);
 }
