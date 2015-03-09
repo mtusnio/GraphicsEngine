@@ -15,9 +15,13 @@ struct LightSource
 
 	Vector Position;
 	float Color[3];
-	float Constant;
-	float Linear;
-	float Quadratic;
+	struct
+	{
+		float Constant;
+		float Linear;
+		float Quadratic;
+	} Attenuation;
+
 };
 
 
