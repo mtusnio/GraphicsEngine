@@ -7,6 +7,13 @@
 
 CustomGame::CustomGame()
 {
+	m_Light.Color[0] = 1.f;
+	m_Light.Color[1] = 1.f;
+	m_Light.Color[2] = 1.f;
+	m_Light.Constant = 0.25f;
+	m_Light.Linear = 0.1f;
+	m_Light.Quadratic = 0.05f;
+	m_Light.Exponent = 1.5f;
 }
 
 CustomGame::~CustomGame()
@@ -24,7 +31,7 @@ void CustomGame::Start(GLFWwindow & window)
 	Scene * scene = new Scene(*this);
 
 	AddScene(scene);
-
+	scene->RegisterLight(m_Light, LightSource::Type::SPOT);
 	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sponza.obj");
 
 	_ASSERT(ptr.get() != nullptr);
@@ -38,6 +45,13 @@ void CustomGame::Start(GLFWwindow & window)
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
+void CustomGame::End()
+{
+	auto scenes = GetScenes();
+
+	if (scenes.size() > 0)
+		scenes[0]->UnregisterLight(m_Light);
+}
 void CustomGame::HandleInput()
 {
 	GLFWwindow * window = GetWindow();
@@ -78,4 +92,7 @@ void CustomGame::HandleInput()
 	{
 		m_RenderPosition -= left * delta * SPEED;
 	}
+
+	m_Light.Position = m_RenderPosition;
+	m_Light.Rotation = m_RenderAngle;
 }
