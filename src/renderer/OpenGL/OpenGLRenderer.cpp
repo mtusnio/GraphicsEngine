@@ -16,6 +16,8 @@
 #include "OpenGLTexture.h"
 #include "OpenGLVAO.h"
 
+#include "../../scene/LightSource.h"
+
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
@@ -52,8 +54,8 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	glDepthFunc(GL_LESS);
 	glShadeModel(GL_SMOOTH);
 
-	Vector glPos = -ConvertToView(cameraPosition);
-	Angle glRot = -ConvertToView(cameraRotation);
+	Vector glPos = -ConverToOpenGL(cameraPosition);
+	Angle glRot = -ConverToOpenGL(cameraRotation);
 
 	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
 	glm::mat4 view = glm::mat4(1.0f);
@@ -79,29 +81,18 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		Entity * ent = pair.second;
 		_ASSERT(ent != nullptr);
 
-		Vector pos = ConvertToView(ent->GetPosition());
-		Angle ang = ConvertToView(ent->GetRotation());
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
-		model = glm::rotate(model, glm::radians(ang.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(ang.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(ang.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
 		const Model * pModel = pair.second->GetModel();
 
 		_ASSERT(pModel != nullptr);
 
-		glm::mat4 MVP = projection * view * model;
-		GLuint MVPLocation = glGetUniformLocation(m_Program, "MVP");
+		BindMatrices(view, projection, ent);
 
-		_ASSERT(MVPLocation != -1);
-
-		glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
 		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
-			if (mesh->VAOs.size() > 0)
-				DrawMesh(*mesh);
+			BindLightSources(scene);
+			DrawMesh(*mesh);
 		}
 
 	}
@@ -125,20 +116,73 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 	}
 }
 
+void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent) const
+{
+	Vector pos = ConverToOpenGL(ent->GetPosition());
+	Angle ang = ConverToOpenGL(ent->GetRotation());
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
+	model = glm::rotate(model, glm::radians(ang.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(ang.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(ang.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4 MV = view * model;
+	glm::mat4 MVP = projection * MV;
+	GLuint MVPLocation = glGetUniformLocation(m_Program, "MVP");
+	GLuint MVLocation = glGetUniformLocation(m_Program, "MV");
+	GLuint MLocation = glGetUniformLocation(m_Program, "M");
+
+	_ASSERT(MVPLocation != -1);
+
+	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix4fv(MVLocation, 1, GL_FALSE, glm::value_ptr(MV));
+	glUniformMatrix4fv(MLocation, 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void OpenGLRenderer::BindLightSources(const IScene & scene) const
+{
+	auto sources = scene.GetLightSources(LightSource::SPOT);
+
+	size_t lightCount = (int)fmin(8, sources.size());
+
+	glUniform1i(glGetUniformLocation(m_Program, "SpotlightCount"), lightCount);
+
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
+
+		_ASSERT(light != nullptr);
+
+		std::string lightName = "Spotlights[" + std::to_string(i) + "]";
+		Vector dir = ConverToOpenGL(light->Rotation.ToDirection());
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
+		Vector lightPosition = ConverToOpenGL(light->Position);
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Exponent").c_str()), light->Exponent);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Linear").c_str()), light->Attenuation.Linear);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Constant").c_str()), light->Attenuation.Constant);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
+	}
+}
+
 void OpenGLRenderer::BindTextures(const Material * mat) const
 {
 	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
+
 	glActiveTexture(GL_TEXTURE0);
 	if (!mat || mat->DiffuseTex.get() == nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
+		glUniform3f(glGetUniformLocation(m_Program, "ambientIntensity"), 0.0f, 0.0f, 0.0f);
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, static_cast<const OpenGLTexture*>(mat->DiffuseTex.get())->TextureID);
-		
+		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
+		glBindTexture(GL_TEXTURE_2D, tex->TextureID);
+		glUniform3fv(glGetUniformLocation(m_Program, "ambientIntensity"), 1, mat->Ambient);
 	}
 	glBindSampler(0, m_LinearSampler);
+	
 }
 
 void OpenGLRenderer::InitializeShaders()
@@ -149,6 +193,8 @@ void OpenGLRenderer::InitializeShaders()
 
 	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
 	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
+
+	_ASSERT(m_VertexShader && m_FragmentShader);
 
 	if (m_VertexShader && m_FragmentShader)
 	{
@@ -190,12 +236,12 @@ void OpenGLRenderer::InitializeBaseTexture()
 
 }
 
-Vector OpenGLRenderer::ConvertToView(const Vector & vec) const
+Vector OpenGLRenderer::ConverToOpenGL(const Vector & vec) const
 {
 	return Vector(-vec.y, vec.z, -vec.x);
 }
 
-Angle OpenGLRenderer::ConvertToView(const Angle & ang) const
+Angle OpenGLRenderer::ConverToOpenGL(const Angle & ang) const
 {
 	return Angle(ang.y, ang.z, -ang.x);
 }

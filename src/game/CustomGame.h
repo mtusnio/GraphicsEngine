@@ -5,6 +5,8 @@
 
 #include "../math/Angle.h"
 
+#include "../scene/LightSource.h"
+
 class CustomGame : public Game
 {
 public:
@@ -12,6 +14,7 @@ public:
 	virtual ~CustomGame();
 
 	virtual void Start(GLFWwindow & window);
+	virtual void End();
 private:
 	virtual void HandleInput();
 
@@ -20,6 +23,7 @@ private:
 
 	Vector m_RenderPosition;
 	Angle m_RenderAngle;
+	SpotLightSource m_Light;
 
 	double m_PrevX;
 	double m_PrevY;
