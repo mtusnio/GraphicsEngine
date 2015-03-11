@@ -21,7 +21,7 @@ struct LightSource
 		float Linear;
 		float Quadratic;
 	} Attenuation;
-
+	float MaxDistance;
 };
 
 

@@ -10,6 +10,7 @@ struct Spotlight
     float Constant;
     float Quadratic;
     float Cone;
+    float MaxDistance;
 };
 
 layout(location = 0) in vec3 vertexPosition;
@@ -33,7 +34,8 @@ vec3 CalculateSpotlight(Spotlight light, vec3 position)
     
     float ang = degrees(acos(dot(diff, light.Direction)));
     
-    if(ang > light.Cone)
+    
+    if(ang > light.Cone || dist > light.MaxDistance)
         return vec3(0.0f);
         
     vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color;
@@ -48,7 +50,7 @@ void main()
     vec4 pos = M * vec4(vertexPosition, 1.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        LightColor = LightColor + CalculateSpotlight(Spotlights[i], pos.xyz);
+        LightColor += CalculateSpotlight(Spotlights[i], pos.xyz);
     }
     
     gl_Position = MVP * vec4(vertexPosition, 1.0f);

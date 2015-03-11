@@ -15,6 +15,7 @@ CustomGame::CustomGame()
 	m_Light.Attenuation.Quadratic = 0.0f;
 	m_Light.Exponent = 27.0f;
 	m_Light.Cone = 50.0f;
+	m_Light.MaxDistance = 64.f;
 }
 
 CustomGame::~CustomGame()
