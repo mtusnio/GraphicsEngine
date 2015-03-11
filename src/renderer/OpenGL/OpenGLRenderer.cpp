@@ -129,8 +129,31 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 
 void OpenGLRenderer::BindLightSources(const IScene & scene) const
 {
+	auto sources = scene.GetLightSources(LightSource::SPOT);
 
+	size_t lightCount = (int)fmin(8, sources.size());
+
+	glUniform1i(glGetUniformLocation(m_Program, "SpotlightCount"), lightCount);
+
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
+
+		_ASSERT(light != nullptr);
+
+		std::string lightName = "Spotlights[" + std::to_string(i) + "]";
+		Vector dir = ConvertToView(light->Rotation.ToDirection());
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
+		Vector lightPosition = ConvertToView(light->Position);
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
+		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Exponent").c_str()), light->Exponent);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Linear").c_str()), light->Attenuation.Linear);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Constant").c_str()), light->Attenuation.Constant);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
+	}
 }
+
 void OpenGLRenderer::BindTextures(const Material * mat) const
 {
 	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
