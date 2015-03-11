@@ -201,8 +201,6 @@ void OpenGLRenderer::InitializeShaders()
 	{
 		glAttachShader(m_Program, m_VertexShader->ShaderID);
 		glAttachShader(m_Program, m_FragmentShader->ShaderID);
-		glBindAttribLocation(m_Program, 0, "vertexPosition");
-		glBindAttribLocation(m_Program, 1, "vertexColor");
 	}
 	else
 		m_Game->Log("Error loading shaders");
