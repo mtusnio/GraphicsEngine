@@ -9,6 +9,7 @@ struct Spotlight
     float Linear;
     float Constant;
     float Quadratic;
+    float Cone;
 };
 
 layout(location = 0) in vec3 vertexPosition;
@@ -26,11 +27,16 @@ uniform Spotlight Spotlights[8];
 
 vec3 CalculateSpotlight(Spotlight light, vec3 position)
 {
-    vec3 diff = light.Position - position;
+    vec3 diff = position - light.Position;
     float dist = length(diff);
     vec3 direction = normalize(diff);
     
-    vec3 clr = (pow(max(0.0, -dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color;
+    float ang = degrees(acos(dot(diff, light.Direction)));
+    
+    if(ang > light.Cone)
+        return vec3(0.0f);
+        
+    vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color;
     return clamp(clr.xyz, 0.0, 1.0);
 }
 

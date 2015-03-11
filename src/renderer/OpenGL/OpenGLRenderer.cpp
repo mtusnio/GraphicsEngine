@@ -161,6 +161,7 @@ void OpenGLRenderer::BindLightSources(const IScene & scene) const
 		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Linear").c_str()), light->Attenuation.Linear);
 		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Constant").c_str()), light->Attenuation.Constant);
 		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
+		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Cone").c_str()), light->Cone);
 	}
 }
 

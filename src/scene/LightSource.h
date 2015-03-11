@@ -34,6 +34,7 @@ struct SpotLightSource : public LightSource
 {
 	Angle Rotation;
 	float Exponent;
+	float Cone;
 };
 
 #endif
