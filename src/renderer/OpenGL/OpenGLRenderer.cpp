@@ -52,7 +52,6 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
-	glShadeModel(GL_SMOOTH);
 
 	Vector glPos = -ConverToOpenGL(cameraPosition);
 	Angle glRot = -ConverToOpenGL(cameraRotation);
