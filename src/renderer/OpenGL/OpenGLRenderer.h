@@ -10,6 +10,7 @@
 #include "../Model.h"
 
 class IGame;
+class Entity;
 
 class OpenGLRenderer : public IRenderer
 {
@@ -22,6 +23,7 @@ public:
 private:
 	void DrawMesh(const Model::Mesh & mesh) const;
 
+	void BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent) const;
 	void BindLightSources(const IScene & scene) const;
 	void BindTextures(const Material * mat) const;
 
@@ -33,8 +35,8 @@ private:
 
 	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const;
 
-	Vector ConvertToView(const Vector & vec) const;
-	Angle ConvertToView(const Angle & ang) const;
+	Vector ConverToOpenGL(const Vector & vec) const;
+	Angle ConverToOpenGL(const Angle & ang) const;
 
 	IGame * m_Game;
 

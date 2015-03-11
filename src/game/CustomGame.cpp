@@ -10,10 +10,10 @@ CustomGame::CustomGame()
 	m_Light.Color[0] = 1.f;
 	m_Light.Color[1] = 1.f;
 	m_Light.Color[2] = 1.f;
-	m_Light.Attenuation.Constant = 0.25f;
+	m_Light.Attenuation.Constant = 0.0f;
 	m_Light.Attenuation.Linear = 0.1f;
-	m_Light.Attenuation.Quadratic = 0.05f;
-	m_Light.Exponent = 1.5f;
+	m_Light.Attenuation.Quadratic = 0.0f;
+	m_Light.Exponent = 30.0f;
 }
 
 CustomGame::~CustomGame()
