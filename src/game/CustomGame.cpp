@@ -94,6 +94,9 @@ void CustomGame::HandleInput()
 		m_RenderPosition -= left * delta * SPEED;
 	}
 
-	m_Light.Position = m_RenderPosition;
-	m_Light.Rotation = m_RenderAngle;
+	if (!glfwGetKey(window, GLFW_KEY_SPACE))
+	{
+		m_Light.Position = m_RenderPosition;
+		m_Light.Rotation = m_RenderAngle;
+	}
 }
