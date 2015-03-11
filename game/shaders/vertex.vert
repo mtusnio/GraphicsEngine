@@ -13,6 +13,7 @@ struct Spotlight
 
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 texCoords;
+layout(location = 2) in vec3 vertexNormal;
 
 out vec2 UV;
 out vec3 LightColor;
