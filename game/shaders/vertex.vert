@@ -32,10 +32,10 @@ vec3 CalculateSpotlight(Spotlight light, vec3 position)
     float dist = length(diff);
     vec3 direction = normalize(diff);
     
-    float ang = degrees(acos(dot(diff, light.Direction)));
+    float ang = degrees(acos(dot(direction, light.Direction)));
     
     
-    if(ang > light.Cone || dist > light.MaxDistance)
+    if(ang > light.Cone/2.0 || dist > light.MaxDistance)
         return vec3(0.0f);
         
     vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color;

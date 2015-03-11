@@ -12,8 +12,8 @@ CustomGame::CustomGame()
 	m_Light.Color[2] = 1.f;
 	m_Light.Attenuation.Constant = 0.0f;
 	m_Light.Attenuation.Linear = 0.1f;
-	m_Light.Attenuation.Quadratic = 0.0f;
-	m_Light.Exponent = 27.0f;
+	m_Light.Attenuation.Quadratic = 0.01f;
+	m_Light.Exponent = 15.0f;
 	m_Light.Cone = 50.0f;
 	m_Light.MaxDistance = 64.f;
 }
