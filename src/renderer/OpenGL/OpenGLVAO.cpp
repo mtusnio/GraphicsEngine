@@ -63,26 +63,19 @@ void OpenGLVAO::Register(Model & model, unsigned int meshIndex, unsigned int mat
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(0);
 
-		if (mesh.Normals.size() > 0)
-		{
-			glGenBuffers(1, &Normals);
-			glBindBuffer(GL_ARRAY_BUFFER, Normals);
-			glBufferData(GL_ARRAY_BUFFER, mesh.Normals.size() * 3 * sizeof(GLfloat), &mesh.Vertices[0], GL_STATIC_DRAW);
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-			glEnableVertexAttribArray(2);
-		}
-		
-		if (mesh.UVs.size() > 0)
-		{
-			glGenBuffers(1, &Texcoords);
-			glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
-			glBufferData(GL_ARRAY_BUFFER, mesh.UVs.size() * 2 * sizeof(GLfloat), &mesh.UVs[0], GL_STATIC_DRAW);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-			glEnableVertexAttribArray(1);
-		}
 
-
+		glGenBuffers(1, &Normals);
+		glBindBuffer(GL_ARRAY_BUFFER, Normals);
+		glBufferData(GL_ARRAY_BUFFER, mesh.Normals.size() * 3 * sizeof(GLfloat), &mesh.Vertices[0], GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(2);
 		
+
+		glGenBuffers(1, &Texcoords);
+		glBindBuffer(GL_ARRAY_BUFFER, Texcoords);
+		glBufferData(GL_ARRAY_BUFFER, mesh.UVs.size() * 2 * sizeof(GLfloat), &mesh.UVs[0], GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(1);
 	}
 
 	_ASSERT(materialIndex < mesh.Materials.size());
