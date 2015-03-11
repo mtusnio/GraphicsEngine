@@ -171,17 +171,18 @@ void OpenGLRenderer::BindTextures(const Material * mat) const
 	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
 
 	glActiveTexture(GL_TEXTURE0);
-	if (!mat || mat->DiffuseTex.get() == nullptr)
+	_ASSERT(mat != nullptr);
+	if (mat->DiffuseTex.get() == nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
-		glUniform3f(glGetUniformLocation(m_Program, "ambientIntensity"), 0.0f, 0.0f, 0.0f);
 	}
 	else
 	{
 		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
-		glBindTexture(GL_TEXTURE_2D, tex->TextureID);
-		glUniform3fv(glGetUniformLocation(m_Program, "ambientIntensity"), 1, mat->Ambient);
+		glBindTexture(GL_TEXTURE_2D, tex->TextureID);	
 	}
+	glUniform3fv(glGetUniformLocation(m_Program, "ambientIntensity"), 1, mat->Ambient);
+	glUniform3fv(glGetUniformLocation(m_Program, "diffuseIntensity"), 1, mat->Diffuse);
 	glBindSampler(0, m_LinearSampler);
 	
 }
@@ -222,16 +223,18 @@ void OpenGLRenderer::InitializeSampler()
 
 void OpenGLRenderer::InitializeBaseTexture()
 {
-	const int TEXTURE_SIZE = 32;;
+	const int TEXTURE_SIZE = 4;
 	const int TABLE_SIZE = 4 * TEXTURE_SIZE * TEXTURE_SIZE;
-	GLfloat data[TABLE_SIZE];
-
+	GLubyte data[TABLE_SIZE];
+	
 	for (int i = 0; i < TABLE_SIZE; i++)
-		data[i] = 1.0f;
+		data[i] = 255;
 
 	glGenTextures(1, &m_BaseTexture);
 	glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_SIZE, TEXTURE_SIZE, 0, GL_FLOAT, GL_RGBA, &data);
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE, GL_RGBA8, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_SIZE, TEXTURE_SIZE, 0, GL_UNSIGNED_BYTE, GL_RGBA, data);
 
 }
 
