@@ -14,16 +14,12 @@ void OpenGLProgram::Load(const std::shared_ptr<const OpenGLShader> & vertexShade
 {
 	_ASSERT(vertexShader.get() != nullptr && pixelShader.get() != nullptr);
 
-	if (m_ProgramID != 0)
-	{
-		FreeProgram();
-	}
-
 	m_VertexShader = vertexShader;
 	m_FragmentShader = pixelShader;
 
+	if (m_ProgramID = 0)
+		m_ProgramID = glCreateProgram();
 
-	m_ProgramID = glCreateProgram();
 	glAttachShader(m_ProgramID, m_VertexShader->ShaderID);
 	glAttachShader(m_ProgramID, m_FragmentShader->ShaderID);
 	glLinkProgram(m_ProgramID);
