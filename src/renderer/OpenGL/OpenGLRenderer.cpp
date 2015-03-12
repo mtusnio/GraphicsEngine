@@ -71,7 +71,6 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
-		glPushMatrix();
 		Entity * ent = pair.second;
 		_ASSERT(ent != nullptr);
 
