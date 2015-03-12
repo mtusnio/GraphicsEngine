@@ -27,7 +27,7 @@ uniform mat4 M;
 uniform int SpotlightCount;
 uniform Spotlight Spotlights[MAX_SPOTLIGHTS];
 
-vec3 CalculateSpotlight(Spotlight light, vec3 position)
+vec3 CalculateSpotlight(Spotlight light, vec3 position, vec3 normal)
 {
     vec3 diff = position - light.Position;
     float dist = length(diff);
@@ -39,7 +39,7 @@ vec3 CalculateSpotlight(Spotlight light, vec3 position)
     if(ang > light.Cone/2.0 || dist > light.MaxDistance)
         return vec3(0.0f);
         
-    vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color;
+    vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color * max(0.0f, dot(normal, -direction));
     return clamp(clr.xyz, 0.0, 1.0);
 }
 
@@ -48,9 +48,11 @@ void main()
     UV = texCoords;
    
     vec4 pos = M * vec4(vertexPosition, 1.0);
+    vec4 normal = transpose(inverse(M)) * vec4(vertexNormal, 1.0);
+    
     for(int i = 0; i < SpotlightCount; i++)
     {
-        SpotlightColor[i] = CalculateSpotlight(Spotlights[i], pos.xyz);
+        SpotlightColor[i] = CalculateSpotlight(Spotlights[i], pos.xyz, normal.xyz);
     }
     
     gl_Position = MVP * vec4(vertexPosition, 1.0f);
