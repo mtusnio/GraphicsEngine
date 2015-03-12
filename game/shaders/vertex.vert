@@ -1,5 +1,7 @@
 #version 420
 
+#define MAX_SPOTLIGHTS 8
+
 struct Spotlight
 {
     vec3 Direction;
@@ -18,13 +20,13 @@ layout(location = 1) in vec2 texCoords;
 layout(location = 2) in vec3 vertexNormal;
 
 out vec2 UV;
-out vec3 LightColor;
+out vec3 SpotlightColor[MAX_SPOTLIGHTS];
 
 uniform mat4 MVP;
 uniform mat4 MV;
 uniform mat4 M;
 uniform int SpotlightCount;
-uniform Spotlight Spotlights[8];
+uniform Spotlight Spotlights[MAX_SPOTLIGHTS];
 
 vec3 CalculateSpotlight(Spotlight light, vec3 position)
 {
@@ -46,11 +48,10 @@ void main()
 {
     UV = texCoords;
    
-    LightColor = vec3(0.0f);
     vec4 pos = M * vec4(vertexPosition, 1.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        LightColor += CalculateSpotlight(Spotlights[i], pos.xyz);
+        SpotlightColor[i] = CalculateSpotlight(Spotlights[i], pos.xyz);
     }
     
     gl_Position = MVP * vec4(vertexPosition, 1.0f);
