@@ -35,8 +35,8 @@ private:
 
 	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const;
 
-	Vector ConverToOpenGL(const Vector & vec) const;
-	Angle ConverToOpenGL(const Angle & ang) const;
+	Vector ConvertToOpenGL(const Vector & vec) const;
+	Angle ConvertToOpenGL(const Angle & ang) const;
 
 	IGame * m_Game;
 
