@@ -35,6 +35,13 @@ private:
 
 	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const;
 
+	// Accepts position & rotation in worlds coordinates, converts to OpenGL coordinate
+	// system by itself
+	glm::mat4 CreateModelMatrix(const Vector & position, const Angle & rotation) const;
+	glm::mat4 CreateViewMatrix(const Vector & viewPosition, const Angle & viewRotation) const;
+
+
+	// Converts our world space coordinates to OpenGL coordinates
 	Vector ConvertToOpenGL(const Vector & vec) const;
 	Angle ConvertToOpenGL(const Angle & ang) const;
 

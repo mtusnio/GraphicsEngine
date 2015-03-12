@@ -54,13 +54,10 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	Angle glRot = -ConvertToOpenGL(cameraRotation);
 
 	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::rotate(view, glm::radians(glRot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	view = glm::rotate(view, glm::radians(glRot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	view = glm::rotate(view, glm::radians(glRot.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	view = glm::translate(view, glm::vec3(glPos.x, glPos.y, glPos.z));
+	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
 
 
+	glUseProgram(m_Program.GetProgramID());
 	RenderObjects(view, projection, scene);
 
 	glfwSwapBuffers(m_Game->GetWindow());
@@ -68,7 +65,6 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const
 {
-	glUseProgram(m_Program.GetProgramID());
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	BindLightSources(scene);
@@ -95,9 +91,35 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	}
 }
 
+glm::mat4 OpenGLRenderer::CreateModelMatrix(const Vector & position, const Angle & rotation) const
+{
+	Vector pos = ConvertToOpenGL(position);
+	Angle ang = ConvertToOpenGL(rotation);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
+	model = glm::rotate(model, glm::radians(ang.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(ang.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(ang.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	return model;
+
+}
+
+glm::mat4 OpenGLRenderer::CreateViewMatrix(const Vector & viewPosition, const Angle & viewRotation) const
+{
+	Vector glPos = -ConvertToOpenGL(viewPosition);
+	Angle glRot = -ConvertToOpenGL(viewRotation);
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::rotate(view, glm::radians(glRot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	view = glm::rotate(view, glm::radians(glRot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::rotate(view, glm::radians(glRot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	view = glm::translate(view, glm::vec3(glPos.x, glPos.y, glPos.z));
+
+	return view;
+}
+
+
 void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 {
-	
 	for (size_t i = 0; i < mesh.VAOs.size(); i++)
 	{
 		OpenGLVAO * vao = static_cast<OpenGLVAO*>(mesh.VAOs[i]);
@@ -115,12 +137,7 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 
 void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent) const
 {
-	Vector pos = ConvertToOpenGL(ent->GetPosition());
-	Angle ang = ConvertToOpenGL(ent->GetRotation());
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, pos.z));
-	model = glm::rotate(model, glm::radians(ang.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(ang.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(ang.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 model = CreateModelMatrix(ent->GetPosition(), ent->GetRotation());
 
 	glm::mat4 MV = view * model;
 	glm::mat4 MVP = projection * MV;
