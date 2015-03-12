@@ -71,6 +71,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	glUseProgram(m_Program.GetProgramID());
 	auto entities = scene.GetEntitySystem().GetEntities();
 
+	BindLightSources(scene);
 	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
@@ -88,7 +89,6 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		{
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
-			BindLightSources(scene);
 			DrawMesh(*mesh);
 		}
 
