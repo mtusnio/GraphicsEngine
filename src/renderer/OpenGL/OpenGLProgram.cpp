@@ -17,7 +17,7 @@ void OpenGLProgram::Load(const std::shared_ptr<const OpenGLShader> & vertexShade
 	m_VertexShader = vertexShader;
 	m_FragmentShader = pixelShader;
 
-	if (m_ProgramID = 0)
+	if (m_ProgramID == 0)
 		m_ProgramID = glCreateProgram();
 
 	glAttachShader(m_ProgramID, m_VertexShader->ShaderID);
