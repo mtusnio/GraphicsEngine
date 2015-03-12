@@ -98,6 +98,9 @@
     <ClCompile Include="src\renderer\OpenGL\OpenGLVAO.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\OpenGL\OpenGLProgram.cpp">
+      <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -186,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="src\scene\LightSource.h">
       <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\OpenGL\OpenGLProgram.h">
+      <Filter>Header Files\renderer\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
