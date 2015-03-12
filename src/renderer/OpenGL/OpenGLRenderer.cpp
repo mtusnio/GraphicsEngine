@@ -50,9 +50,6 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 
-	Vector glPos = -ConvertToOpenGL(cameraPosition);
-	Angle glRot = -ConvertToOpenGL(cameraRotation);
-
 	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
 	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
 
