@@ -4,7 +4,7 @@
 #include <glm/fwd.hpp>
 
 #include "OpenGLHeader.h"
-#include "OpenGLShader.h"
+#include "OpenGLProgram.h"
 
 #include "../IRenderer.h"
 #include "../Model.h"
@@ -40,12 +40,11 @@ private:
 
 	IGame * m_Game;
 
-	GLuint m_Program;
+	OpenGLProgram m_Program;
+
 	GLuint m_LinearSampler;
 	GLuint m_BaseTexture;
 
-	std::shared_ptr<const OpenGLShader> m_VertexShader;
-	std::shared_ptr<const OpenGLShader> m_FragmentShader;
 };
 
 

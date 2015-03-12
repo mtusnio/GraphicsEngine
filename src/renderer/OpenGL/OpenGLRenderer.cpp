@@ -30,9 +30,6 @@ OpenGLRenderer::OpenGLRenderer(IGame & game)
 
 OpenGLRenderer::~OpenGLRenderer()
 {
-	if (m_Program != 0)
-		glDeleteProgram(m_Program);
-
 	if (m_LinearSampler != 0)
 		glDeleteSamplers(1, &m_LinearSampler);
 
@@ -126,11 +123,11 @@ void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & proj
 
 	glm::mat4 MV = view * model;
 	glm::mat4 MVP = projection * MV;
-	GLuint MVPLocation = glGetUniformLocation(m_Program, "MVP");
+	GLuint MVPLocation = glGetUniformLocation(m_Program.GetProgramID(), "MVP");
 	_ASSERT(MVPLocation != -1);
 
 	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix4fv(glGetUniformLocation(m_Program, "M"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(m_Program.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void OpenGLRenderer::BindLightSources(const IScene & scene) const
@@ -139,7 +136,7 @@ void OpenGLRenderer::BindLightSources(const IScene & scene) const
 
 	size_t lightCount = (int)fmin(8, sources.size());
 
-	glUniform1i(glGetUniformLocation(m_Program, "SpotlightCount"), lightCount);
+	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "SpotlightCount"), lightCount);
 
 	for (size_t i = 0; i < lightCount; i++)
 	{
@@ -149,22 +146,22 @@ void OpenGLRenderer::BindLightSources(const IScene & scene) const
 
 		std::string lightName = "Spotlights[" + std::to_string(i) + "]";
 		Vector dir = ConverToOpenGL(light->Rotation.ToDirection());
-		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
+		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
 		Vector lightPosition = ConverToOpenGL(light->Position);
-		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
-		glUniform3f(glGetUniformLocation(m_Program, (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Exponent").c_str()), light->Exponent);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Linear").c_str()), light->Attenuation.Linear);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Constant").c_str()), light->Attenuation.Constant);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".Cone").c_str()), light->Cone);
-		glUniform1f(glGetUniformLocation(m_Program, (lightName + ".MaxDistance").c_str()), light->MaxDistance);
+		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
+		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Exponent").c_str()), light->Exponent);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Linear").c_str()), light->Attenuation.Linear);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Constant").c_str()), light->Attenuation.Constant);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Cone").c_str()), light->Cone);
+		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".MaxDistance").c_str()), light->MaxDistance);
 	}
 }
 
 void OpenGLRenderer::BindTextures(const Material * mat) const
 {
-	glUniform1i(glGetUniformLocation(m_Program, "diffuseTexture"), 0);
+	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "diffuseTexture"), 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	_ASSERT(mat != nullptr);
@@ -177,33 +174,22 @@ void OpenGLRenderer::BindTextures(const Material * mat) const
 		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
 		glBindTexture(GL_TEXTURE_2D, tex->TextureID);	
 	}
-	glUniform3fv(glGetUniformLocation(m_Program, "ambientIntensity"), 1, mat->Ambient);
-	glUniform3fv(glGetUniformLocation(m_Program, "diffuseIntensity"), 1, mat->Diffuse);
+	glUniform3fv(glGetUniformLocation(m_Program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
+	glUniform3fv(glGetUniformLocation(m_Program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
 	glBindSampler(0, m_LinearSampler);
 	
 }
 
 void OpenGLRenderer::InitializeShaders()
 {
-	m_Program = glCreateProgram();
-
 	auto & shaderMan = m_Game->GetShaderManager();
 
-	m_VertexShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert"));
-	m_FragmentShader = std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag"));
+	m_Program.Load(std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert")), 
+					std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag")));
 
-	_ASSERT(m_VertexShader && m_FragmentShader);
+	_ASSERT(m_Program.GetProgramID() != 0);
 
-	if (m_VertexShader && m_FragmentShader)
-	{
-		glAttachShader(m_Program, m_VertexShader->ShaderID);
-		glAttachShader(m_Program, m_FragmentShader->ShaderID);
-	}
-	else
-		m_Game->Log("Error loading shaders");
-
-	glLinkProgram(m_Program);
-	glUseProgram(m_Program);
+	glUseProgram(m_Program.GetProgramID());
 }
 
 void OpenGLRenderer::InitializeSampler()
