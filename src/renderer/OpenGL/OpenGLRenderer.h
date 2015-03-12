@@ -41,6 +41,7 @@ private:
 	IGame * m_Game;
 
 	OpenGLProgram m_Program;
+	OpenGLProgram m_ShadowmapProgram;
 
 	GLuint m_LinearSampler;
 	GLuint m_BaseTexture;

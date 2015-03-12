@@ -68,6 +68,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const
 {
+	glUseProgram(m_Program.GetProgramID());
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glDisable(GL_TEXTURE_2D);
@@ -186,10 +187,11 @@ void OpenGLRenderer::InitializeShaders()
 
 	m_Program.Load(std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/vertex.vert")), 
 					std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/pixel.frag")));
+	m_ShadowmapProgram.Load(std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/shadow.vert")),
+		std::static_pointer_cast<const OpenGLShader>(shaderMan.Cache("shaders/shadow.frag")));
 
 	_ASSERT(m_Program.GetProgramID() != 0);
-
-	glUseProgram(m_Program.GetProgramID());
+	_ASSERT(m_ShadowmapProgram.GetProgramID() != 0);
 }
 
 void OpenGLRenderer::InitializeSampler()
