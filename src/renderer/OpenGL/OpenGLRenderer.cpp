@@ -1,4 +1,4 @@
-#include "OpenGLRenderer.h"
+﻿#include "OpenGLRenderer.h"
 
 #include <cmath>
 
@@ -127,14 +127,10 @@ void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & proj
 	glm::mat4 MV = view * model;
 	glm::mat4 MVP = projection * MV;
 	GLuint MVPLocation = glGetUniformLocation(m_Program, "MVP");
-	GLuint MVLocation = glGetUniformLocation(m_Program, "MV");
-	GLuint MLocation = glGetUniformLocation(m_Program, "M");
-
 	_ASSERT(MVPLocation != -1);
 
 	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix4fv(MVLocation, 1, GL_FALSE, glm::value_ptr(MV));
-	glUniformMatrix4fv(MLocation, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(m_Program, "M"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void OpenGLRenderer::BindLightSources(const IScene & scene) const

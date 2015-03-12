@@ -23,7 +23,6 @@ out vec2 UV;
 out vec3 SpotlightColor[MAX_SPOTLIGHTS];
 
 uniform mat4 MVP;
-uniform mat4 MV;
 uniform mat4 M;
 uniform int SpotlightCount;
 uniform Spotlight Spotlights[MAX_SPOTLIGHTS];
