@@ -63,10 +63,6 @@ private:
 	GLuint m_LinearSampler;
 	GLuint m_BaseTexture;
 	GLuint m_ShadowmapTextures[MAX_SPOTLIGHTS];
-
-	GLuint m_Framebuffer;
-	GLuint m_ColorBuffer;
-	GLuint m_DepthBuffer;
 };
 
 

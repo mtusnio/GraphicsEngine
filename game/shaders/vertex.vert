@@ -21,11 +21,13 @@ layout(location = 2) in vec3 vertexNormal;
 
 out vec2 UV;
 out vec3 SpotlightColor[MAX_SPOTLIGHTS];
+out vec4 ShadowCoord[MAX_SPOTLIGHTS];
 
 uniform mat4 MVP;
 uniform mat4 M;
 uniform int SpotlightCount;
 uniform Spotlight Spotlights[MAX_SPOTLIGHTS];
+uniform mat4 SpotlightMVP[MAX_SPOTLIGHTS];
 
 vec3 CalculateSpotlight(Spotlight light, vec3 position, vec3 normal)
 {
@@ -53,6 +55,7 @@ void main()
     for(int i = 0; i < SpotlightCount; i++)
     {
         SpotlightColor[i] = CalculateSpotlight(Spotlights[i], pos.xyz, normal.xyz);
+        ShadowCoord[i] = SpotlightMVP[i] * vec4(vertexPosition, 1.0f);
     }
     
     

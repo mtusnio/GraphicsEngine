@@ -34,16 +34,9 @@ OpenGLRenderer::OpenGLRenderer(IGame & game)
 
 OpenGLRenderer::~OpenGLRenderer()
 {
-	if (m_Framebuffer != 0)
-		glDeleteFramebuffers(1, &m_Framebuffer);
-
 	glDeleteTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
-
-	if (m_LinearSampler != 0)
-		glDeleteSamplers(1, &m_LinearSampler);
-
-	if (m_BaseTexture != 0)
-		glDeleteTextures(1, &m_BaseTexture);
+	glDeleteSamplers(1, &m_LinearSampler);
+	glDeleteTextures(1, &m_BaseTexture);
 }
 
 void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
@@ -78,12 +71,15 @@ void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
 	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
-	glUniform1i(glGetUniformLocation(m_ShadowmapProgram.GetProgramID(), "SpotlightCount"), lightCount);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
+	GLuint frameBuffer;
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	glDrawBuffer(GL_NONE);
 	for (size_t i = 0; i < lightCount; i++)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ShadowmapTextures[i], 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_ShadowmapTextures[i], 0);
 		StartRender(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
 
 		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
@@ -92,6 +88,7 @@ void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
 		RenderObjects(view, projection, scene, m_ShadowmapProgram);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDeleteFramebuffers(1, &frameBuffer);
 }
 
 void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting) const
@@ -101,8 +98,9 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glUseProgram(program.GetProgramID());
+
 	if (lighting)
-		BindLightSources(scene, m_Program);
+		BindLightSources(scene, program);
 
 	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
@@ -209,12 +207,12 @@ void OpenGLRenderer::BindLightSources(const IScene & scene, const OpenGLProgram 
 
 		std::string shadowmapName = "Shadowmap[" + std::to_string(i) + "]";
 		GLenum texture = GL_TEXTURE6 + i;
-		glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), shadowmapName.c_str()), 0);
-
+		
 		glActiveTexture(texture);
 		glBindTexture(GL_TEXTURE_2D, m_ShadowmapTextures[i]);
-		glBindSampler(0, m_LinearSampler);
+		glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), shadowmapName.c_str()), i + 6);
 	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const
@@ -299,41 +297,18 @@ void OpenGLRenderer::InitializeBaseTexture()
 
 void OpenGLRenderer::InitializeShadowmapTextures()
 {
-	int width = SHADOWMAP_WIDTH;
-	int height = SHADOWMAP_HEIGHT;
-
 	glGenTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
 	for (int i = 0; i < MAX_SPOTLIGHTS; i++)
 	{
 		GLuint & tex = m_ShadowmapTextures[i];
 		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, 0, GL_DEPTH_COMPONENT16, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glGenFramebuffers(1, &m_Framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
-
-	glGenRenderbuffers(1, &m_ColorBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-
-	glGenRenderbuffers(1, &m_DepthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_DepthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
-
-	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE) 
-	{
-		m_Game->Log("Frame buffer failed with status: " + std::to_string(status));
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);	
 }
 
 Vector OpenGLRenderer::ConvertToOpenGL(const Vector & vec) const

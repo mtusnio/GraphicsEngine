@@ -4,6 +4,7 @@
 
 in vec2 UV;
 in vec3 SpotlightColor[MAX_SPOTLIGHTS];
+in vec4 ShadowCoord[MAX_SPOTLIGHTS];
 
 out vec4 color;
 
@@ -13,8 +14,7 @@ uniform vec3 diffuseIntensity;
 uniform sampler2D diffuseTexture;
 
 uniform int SpotlightCount;
-uniform mat4 SpotlightMVP[MAX_SPOTLIGHTS];
-uniform sampler2D Shadowmap[MAX_SPOTLIGHTS];
+uniform sampler2DShadow Shadowmap[MAX_SPOTLIGHTS];
 
 
 void main()
@@ -22,7 +22,8 @@ void main()
     vec3 clr = vec3(0.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        clr += SpotlightColor[i];
+        if(texture(Shadowmap[i], ShadowCoord[i].xyz) > ShadowCoord[i].x - 0.005)
+            clr += SpotlightColor[i];
     }
     
     vec4 tex = texture(diffuseTexture, UV.xy);
