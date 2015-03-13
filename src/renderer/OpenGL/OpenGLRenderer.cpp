@@ -18,6 +18,10 @@
 
 #include "../../scene/LightSource.h"
 
+
+const float OpenGLRenderer::NEAR = 0.25f;
+const float OpenGLRenderer::FAR = 1000.0f;
+
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
@@ -25,11 +29,16 @@ OpenGLRenderer::OpenGLRenderer(IGame & game)
 	InitializeShaders();
 	InitializeSampler();
 	InitializeBaseTexture();
-
+	InitializeShadowmapTextures();
 }
 
 OpenGLRenderer::~OpenGLRenderer()
 {
+	if (m_Framebuffer != 0)
+		glDeleteFramebuffers(1, &m_Framebuffer);
+
+	glDeleteTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
+
 	if (m_LinearSampler != 0)
 		glDeleteSamplers(1, &m_LinearSampler);
 
@@ -39,32 +48,59 @@ OpenGLRenderer::~OpenGLRenderer()
 
 void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
 {
-	int width, height;
+	RenderSpotlights(scene);
 
+	int width, height;
 	glfwGetFramebufferSize(m_Game->GetWindow(), &width, &height);
 	float aspect = (float)width / (float)height;
 
+	
+	StartRender(width, height);
+
+	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
+	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
+
+	// Draws our scene
+	BindLightSources(scene, m_Program);
+	RenderObjects(view, projection, scene, m_Program);
+
+	glfwSwapBuffers(m_Game->GetWindow());
+}
+
+void OpenGLRenderer::StartRender(int width, int height) const
+{
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
-
-	glm::mat4 projection = glm::perspective(90.0f, aspect, 0.25f, 1000.0f);
-	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
-
-
-	glUseProgram(m_Program.GetProgramID());
-	RenderObjects(view, projection, scene);
-
-	glfwSwapBuffers(m_Game->GetWindow());
 }
 
-void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene) const
+void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
+{
+	auto sources = scene.GetLightSources(LightSource::SPOT);
+	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
+	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "SpotlightCount"), lightCount);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ShadowmapTextures[i], 0);
+		StartRender(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
+
+		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
+		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
+		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
+		RenderObjects(view, projection, scene, m_ShadowmapProgram);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program) const
 {
 	auto entities = scene.GetEntitySystem().GetEntities();
 
-	BindLightSources(scene);
+	glUseProgram(program.GetProgramID());
 	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
@@ -75,7 +111,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 
 		_ASSERT(pModel != nullptr);
 
-		BindMatrices(view, projection, ent);
+		BindMatrices(view, projection, ent, program);
 
 		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
@@ -131,26 +167,25 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 	}
 }
 
-void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent) const
+void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent, const OpenGLProgram & program) const
 {
 	glm::mat4 model = CreateModelMatrix(ent->GetPosition(), ent->GetRotation());
 
-	glm::mat4 MV = view * model;
-	glm::mat4 MVP = projection * MV;
-	GLuint MVPLocation = glGetUniformLocation(m_Program.GetProgramID(), "MVP");
+	glm::mat4 MVP = projection * view * model;
+	GLuint MVPLocation = glGetUniformLocation(program.GetProgramID(), "MVP");
 	_ASSERT(MVPLocation != -1);
 
 	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix4fv(glGetUniformLocation(m_Program.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void OpenGLRenderer::BindLightSources(const IScene & scene) const
+void OpenGLRenderer::BindLightSources(const IScene & scene, const OpenGLProgram & program) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
 
-	size_t lightCount = (int)fmin(8, sources.size());
+	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
 
-	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "SpotlightCount"), lightCount);
+	glUniform1i(glGetUniformLocation(program.GetProgramID(), "SpotlightCount"), lightCount);
 
 	for (size_t i = 0; i < lightCount; i++)
 	{
@@ -160,16 +195,16 @@ void OpenGLRenderer::BindLightSources(const IScene & scene) const
 
 		std::string lightName = "Spotlights[" + std::to_string(i) + "]";
 		Vector dir = ConvertToOpenGL(light->Rotation.ToDirection());
-		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
+		glUniform3f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Direction").c_str()), dir.x, dir.y, dir.z);
 		Vector lightPosition = ConvertToOpenGL(light->Position);
-		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
-		glUniform3f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Exponent").c_str()), light->Exponent);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Linear").c_str()), light->Attenuation.Linear);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Constant").c_str()), light->Attenuation.Constant);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".Cone").c_str()), light->Cone);
-		glUniform1f(glGetUniformLocation(m_Program.GetProgramID(), (lightName + ".MaxDistance").c_str()), light->MaxDistance);
+		glUniform3f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Position").c_str()), lightPosition.x, lightPosition.y, lightPosition.z);
+		glUniform3f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Color").c_str()), light->Color[0], light->Color[1], light->Color[2]);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Exponent").c_str()), light->Exponent);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Linear").c_str()), light->Attenuation.Linear);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Constant").c_str()), light->Attenuation.Constant);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Cone").c_str()), light->Cone);
+		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".MaxDistance").c_str()), light->MaxDistance);
 	}
 }
 
@@ -232,7 +267,46 @@ void OpenGLRenderer::InitializeBaseTexture()
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE, GL_RGBA8, GL_UNSIGNED_BYTE, data);
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_SIZE, TEXTURE_SIZE, 0, GL_UNSIGNED_BYTE, GL_RGBA, data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
+void OpenGLRenderer::InitializeShadowmapTextures()
+{
+	int width = SHADOWMAP_WIDTH;
+	int height = SHADOWMAP_HEIGHT;
+
+	glGenTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
+	for (int i = 0; i < MAX_SPOTLIGHTS; i++)
+	{
+		GLuint & tex = m_ShadowmapTextures[i];
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenFramebuffers(1, &m_Framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
+
+	glGenRenderbuffers(1, &m_ColorBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
+
+	glGenRenderbuffers(1, &m_DepthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_DepthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE) 
+	{
+		m_Game->Log("Frame buffer failed with status: " + std::to_string(status));
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 Vector OpenGLRenderer::ConvertToOpenGL(const Vector & vec) const
