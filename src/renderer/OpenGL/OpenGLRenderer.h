@@ -27,11 +27,12 @@ private:
 	static const float NEAR;
 	static const float FAR;
 
-	void DrawMesh(const Model::Mesh & mesh) const;
+	void DrawMesh(const Model::Mesh & mesh, const OpenGLProgram & program) const;
 
-	void BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent, const OpenGLProgram & program) const;
 	void BindLightSources(const IScene & scene, const OpenGLProgram & program) const;
-	void BindTextures(const Material * mat) const;
+	void BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const;
+
+	void BindTextures(const Material * mat, const OpenGLProgram & program) const;
 
 	void InitializeShaders();
 	void InitializeBaseTexture();
@@ -42,7 +43,7 @@ private:
 
 	void StartRender(int width, int height) const;
 	void RenderSpotlights(const IScene & scene) const;
-	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program) const;
+	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting = false) const;
 
 	// Accepts position & rotation in worlds coordinates, converts to OpenGL coordinate
 	// system by itself

@@ -7,13 +7,14 @@ in vec3 SpotlightColor[MAX_SPOTLIGHTS];
 
 out vec4 color;
 
-
-uniform int SpotlightCount;
-
 uniform vec3 ambientIntensity;
 
 uniform vec3 diffuseIntensity;
 uniform sampler2D diffuseTexture;
+
+uniform int SpotlightCount;
+uniform mat4 SpotlightMVP[MAX_SPOTLIGHTS];
+uniform sampler2D Shadowmap[MAX_SPOTLIGHTS];
 
 
 void main()

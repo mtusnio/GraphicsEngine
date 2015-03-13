@@ -55,5 +55,6 @@ void main()
         SpotlightColor[i] = CalculateSpotlight(Spotlights[i], pos.xyz, normal.xyz);
     }
     
+    
     gl_Position = MVP * vec4(vertexPosition, 1.0f);
 }

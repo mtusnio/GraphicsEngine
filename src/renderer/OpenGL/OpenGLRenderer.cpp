@@ -60,9 +60,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
 	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
 
-	// Draws our scene
-	BindLightSources(scene, m_Program);
-	RenderObjects(view, projection, scene, m_Program);
+	RenderObjects(view, projection, scene, m_Program, true);
 
 	glfwSwapBuffers(m_Game->GetWindow());
 }
@@ -80,7 +78,7 @@ void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
 	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
-	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "SpotlightCount"), lightCount);
+	glUniform1i(glGetUniformLocation(m_ShadowmapProgram.GetProgramID(), "SpotlightCount"), lightCount);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
 	for (size_t i = 0; i < lightCount; i++)
@@ -96,11 +94,16 @@ void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program) const
+void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting) const
 {
+	glm::mat4 SpotlightVP[MAX_SPOTLIGHTS];
+
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glUseProgram(program.GetProgramID());
+	if (lighting)
+		BindLightSources(scene, m_Program);
+
 	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
@@ -111,13 +114,23 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 
 		_ASSERT(pModel != nullptr);
 
-		BindMatrices(view, projection, ent, program);
+		glm::mat4 model = CreateModelMatrix(ent->GetPosition(), ent->GetRotation());
+
+		glm::mat4 MVP = projection * view * model;
+		GLuint MVPLocation = glGetUniformLocation(program.GetProgramID(), "MVP");
+		_ASSERT(MVPLocation != -1);
+
+		glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
+		glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
+
+		if (lighting)
+			BindLightsForEntity(scene, program, model);
 
 		for (const Model::Mesh * mesh : pModel->Meshes)
 		{
 			_ASSERT(mesh != nullptr && mesh->VAOs.size() > 0);
 
-			DrawMesh(*mesh);
+			DrawMesh(*mesh, program);
 		}
 
 	}
@@ -150,7 +163,7 @@ glm::mat4 OpenGLRenderer::CreateViewMatrix(const Vector & viewPosition, const An
 }
 
 
-void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
+void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh, const OpenGLProgram & program) const
 {
 	for (size_t i = 0; i < mesh.VAOs.size(); i++)
 	{
@@ -159,24 +172,12 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh) const
 
 		auto pair = mesh.Materials[i];
 
-		BindTextures(pair.second);
+		BindTextures(pair.second, program);
 
 		glBindVertexArray(vao->ID);
 		glDrawElements(GL_TRIANGLES, vao->Size, GL_UNSIGNED_INT, (void*)0);
 		glBindVertexArray(0);
 	}
-}
-
-void OpenGLRenderer::BindMatrices(const glm::mat4 & view, const glm::mat4 & projection, const Entity * ent, const OpenGLProgram & program) const
-{
-	glm::mat4 model = CreateModelMatrix(ent->GetPosition(), ent->GetRotation());
-
-	glm::mat4 MVP = projection * view * model;
-	GLuint MVPLocation = glGetUniformLocation(program.GetProgramID(), "MVP");
-	_ASSERT(MVPLocation != -1);
-
-	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void OpenGLRenderer::BindLightSources(const IScene & scene, const OpenGLProgram & program) const
@@ -205,12 +206,38 @@ void OpenGLRenderer::BindLightSources(const IScene & scene, const OpenGLProgram 
 		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Quadratic").c_str()), light->Attenuation.Quadratic);
 		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".Cone").c_str()), light->Cone);
 		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".MaxDistance").c_str()), light->MaxDistance);
+
+		std::string shadowmapName = "Shadowmap[" + std::to_string(i) + "]";
+		GLenum texture = GL_TEXTURE6 + i;
+		glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), shadowmapName.c_str()), 0);
+
+		glActiveTexture(texture);
+		glBindTexture(GL_TEXTURE_2D, m_ShadowmapTextures[i]);
+		glBindSampler(0, m_LinearSampler);
 	}
 }
 
-void OpenGLRenderer::BindTextures(const Material * mat) const
+void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const
 {
-	glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), "diffuseTexture"), 0);
+	auto sources = scene.GetLightSources(LightSource::SPOT);
+	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
+
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
+		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
+		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
+
+		glm::mat4 mvp = projection * view * model;
+
+		std::string name = "SpotlightMVP[" + std::to_string(i) + "]";
+		glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mvp));
+	}
+}
+
+void OpenGLRenderer::BindTextures(const Material * mat, const OpenGLProgram & program) const
+{
+	glUniform1i(glGetUniformLocation(program.GetProgramID(), "diffuseTexture"), 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	_ASSERT(mat != nullptr);
@@ -223,8 +250,8 @@ void OpenGLRenderer::BindTextures(const Material * mat) const
 		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
 		glBindTexture(GL_TEXTURE_2D, tex->TextureID);	
 	}
-	glUniform3fv(glGetUniformLocation(m_Program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
-	glUniform3fv(glGetUniformLocation(m_Program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
 	glBindSampler(0, m_LinearSampler);
 	
 }
