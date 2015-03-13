@@ -226,7 +226,14 @@ void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgr
 		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
 
-		glm::mat4 mvp = projection * view * model;
+		// Transate for UV mapping
+		glm::mat4 bias(
+			0.5, 0.0, 0.0, 0.0,
+			0.0, 0.5, 0.0, 0.0,
+			0.0, 0.0, 0.5, 0.0,
+			0.5, 0.5, 0.5, 1.0
+			);
+		glm::mat4 mvp = bias * (projection * view * model);
 
 		std::string name = "SpotlightMVP[" + std::to_string(i) + "]";
 		glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mvp));

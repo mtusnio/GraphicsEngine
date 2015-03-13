@@ -22,7 +22,7 @@ void main()
     vec3 clr = vec3(0.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        if(texture(Shadowmap[i], ShadowCoord[i].xyz) > ShadowCoord[i].x - 0.005)
+        if(texture(Shadowmap[i], ShadowCoord[i].xyz) > ShadowCoord[i].z)
             clr += SpotlightColor[i];
     }
     
