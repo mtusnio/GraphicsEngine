@@ -41,7 +41,7 @@ void CustomGame::Start(GLFWwindow & window)
 	Entity * entity = new Entity();
 
 	entity->SetModel(ptr);
-	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
+	entity->SetPosition(Vector(0, 0, -2.0f));
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
