@@ -45,7 +45,11 @@ void Scene::UnregisterLight(const LightSource & light)
 bool Scene::HasLightSource(const LightSource & light) const
 {
 	for (auto pair : m_LightSources)
-		return std::find(pair.second.begin(), pair.second.end(), &light) != pair.second.end();
+	{
+		if (std::find(pair.second.begin(), pair.second.end(), &light) != pair.second.end())
+			return true;
+	}
+		
 	
 	return false;
 }
