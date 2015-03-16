@@ -269,7 +269,7 @@ void OpenGLRenderer::BindMaterial(const Material * mat, const OpenGLProgram & pr
 void OpenGLRenderer::BindTexture(int pos, const Texture * texture, const std::string & name, const OpenGLProgram & program) const
 {
 	const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(texture);
-	glUniform1i(glGetUniformLocation(program.GetProgramID(), name.c_str()), 0);
+	glUniform1i(glGetUniformLocation(program.GetProgramID(), name.c_str()), pos);
 
 	glActiveTexture(GL_TEXTURE0 + pos);
 
