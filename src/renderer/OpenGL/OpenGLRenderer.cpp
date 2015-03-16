@@ -20,16 +20,16 @@
 
 
 const float OpenGLRenderer::NEAR = 0.25f;
-const float OpenGLRenderer::FAR = 1000.0f;
+const float OpenGLRenderer::FAR = 40.0f;
 
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
 	m_Game = &game;
 	
+	InitializeShadowmapTextures();
+	InitializeBaseTexture();
 	InitializeShaders();
 	InitializeSampler();
-	InitializeBaseTexture();
-	InitializeShadowmapTextures();
 }
 
 OpenGLRenderer::~OpenGLRenderer()
@@ -37,18 +37,20 @@ OpenGLRenderer::~OpenGLRenderer()
 	glDeleteTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
 	glDeleteSamplers(1, &m_LinearSampler);
 	glDeleteTextures(1, &m_BaseTexture);
+	glDeleteFramebuffers(1, &m_ShadowFramebuffer);
 }
+
 
 void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosition, const Angle & cameraRotation) const
 {
-	RenderSpotlights(scene);
+	RenderShadowmaps(scene);
 
 	int width, height;
 	glfwGetFramebufferSize(m_Game->GetWindow(), &width, &height);
 	float aspect = (float)width / (float)height;
 
 	
-	StartRender(width, height);
+	StartRender(0, 0, width, height);
 
 	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
 	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
@@ -58,43 +60,50 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	glfwSwapBuffers(m_Game->GetWindow());
 }
 
-void OpenGLRenderer::StartRender(int width, int height) const
+void OpenGLRenderer::StartRender(int x, int y, int width, int height) const
 {
-	glViewport(0, 0, width, height);
+	glViewport(x, y, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 }
 
-void OpenGLRenderer::RenderSpotlights(const IScene & scene) const
+void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
 	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
 
-	GLuint frameBuffer;
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFramebuffer);
+	
 
-	glDrawBuffer(GL_NONE);
 	for (size_t i = 0; i < lightCount; i++)
 	{
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_ShadowmapTextures[i], 0);
-		StartRender(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ShadowmapTextures[i], 0);
+		glDrawBuffer(GL_NONE);
+		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			m_Game->Log("Frame buffer failed with " + std::to_string(status));
+			_ASSERT(status == GL_FRAMEBUFFER_COMPLETE);
+			break;
+		}
+
+		StartRender(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
 
 		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
 		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
-		RenderObjects(view, projection, scene, m_ShadowmapProgram);
+
+		RenderObjects(view, projection, scene, m_ShadowmapProgram, false);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &frameBuffer);
 }
 
 void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting) const
 {
-	glm::mat4 SpotlightVP[MAX_SPOTLIGHTS];
-
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glUseProgram(program.GetProgramID());
@@ -102,7 +111,6 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	if (lighting)
 		BindLightSources(scene, program);
 
-	glDisable(GL_TEXTURE_2D);
 	for (auto pair : entities)
 	{
 		Entity * ent = pair.second;
@@ -132,6 +140,7 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 		}
 
 	}
+
 }
 
 glm::mat4 OpenGLRenderer::CreateModelMatrix(const Vector & position, const Angle & rotation) const
@@ -175,6 +184,10 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh, const OpenGLProgram & pr
 		glBindVertexArray(vao->ID);
 		glDrawElements(GL_TRIANGLES, vao->Size, GL_UNSIGNED_INT, (void*)0);
 		glBindVertexArray(0);
+
+		// Unbind any textures we've had
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindSampler(0, 0);
 	}
 }
 
@@ -206,13 +219,14 @@ void OpenGLRenderer::BindLightSources(const IScene & scene, const OpenGLProgram 
 		glUniform1f(glGetUniformLocation(program.GetProgramID(), (lightName + ".MaxDistance").c_str()), light->MaxDistance);
 
 		std::string shadowmapName = "Shadowmap[" + std::to_string(i) + "]";
-		GLenum texture = GL_TEXTURE6 + i;
-		
-		glActiveTexture(texture);
+		glActiveTexture(GL_TEXTURE6 + i);
 		glBindTexture(GL_TEXTURE_2D, m_ShadowmapTextures[i]);
-		glUniform1i(glGetUniformLocation(m_Program.GetProgramID(), shadowmapName.c_str()), i + 6);
+		GLuint location = glGetUniformLocation(m_Program.GetProgramID(), shadowmapName.c_str());
+
+		glUniform1i(location, i + 6);
+		
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);
+	
 }
 
 void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const
@@ -226,14 +240,12 @@ void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgr
 		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
 
-		// Transate for UV mapping
-		glm::mat4 bias(
-			0.5, 0.0, 0.0, 0.0,
-			0.0, 0.5, 0.0, 0.0,
-			0.0, 0.0, 0.5, 0.0,
-			0.5, 0.5, 0.5, 1.0
-			);
-		glm::mat4 mvp = bias * (projection * view * model);
+		glm::mat4 biasMatrix = glm::mat4(
+			0.5f, 0.f, 0.f, 0.f,
+			0.f, 0.5f, 0.f, 0.f,
+			0.f, 0.f, 0.5f, 0.f,
+			0.5f, 0.5f, 0.5f, 1.f);
+		glm::mat4 mvp = biasMatrix * (projection * view * model);
 
 		std::string name = "SpotlightMVP[" + std::to_string(i) + "]";
 		glUniformMatrix4fv(glGetUniformLocation(program.GetProgramID(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mvp));
@@ -258,7 +270,6 @@ void OpenGLRenderer::BindTextures(const Material * mat, const OpenGLProgram & pr
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
 	glBindSampler(0, m_LinearSampler);
-	
 }
 
 void OpenGLRenderer::InitializeShaders()
@@ -304,18 +315,24 @@ void OpenGLRenderer::InitializeBaseTexture()
 
 void OpenGLRenderer::InitializeShadowmapTextures()
 {
+	glGenFramebuffers(1, &m_ShadowFramebuffer);
 	glGenTextures(MAX_SPOTLIGHTS, m_ShadowmapTextures);
+
+
 	for (int i = 0; i < MAX_SPOTLIGHTS; i++)
 	{
-		GLuint & tex = m_ShadowmapTextures[i];
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, 0, GL_DEPTH_COMPONENT16, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, m_ShadowmapTextures[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);	
+	
+	
 }
 
 Vector OpenGLRenderer::ConvertToOpenGL(const Vector & vec) const

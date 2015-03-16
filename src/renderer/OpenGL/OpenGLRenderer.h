@@ -23,7 +23,7 @@ public:
 private:
 	static const int MAX_SPOTLIGHTS = 8;
 	static const int SHADOWMAP_WIDTH = 1024;
-	static const int SHADOWMAP_HEIGHT = 768;
+	static const int SHADOWMAP_HEIGHT = 1024;
 	static const float NEAR;
 	static const float FAR;
 
@@ -41,9 +41,10 @@ private:
 
 	void PrepareView() const;
 
-	void StartRender(int width, int height) const;
-	void RenderSpotlights(const IScene & scene) const;
+	void StartRender(int x, int y, int width, int height) const;
+	void RenderShadowmaps(const IScene & scene) const;
 	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting = false) const;
+	void RenderDebug() const;
 
 	// Accepts position & rotation in worlds coordinates, converts to OpenGL coordinate
 	// system by itself
@@ -59,6 +60,8 @@ private:
 
 	OpenGLProgram m_Program;
 	OpenGLProgram m_ShadowmapProgram;
+
+	GLuint m_ShadowFramebuffer;
 
 	GLuint m_LinearSampler;
 	GLuint m_BaseTexture;

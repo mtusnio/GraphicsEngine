@@ -22,7 +22,8 @@ void main()
     vec3 clr = vec3(0.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        if(texture(Shadowmap[i], ShadowCoord[i].xyz) > ShadowCoord[i].z)
+        float depth = textureProj(Shadowmap[0], ShadowCoord[0], 0.005f);
+        if(depth > 0.0)
             clr += SpotlightColor[i];
     }
     
