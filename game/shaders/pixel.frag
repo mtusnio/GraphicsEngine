@@ -13,6 +13,9 @@ uniform vec3 ambientIntensity;
 uniform vec3 diffuseIntensity;
 uniform sampler2D diffuseTexture;
 
+uniform vec3 specularIntensity;
+uniform sampler2D specularTexture;
+
 uniform int SpotlightCount;
 uniform sampler2DShadow Shadowmap[MAX_SPOTLIGHTS];
 
