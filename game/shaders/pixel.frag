@@ -22,7 +22,7 @@ void main()
     vec3 clr = vec3(0.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
-        float shadow = textureProj(Shadowmap[0], ShadowCoord[0], 0.005f);
+        float shadow = textureProj(Shadowmap[i], ShadowCoord[i], 0.005f);
         clr += SpotlightColor[i] * shadow;
     }
     
