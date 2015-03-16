@@ -16,6 +16,16 @@ CustomGame::CustomGame()
 	m_Light.Exponent = 15.0f;
 	m_Light.Cone = 90.0f;
 	m_Light.MaxDistance = 128.f;
+
+	for (size_t i = 0; i < m_KeyLights.size(); i++)
+	{
+		auto & light = m_KeyLights[i];
+		light = m_Light;
+		light.Color[0] = 0.0f;
+		light.Color[1] = 0.0f;
+		light.Color[2] = 0.0f;
+		light.Color[i] = 1.0f;
+	}
 }
 
 CustomGame::~CustomGame()
