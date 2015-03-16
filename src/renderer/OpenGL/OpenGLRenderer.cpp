@@ -255,25 +255,33 @@ void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgr
 void OpenGLRenderer::BindMaterial(const Material * mat, const OpenGLProgram & program) const
 {
 	_ASSERT(mat != nullptr);
-	glUniform1i(glGetUniformLocation(program.GetProgramID(), "diffuseTexture"), 0);
+	
+	BindTexture(0, mat->AmbientTex.get(), "ambientTexture", program);
+	BindTexture(1, mat->DiffuseTex.get(), "diffuseTexture", program);
+	BindTexture(2, mat->SpecularTex.get(), "specularTexture", program);
 
-	glActiveTexture(GL_TEXTURE0);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "specularIntensity"), 1, mat->Specular);
+	
+}
 
-	if (mat->DiffuseTex.get() == nullptr)
+void OpenGLRenderer::BindTexture(int pos, const Texture * texture, const std::string & name, const OpenGLProgram & program) const
+{
+	const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(texture);
+	glUniform1i(glGetUniformLocation(program.GetProgramID(), name.c_str()), 0);
+
+	glActiveTexture(GL_TEXTURE0 + pos);
+
+	if (tex == nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
 	}
 	else
 	{
-		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
-		glBindTexture(GL_TEXTURE_2D, tex->TextureID);	
+		glBindTexture(GL_TEXTURE_2D, tex->TextureID);
 	}
-
-
-	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
-	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
-	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "specularIntensity"), 1, mat->Specular);
-	glBindSampler(0, m_LinearSampler);
+	glBindSampler(pos, m_LinearSampler);
 }
 
 void OpenGLRenderer::InitializeShaders()

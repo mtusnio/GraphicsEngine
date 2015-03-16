@@ -33,6 +33,8 @@ private:
 	void BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const;
 
 	void BindMaterial(const Material * mat, const OpenGLProgram & program) const;
+	// Binds to current program. If null passed it will use a default white texture
+	void BindTexture(int pos, const Texture * texture, const std::string & name, const OpenGLProgram & program) const;
 
 	void InitializeShaders();
 	void InitializeBaseTexture();
