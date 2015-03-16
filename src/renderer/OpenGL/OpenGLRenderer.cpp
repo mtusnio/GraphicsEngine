@@ -20,7 +20,7 @@
 
 
 const float OpenGLRenderer::NEAR = 0.25f;
-const float OpenGLRenderer::FAR = 40.0f;
+const float OpenGLRenderer::FAR = 100.0f;
 
 OpenGLRenderer::OpenGLRenderer(IGame & game)
 {
@@ -51,7 +51,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 	
 	StartRender(0, 0, width, height);
-
+	glCullFace(GL_BACK);
 	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
 	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
 
@@ -90,7 +90,7 @@ void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 		}
 
 		StartRender(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
-
+		glCullFace(GL_FRONT);
 		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
 		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
