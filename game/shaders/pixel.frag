@@ -38,33 +38,32 @@ uniform sampler2DShadow Shadowmap[MAX_SPOTLIGHTS];
 
 uniform mat4 M;
 
-vec3 CalculateSpotlight(Spotlight light, vec3 position, vec3 normal)
-{
-    vec3 diff = position - light.Position;
-    float dist = length(diff);
-    vec3 direction = normalize(diff);
-    
-    float ang = degrees(acos(dot(direction, light.Direction)));
-    
-    
-    if(ang > light.Cone/2.0 || dist > light.MaxDistance)
-        return vec3(0.0f);
-        
-    vec3 clr = (pow(max(0.0, dot(direction, light.Direction)), light.Exponent)/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0))) * light.Color * max(0.0f, dot(normal, -direction));
+vec3 CalculateSpotlightDiffuse(Spotlight light, vec3 reflectionDirection, vec3 normal, float dist)
+{     
+    float diffuse = pow(max(0.0, dot(reflectionDirection, light.Direction)), light.Exponent) * max(0.0f, dot(normal, -reflectionDirection));
+    vec3 clr = diffuse/(light.Constant + light.Linear * dist + light.Quadratic * pow(dist, 2.0)) * light.Color;
     return clamp(clr.xyz, 0.0, 1.0);
 }
 
 void main()
 {
-    vec3 clr = vec3(0.0);
+    vec3 diffuseColor = vec3(0.0);
+    vec3 specularColor = vec3(0.0);
     vec4 pos = M * vec4(fragmentPosition, 1.0);
     vec4 normal = inverse(transpose(M)) * vec4(fragmentNormal, 0.0);
     for(int i = 0; i < SpotlightCount; i++)
     {
+        vec3 diff = fragmentPosition - Spotlights[i].Position;
+        vec3 direction = normalize(diff);
+        float dist = length(diff);
+        float ang = degrees(acos(dot(direction, Spotlights[i].Direction)));
+        if(ang > Spotlights[i].Cone/2.0 || dist > Spotlights[i].MaxDistance)
+            continue;
+        
         float shadow = textureProj(Shadowmap[i], ShadowCoord[i], 0.005f);
-        clr += CalculateSpotlight(Spotlights[i], pos.xyz, normal.xyz)  * shadow;
+        diffuseColor += CalculateSpotlightDiffuse(Spotlights[i], direction, normal.xyz, dist)  * shadow;
     }
     
-    vec4 tex = texture(diffuseTexture, UV.xy);
-    color = vec4(ambientIntensity, 1.0) * tex + vec4(diffuseIntensity, 1.0) * tex * vec4(clr, 1.0);
+    vec4 diffuseTex = texture(diffuseTexture, UV.xy);
+    color = vec4(ambientIntensity, 1.0) * diffuseTex + vec4(diffuseIntensity, 1.0) * diffuseTex * vec4(diffuseColor, 1.0);
 }

@@ -32,7 +32,7 @@ private:
 	void BindLightSources(const IScene & scene, const OpenGLProgram & program) const;
 	void BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const;
 
-	void BindTextures(const Material * mat, const OpenGLProgram & program) const;
+	void BindMaterial(const Material * mat, const OpenGLProgram & program) const;
 
 	void InitializeShaders();
 	void InitializeBaseTexture();

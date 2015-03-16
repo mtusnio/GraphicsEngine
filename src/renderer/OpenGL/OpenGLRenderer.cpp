@@ -179,7 +179,7 @@ void OpenGLRenderer::DrawMesh(const Model::Mesh & mesh, const OpenGLProgram & pr
 
 		auto pair = mesh.Materials[i];
 
-		BindTextures(pair.second, program);
+		BindMaterial(pair.second, program);
 
 		glBindVertexArray(vao->ID);
 		glDrawElements(GL_TRIANGLES, vao->Size, GL_UNSIGNED_INT, (void*)0);
@@ -252,12 +252,13 @@ void OpenGLRenderer::BindLightsForEntity(const IScene & scene, const OpenGLProgr
 	}
 }
 
-void OpenGLRenderer::BindTextures(const Material * mat, const OpenGLProgram & program) const
+void OpenGLRenderer::BindMaterial(const Material * mat, const OpenGLProgram & program) const
 {
+	_ASSERT(mat != nullptr);
 	glUniform1i(glGetUniformLocation(program.GetProgramID(), "diffuseTexture"), 0);
 
 	glActiveTexture(GL_TEXTURE0);
-	_ASSERT(mat != nullptr);
+
 	if (mat->DiffuseTex.get() == nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
@@ -267,8 +268,11 @@ void OpenGLRenderer::BindTextures(const Material * mat, const OpenGLProgram & pr
 		const OpenGLTexture * tex = static_cast<const OpenGLTexture*>(mat->DiffuseTex.get());
 		glBindTexture(GL_TEXTURE_2D, tex->TextureID);	
 	}
+
+
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
+	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "specularIntensity"), 1, mat->Specular);
 	glBindSampler(0, m_LinearSampler);
 }
 
