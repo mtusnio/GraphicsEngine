@@ -21,7 +21,7 @@ struct LightSource
 		float Linear;
 		float Quadratic;
 	} Attenuation;
-
+	float MaxDistance;
 };
 
 
@@ -34,6 +34,7 @@ struct SpotLightSource : public LightSource
 {
 	Angle Rotation;
 	float Exponent;
+	float Cone;
 };
 
 #endif

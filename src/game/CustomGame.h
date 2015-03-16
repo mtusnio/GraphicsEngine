@@ -7,6 +7,8 @@
 
 #include "../scene/LightSource.h"
 
+#include <array>
+
 class CustomGame : public Game
 {
 public:
@@ -24,6 +26,8 @@ private:
 	Vector m_RenderPosition;
 	Angle m_RenderAngle;
 	SpotLightSource m_Light;
+
+	std::array<SpotLightSource, 3> m_KeyLights;
 
 	double m_PrevX;
 	double m_PrevY;

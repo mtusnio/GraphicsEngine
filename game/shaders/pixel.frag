@@ -1,14 +1,31 @@
 #version 420
 
+#define MAX_SPOTLIGHTS 8
+
 in vec2 UV;
-in vec3 LightColor;
+in vec3 SpotlightColor[MAX_SPOTLIGHTS];
+in vec4 ShadowCoord[MAX_SPOTLIGHTS];
+
 out vec4 color;
 
-uniform sampler2D diffuseTexture;
 uniform vec3 ambientIntensity;
+
+uniform vec3 diffuseIntensity;
+uniform sampler2D diffuseTexture;
+
+uniform int SpotlightCount;
+uniform sampler2DShadow Shadowmap[MAX_SPOTLIGHTS];
+
 
 void main()
 {
+    vec3 clr = vec3(0.0);
+    for(int i = 0; i < SpotlightCount; i++)
+    {
+        float shadow = textureProj(Shadowmap[i], ShadowCoord[i], 0.005f);
+        clr += SpotlightColor[i] * shadow;
+    }
+    
     vec4 tex = texture(diffuseTexture, UV.xy);
-    color = vec4(ambientIntensity, 1.0f) * tex + vec4(LightColor, 1.0f) * tex;
+    color = vec4(ambientIntensity, 1.0) * tex + vec4(diffuseIntensity, 1.0) * tex * vec4(clr, 1.0);
 }

@@ -11,9 +11,21 @@ CustomGame::CustomGame()
 	m_Light.Color[1] = 1.f;
 	m_Light.Color[2] = 1.f;
 	m_Light.Attenuation.Constant = 0.0f;
-	m_Light.Attenuation.Linear = 0.1f;
-	m_Light.Attenuation.Quadratic = 0.0f;
-	m_Light.Exponent = 30.0f;
+	m_Light.Attenuation.Linear = 0.05f;
+	m_Light.Attenuation.Quadratic = 0.f;
+	m_Light.Exponent = 15.0f;
+	m_Light.Cone = 90.0f;
+	m_Light.MaxDistance = 128.f;
+
+	for (size_t i = 0; i < m_KeyLights.size(); i++)
+	{
+		auto & light = m_KeyLights[i];
+		light = m_Light;
+		light.Color[0] = 0.0f;
+		light.Color[1] = 0.0f;
+		light.Color[2] = 0.0f;
+		light.Color[i] = 1.0f;
+	}
 }
 
 CustomGame::~CustomGame()
@@ -39,7 +51,7 @@ void CustomGame::Start(GLFWwindow & window)
 	Entity * entity = new Entity();
 
 	entity->SetModel(ptr);
-	entity->SetPosition(Vector(4.0f, -1.0f, -1.0f));
+	entity->SetPosition(Vector(0, 0, -2.0f));
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -93,6 +105,46 @@ void CustomGame::HandleInput()
 		m_RenderPosition -= left * delta * SPEED;
 	}
 
-	m_Light.Position = m_RenderPosition;
-	m_Light.Rotation = m_RenderAngle;
+	if (!glfwGetKey(window, GLFW_KEY_SPACE))
+	{
+		m_Light.Position = m_RenderPosition;
+		m_Light.Rotation = m_RenderAngle;
+	}
+
+	bool control = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) != 0;
+	int key = -1;
+
+	if (glfwGetKey(window, GLFW_KEY_1))
+		key = 0;
+	else if (glfwGetKey(window, GLFW_KEY_2))
+		key = 1;
+	else if (glfwGetKey(window, GLFW_KEY_3))
+		key = 2;
+
+	IScene * scene = GetScenes()[0];
+	if (key != -1)
+	{
+		
+		if (control)
+			scene->UnregisterLight(m_KeyLights[key]);
+		else
+		{
+			scene->RegisterLight(m_KeyLights[key], LightSource::SPOT);
+			m_KeyLights[key].Position = m_RenderPosition;
+			m_KeyLights[key].Rotation = m_RenderAngle;
+		}
+	}
+
+	static bool enter = false;
+	if (glfwGetKey(window, GLFW_KEY_ENTER) && !enter)
+	{
+		if (scene->HasLightSource(m_Light))
+			scene->UnregisterLight(m_Light);
+		else
+			scene->RegisterLight(m_Light, LightSource::SPOT);
+		enter = true;
+	}
+	else if (!glfwGetKey(window, GLFW_KEY_ENTER))
+		enter = false;
+		
 }

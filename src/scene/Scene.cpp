@@ -38,14 +38,21 @@ void Scene::UnregisterLight(const LightSource & light)
 	if (!HasLightSource(light))
 		return;
 
-	for (auto pair : m_LightSources)
-		pair.second.erase(std::remove(pair.second.begin(), pair.second.end(), &light));
+	for (auto it = m_LightSources.begin(); it != m_LightSources.end(); it++)
+	{
+		it->second.erase(std::remove(it->second.begin(), it->second.end(), &light));
+	}
+		
 }
 
 bool Scene::HasLightSource(const LightSource & light) const
 {
 	for (auto pair : m_LightSources)
-		return std::find(pair.second.begin(), pair.second.end(), &light) != pair.second.end();
+	{
+		if (std::find(pair.second.begin(), pair.second.end(), &light) != pair.second.end())
+			return true;
+	}
+		
 	
 	return false;
 }

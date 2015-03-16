@@ -97,7 +97,7 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 	m_Game.Log("Cached (" + std::to_string(time) + "): " + path);
 	ptr = std::shared_ptr<const T>(asset);
 	m_Assets[path] = ptr;
-	return ptr;
+	return m_Assets[path].lock();
 }
 
 template<typename T>
