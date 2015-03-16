@@ -26,6 +26,7 @@ out vec4 color;
 uniform Spotlight Spotlights[MAX_SPOTLIGHTS];
 
 uniform vec3 ambientIntensity;
+uniform sampler2D ambientTexture;
 
 uniform vec3 diffuseIntensity;
 uniform sampler2D diffuseTexture;
@@ -65,5 +66,6 @@ void main()
     }
     
     vec4 diffuseTex = texture(diffuseTexture, UV.xy);
-    color = vec4(ambientIntensity, 1.0) * diffuseTex + vec4(diffuseIntensity, 1.0) * diffuseTex * vec4(diffuseColor, 1.0);
+    vec4 ambientTex = texture(ambientTexture, UV.xy);
+    color = vec4(ambientIntensity, 1.0) * ambientTex + vec4(diffuseIntensity, 1.0) * diffuseTex * vec4(diffuseColor, 1.0);
 }
