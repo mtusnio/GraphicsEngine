@@ -110,4 +110,41 @@ void CustomGame::HandleInput()
 		m_Light.Position = m_RenderPosition;
 		m_Light.Rotation = m_RenderAngle;
 	}
+
+	bool control = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) != 0;
+	int key = -1;
+
+	if (glfwGetKey(window, GLFW_KEY_1))
+		key = 0;
+	else if (glfwGetKey(window, GLFW_KEY_2))
+		key = 1;
+	else if (glfwGetKey(window, GLFW_KEY_3))
+		key = 2;
+
+	IScene * scene = GetScenes()[0];
+	if (key != -1)
+	{
+		
+		if (control)
+			scene->UnregisterLight(m_KeyLights[key]);
+		else
+		{
+			scene->RegisterLight(m_KeyLights[key], LightSource::SPOT);
+			m_KeyLights[key].Position = m_RenderPosition;
+			m_KeyLights[key].Rotation = m_RenderAngle;
+		}
+	}
+
+	static bool enter = false;
+	if (glfwGetKey(window, GLFW_KEY_ENTER) && !enter)
+	{
+		if (scene->HasLightSource(m_Light))
+			scene->UnregisterLight(m_Light);
+		else
+			scene->RegisterLight(m_Light, LightSource::SPOT);
+		enter = true;
+	}
+	else if (!glfwGetKey(window, GLFW_KEY_ENTER))
+		enter = false;
+		
 }
