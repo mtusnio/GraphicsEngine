@@ -53,9 +53,8 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 	StartRender(0, 0, width, height);
 	glCullFace(GL_BACK);
 	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
-	glm::mat4 view = CreateViewMatrix(cameraPosition, cameraRotation);
 
-	RenderObjects(view, projection, scene, m_Program, true);
+	RenderObjects(cameraPosition, cameraRotation, projection, scene, m_Program, true);
 
 	glfwSwapBuffers(m_Game->GetWindow());
 }
@@ -92,18 +91,19 @@ void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 		StartRender(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
 		glCullFace(GL_FRONT);
 		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
-		glm::mat4 view = CreateViewMatrix(light->Position, light->Rotation);
+		
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
 
-		RenderObjects(view, projection, scene, m_ShadowmapProgram, false);
+		RenderObjects(light->Position, light->Rotation, projection, scene, m_ShadowmapProgram, false);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting) const
+void OpenGLRenderer::RenderObjects(const Vector & camPosition, const Angle & camRotation, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting) const
 {
+	glm::mat4 view = CreateViewMatrix(camPosition, camRotation);
 	auto entities = scene.GetEntitySystem().GetEntities();
 
 	glUseProgram(program.GetProgramID());
@@ -111,6 +111,8 @@ void OpenGLRenderer::RenderObjects(const glm::mat4 & view, const glm::mat4 & pro
 	if (lighting)
 		BindLightSources(scene, program);
 
+	Vector camPositionConv = ConvertToOpenGL(camPosition);
+	glUniform3f(glGetUniformLocation(program.GetProgramID(), "cameraPosition"), camPositionConv.x, camPositionConv.y, camPositionConv.z);
 	for (auto pair : entities)
 	{
 		Entity * ent = pair.second;
@@ -263,6 +265,7 @@ void OpenGLRenderer::BindMaterial(const Material * mat, const OpenGLProgram & pr
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "ambientIntensity"), 1, mat->Ambient);
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "diffuseIntensity"), 1, mat->Diffuse);
 	glUniform3fv(glGetUniformLocation(program.GetProgramID(), "specularIntensity"), 1, mat->Specular);
+	glUniform1f(glGetUniformLocation(program.GetProgramID(), "shininess"), mat->Shininess);
 	
 }
 
