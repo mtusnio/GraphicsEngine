@@ -1,15 +1,21 @@
 ### Description
  
-A simple work in progress graphics engine based on OpenGL
+A WIP Graphics engine. As of now includes shadowmapping, diffuse lighting, specularity, as well as asset managers to handle caching etc.
  
 ### Compilation
  
-Compiled using VS Express 2013, requires additional dependency in the form of glfw. Check the project's settings to change its inclusion path until the dependency has been added as part of a git submodule.
+Compiled using VS Express 2013, all dependencies have been added to the repo, along with Windows libraries, to simplify the compliation process.
  
 ### Additional notes
  
-Tinyobjloader has been incorporated in the source code, along with provided obj files. Licensed under 2 clause BSD.
+Includes TinyObjLoader:
 
 https://github.com/syoyo/tinyobjloader
+
+Models source:
+
+http://graphics.cs.williams.edu/data/meshes.xml
+
+
 
 

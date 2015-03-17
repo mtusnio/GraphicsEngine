@@ -86,11 +86,12 @@ void main()
         float dist = length(diff);
         float ang = degrees(acos(dot(-direction, Spotlights[i].Direction)));
         
-        specularColor += CalculateSpotlightSpecular(Spotlights[i], direction, surfaceToCamera, normal.xyz, dist);
+        
         if(ang > Spotlights[i].Cone/2.0 || dist > Spotlights[i].MaxDistance)
             continue;
         
         float shadow = textureProj(Shadowmap[i], ShadowCoord[i], 0.005f);
+        specularColor += CalculateSpotlightSpecular(Spotlights[i], direction, surfaceToCamera, normal.xyz, dist) * shadow;
         diffuseColor += CalculateSpotlightDiffuse(Spotlights[i], direction, normal.xyz, dist)  * shadow;
         
     }
