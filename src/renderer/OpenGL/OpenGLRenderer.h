@@ -32,7 +32,9 @@ private:
 	void BindLightSources(const IScene & scene, const OpenGLProgram & program) const;
 	void BindLightsForEntity(const IScene & scene, const OpenGLProgram & program, const glm::mat4 & model) const;
 
-	void BindTextures(const Material * mat, const OpenGLProgram & program) const;
+	void BindMaterial(const Material * mat, const OpenGLProgram & program) const;
+	// Binds to current program. If null passed it will use a default white texture
+	void BindTexture(int pos, const Texture * texture, const std::string & name, const OpenGLProgram & program) const;
 
 	void InitializeShaders();
 	void InitializeBaseTexture();
@@ -43,7 +45,7 @@ private:
 
 	void StartRender(int x, int y, int width, int height) const;
 	void RenderShadowmaps(const IScene & scene) const;
-	void RenderObjects(const glm::mat4 & view, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting = false) const;
+	void RenderObjects(const Vector & camPosition, const Angle & camRotation, const glm::mat4 & projection, const IScene & scene, const OpenGLProgram & program, bool lighting = false) const;
 	void RenderDebug() const;
 
 	// Accepts position & rotation in worlds coordinates, converts to OpenGL coordinate
