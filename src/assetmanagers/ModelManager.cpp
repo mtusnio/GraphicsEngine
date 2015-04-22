@@ -106,6 +106,7 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	size_t indiceCount = pModelMesh->Indices.size();
 	Model::Mesh::Range range = { 0, indiceCount };
 
+	// Create material ranges for our indice
 	for (size_t i = 0; i < indiceCount; i++)
 	{
 		int indice = pModelMesh->Indices[i];
