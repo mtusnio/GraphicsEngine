@@ -51,7 +51,6 @@ Model * ModelManager::PerformCache(const std::string & path) const
 	}
 	
 
-	// Uncomment to create VAOs
 	int meshIndex = 0;
 	for (Model::Mesh * mesh : model->Meshes)
 	{
