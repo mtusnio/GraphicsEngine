@@ -17,6 +17,8 @@ CustomGame::CustomGame()
 	m_Light.Cone = 90.0f;
 	m_Light.MaxDistance = 128.f;
 
+	_ASSERT(m_KeyLights.size() <= 3);
+
 	for (size_t i = 0; i < m_KeyLights.size(); i++)
 	{
 		auto & light = m_KeyLights[i];
