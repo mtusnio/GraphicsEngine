@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\assetmanagers\ModelManager.cpp" />
+    <ClCompile Include="src\collision\Octree.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
     <ClCompile Include="src\game\CustomGame.cpp" />
@@ -92,8 +93,10 @@
     <ClInclude Include="src\assetmanagers\AssetManager.h" />
     <ClInclude Include="src\assetmanagers\LoadablesManager.h" />
     <ClInclude Include="src\assetmanagers\ModelManager.h" />
+    <ClInclude Include="src\collision\Octree.h" />
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\EntitySystem.h" />
+    <ClInclude Include="src\entitysystem\Handle.h" />
     <ClInclude Include="src\entitysystem\IEntitySystem.h" />
     <ClInclude Include="src\game\CustomGame.h" />
     <ClInclude Include="src\game\Game.h" />

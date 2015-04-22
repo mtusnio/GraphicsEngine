@@ -60,6 +60,12 @@
     <Filter Include="Source Files\assetmanagers">
       <UniqueIdentifier>{72068fcb-51db-480b-b25d-8bec4f303639}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\collision">
+      <UniqueIdentifier>{ec56080c-564a-4445-b43a-d963c14fcd62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\collision">
+      <UniqueIdentifier>{b2c9738e-3beb-43db-9518-bf5905a44d78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main\main.cpp">
@@ -100,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="src\renderer\OpenGL\OpenGLProgram.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collision\Octree.cpp">
+      <Filter>Source Files\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +201,12 @@
     </ClInclude>
     <ClInclude Include="src\renderer\OpenGL\OpenGLProgram.h">
       <Filter>Header Files\renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\Handle.h">
+      <Filter>Header Files\entitysystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision\Octree.h">
+      <Filter>Header Files\collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

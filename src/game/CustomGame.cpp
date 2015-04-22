@@ -44,7 +44,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	AddScene(scene);
 	scene->RegisterLight(m_Light, LightSource::Type::SPOT);
-	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sponza.obj");
+	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sibenik.obj");
 
 	_ASSERT(ptr.get() != nullptr);
 
