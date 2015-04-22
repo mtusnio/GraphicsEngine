@@ -24,6 +24,7 @@ CustomGame::CustomGame()
 		light.Color[0] = 0.0f;
 		light.Color[1] = 0.0f;
 		light.Color[2] = 0.0f;
+		light.Color[i] = 1.0f;
 	}
 }
 
