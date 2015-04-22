@@ -115,10 +115,9 @@ void OpenGLRenderer::RenderObjects(const Vector & camPosition, const Angle & cam
 	glUniform3f(glGetUniformLocation(program.GetProgramID(), "cameraPosition"), camPositionConv.x, camPositionConv.y, camPositionConv.z);
 	for (auto pair : entities)
 	{
-		Entity * ent = pair.second;
-		_ASSERT(ent != nullptr);
+		Entity * ent = &pair.second;
 
-		const Model * pModel = pair.second->GetModel();
+		const Model * pModel = ent->GetModel();
 
 		_ASSERT(pModel != nullptr);
 

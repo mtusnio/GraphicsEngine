@@ -4,62 +4,52 @@ EntitySystem::EntitySystem()
 {
 	m_Scene = nullptr;
 	m_LastID = Entity::INVALID_ID + 1;
+
+	m_Entities.reserve(100);
 }
 
 EntitySystem::~EntitySystem()
 {
-	for (auto entry : m_Entities)
-	{
-		_ASSERT(entry.second != nullptr);
-
-		delete entry.second;
-	}
-
 
 }
-Entity * EntitySystem::FindEntityByID(Entity::ID id) const
+
+Entity * EntitySystem::FindEntityByID(Entity::ID id)
 {
 	if (id == Entity::INVALID_ID)
 		return nullptr;
 
 	auto it = m_Entities.find(id);
 	if (it != m_Entities.end())
-		return it->second;
+		return &it->second;
 
 	return nullptr;
 }
 
-Entity::ID EntitySystem::AddEntity(Entity & pEnt)
+Entity * EntitySystem::CreateEntity()
 {
-	if (pEnt.GetEntitySystem() == this)
-		return pEnt.GetID();
+	Entity::ID id = GenerateID();
 
-	DetachEntity(pEnt);
+	m_Entities.insert({ id, Entity() });
 
-	pEnt.SetEntitySystem(this);
-	pEnt.SetID(GenerateID());
+	m_Entities[id].SetEntitySystem(this);
+	m_Entities[id].SetID(id);
 
-	m_Entities[pEnt.GetID()] = &pEnt;
-
-	return pEnt.GetID();
+	return &m_Entities[id];
 }
 
-bool EntitySystem::RemoveEntity(Entity & pEnt, bool shouldDelete)
+bool EntitySystem::RemoveEntity(Entity & pEnt)
 {
 	if (pEnt.GetEntitySystem() != this)
 		return false;
 
 	_ASSERT(FindEntityByID(pEnt.GetID()) != nullptr);
 
-	DetachEntity(pEnt);
-
-	if (shouldDelete)
-		delete &pEnt;
+	m_Entities.erase(pEnt.GetID());
 
 	return true;
 }
 
-const std::unordered_map<Entity::ID, Entity*> & EntitySystem::GetEntities() const
+const std::unordered_map<Entity::ID, Entity> & EntitySystem::GetEntities() const
 {
 	return m_Entities;
 }
@@ -70,20 +60,4 @@ Entity::ID EntitySystem::GenerateID()
 	m_LastID++;
 
 	return ret;
-}
-
-void EntitySystem::DetachEntity(Entity & pEnt)
-{
-	IEntitySystem * system = pEnt.GetEntitySystem();
-
-	if (system)
-	{
-		if (system != this)
-			system->RemoveEntity(pEnt);
-		else
-			m_Entities.erase(pEnt.GetID());
-		pEnt.SetEntitySystem(nullptr);
-	}
-	
-	pEnt.SetID(Entity::INVALID_ID);
 }
