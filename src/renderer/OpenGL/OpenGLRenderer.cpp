@@ -322,7 +322,7 @@ void OpenGLRenderer::InitializeBaseTexture()
 	glGenTextures(1, &m_BaseTexture);
 	glBindTexture(GL_TEXTURE_2D, m_BaseTexture);
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE, GL_RGBA8, GL_UNSIGNED_BYTE, data);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_SIZE, TEXTURE_SIZE, 0, GL_UNSIGNED_BYTE, GL_RGBA, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
