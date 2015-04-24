@@ -27,24 +27,14 @@ public:
 	std::shared_ptr<const T> GetAsset(const std::string & path) const;
 
 protected:
-	// Exception to throw in PerformCache with explanation of error
-	class AssetError : public std::runtime_error
-	{
-	public:
-		AssetError(const std::string & str) : std::runtime_error(str) {
-
-		}
-
-
-	};
-
 	IGame & m_Game;
 
+	std::string m_LastError;
 private:
 	
 	// Derived classes should load the data into an object here and return it
 	// for it to be added to the map by the AssetManager
-	virtual T * PerformCache(const std::string & path) const = 0;
+	virtual T * PerformCache(const std::string & path) = 0;
 
 
 	// Maps our paths to loaded assets.
@@ -55,7 +45,8 @@ private:
 
 template<typename T>
 AssetManager<T>::AssetManager(IGame & game) :
-m_Game(game)
+m_Game(game),
+m_LastError("")
 {
 
 }
@@ -78,14 +69,10 @@ std::shared_ptr<const T> AssetManager<T>::Cache(const std::string & path)
 
 	m_Game.Log("Caching attempt: " + path);
 
-	T * asset = nullptr;
-	try
+	T * asset = PerformCache(path);
+	if (!asset)
 	{
-		asset = PerformCache(path);
-	}
-	catch (AssetError & e)
-	{
-		m_Game.Log("Cache fail: " + std::string(e.what()));
+		m_Game.Log("Cache fail: " + std::string(m_LastError));
 		return nullptr;
 	}
 
