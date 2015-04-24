@@ -14,11 +14,11 @@ public:
 	virtual ~LoadablesManager() { };
 
 private:
-	virtual Derived * PerformCache(const std::string & path) const;
+	virtual Derived * PerformCache(const std::string & path);
 };
 
 template<class T, class Derived>
-Derived * LoadablesManager<T, Derived>::PerformCache(const std::string & path) const
+Derived * LoadablesManager<T, Derived>::PerformCache(const std::string & path)
 {
 	T * asset = new T();
 
@@ -26,7 +26,8 @@ Derived * LoadablesManager<T, Derived>::PerformCache(const std::string & path) c
 	if ((error = asset->Load(path)) != "")
 	{
 		delete asset;
-		throw AssetError(error);
+		m_LastError = error;
+		return nullptr;
 	}
 	return asset;
 }
