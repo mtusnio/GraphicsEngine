@@ -7,8 +7,9 @@ struct GLFWwindow;
 #include <vector>
 #include "../assetmanagers/AssetManager.h"
 
+#include "Time.h"
+
 struct Model;
-struct Time;
 struct Texture;
 struct Shader;
 
