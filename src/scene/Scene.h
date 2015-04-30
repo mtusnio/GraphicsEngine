@@ -6,7 +6,7 @@
 #include "IScene.h"
 #include "../entitysystem/EntitySystem.h"
 
-#include "../collision/CollisionManager.h"
+#include "../physics/CollisionManager.h"
 
 class Scene : public IScene
 {

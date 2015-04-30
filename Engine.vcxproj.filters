@@ -60,11 +60,11 @@
     <Filter Include="Source Files\assetmanagers">
       <UniqueIdentifier>{72068fcb-51db-480b-b25d-8bec4f303639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\collision">
-      <UniqueIdentifier>{ec56080c-564a-4445-b43a-d963c14fcd62}</UniqueIdentifier>
+    <Filter Include="Header Files\physics">
+      <UniqueIdentifier>{4e367687-1f52-4dbb-904e-b145f40bd87f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\collision">
-      <UniqueIdentifier>{b2c9738e-3beb-43db-9518-bf5905a44d78}</UniqueIdentifier>
+    <Filter Include="Source Files\physics">
+      <UniqueIdentifier>{7b0cb8b3-3979-4cfd-a8fc-19836dc2f698}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,11 +107,11 @@
     <ClCompile Include="src\renderer\OpenGL\OpenGLProgram.cpp">
       <Filter>Source Files\renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\collision\Octree.cpp">
-      <Filter>Source Files\collision</Filter>
+    <ClCompile Include="src\physics\CollisionManager.cpp">
+      <Filter>Source Files\physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\collision\CollisionManager.cpp">
-      <Filter>Source Files\collision</Filter>
+    <ClCompile Include="src\physics\Octree.cpp">
+      <Filter>Source Files\physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,17 +208,17 @@
     <ClInclude Include="src\entitysystem\Handle.h">
       <Filter>Header Files\entitysystem</Filter>
     </ClInclude>
-    <ClInclude Include="src\collision\Octree.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="src\collision\CollisionManager.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="src\collision\ICollisionManager.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\Box.h">
       <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\CollisionManager.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\ICollisionManager.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\Octree.h">
+      <Filter>Header Files\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

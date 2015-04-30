@@ -17,6 +17,9 @@ public:
 	virtual void Run();
 	virtual bool CheckCollision(const Entity & ent1, const Entity & ent2) const;
 private:
+	virtual void GenerateResponse(const Entity & entity, Entity & affected);
+
+
 
 	IScene * m_Scene;
 };

@@ -23,10 +23,14 @@ void CollisionManager::Run()
 		{
 			Entity * coll = pair2.second;
 
-			if (CheckCollision(*main, *coll))
-			{
+			if (main == coll)
+				continue;
 
-			}
+			if (coll->GetVelocity().LengthSqr() <= 0.25f)
+				continue;
+
+			if (coll->ShouldUsePhysics() && CheckCollision(*main, *coll))
+				GenerateResponse(*main, *coll);
 		}
 	}
 }
@@ -42,4 +46,9 @@ bool CollisionManager::CheckCollision(const Entity & ent1, const Entity & ent2) 
 		return true;
 
 	return false;
+}
+
+void CollisionManager::GenerateResponse(const Entity & entity, Entity & affected)
+{
+	affected.SetVelocity(Vector());
 }

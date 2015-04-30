@@ -75,13 +75,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\assetmanagers\ModelManager.cpp" />
-    <ClCompile Include="src\collision\CollisionManager.cpp" />
-    <ClCompile Include="src\collision\Octree.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entitysystem\EntitySystem.cpp" />
     <ClCompile Include="src\game\CustomGame.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
+    <ClCompile Include="src\physics\CollisionManager.cpp" />
+    <ClCompile Include="src\physics\Octree.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLProgram.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLShader.cpp" />
@@ -94,9 +94,6 @@
     <ClInclude Include="src\assetmanagers\AssetManager.h" />
     <ClInclude Include="src\assetmanagers\LoadablesManager.h" />
     <ClInclude Include="src\assetmanagers\ModelManager.h" />
-    <ClInclude Include="src\collision\CollisionManager.h" />
-    <ClInclude Include="src\collision\ICollisionManager.h" />
-    <ClInclude Include="src\collision\Octree.h" />
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\EntitySystem.h" />
     <ClInclude Include="src\entitysystem\Handle.h" />
@@ -109,6 +106,9 @@
     <ClInclude Include="src\math\Box.h" />
     <ClInclude Include="src\math\consts.h" />
     <ClInclude Include="src\math\Vector.h" />
+    <ClInclude Include="src\physics\CollisionManager.h" />
+    <ClInclude Include="src\physics\ICollisionManager.h" />
+    <ClInclude Include="src\physics\Octree.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\Model.h" />
