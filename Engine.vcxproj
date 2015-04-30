@@ -106,6 +106,7 @@
     <ClInclude Include="src\game\IGame.h" />
     <ClInclude Include="src\game\Time.h" />
     <ClInclude Include="src\math\Angle.h" />
+    <ClInclude Include="src\math\Box.h" />
     <ClInclude Include="src\math\consts.h" />
     <ClInclude Include="src\math\Vector.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />

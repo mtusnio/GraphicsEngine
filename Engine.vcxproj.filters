@@ -217,5 +217,8 @@
     <ClInclude Include="src\collision\ICollisionManager.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\Box.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
