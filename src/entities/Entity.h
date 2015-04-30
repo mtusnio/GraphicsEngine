@@ -48,9 +48,11 @@ public:
 	const Vector & GetVelocity() const { return m_Velocity;  }
 
 	const Box & GetBoundingBox() const { return m_BoundingBox; }
+	float GetCollisionRadius() const { return m_Sphere;  }
 private:
-	void CalculateBoundingBox();
+	void CalculateCollision();
 
+	float m_Sphere;
 	Box m_BoundingBox;
 
 	Vector m_Velocity;

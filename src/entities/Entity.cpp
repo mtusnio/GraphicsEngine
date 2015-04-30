@@ -17,15 +17,17 @@ void Entity::SetModel(const std::shared_ptr<const Model> & model)
 {
 	m_Model = model;
 
-	CalculateBoundingBox();
+	CalculateCollision();
 }
 
-void Entity::CalculateBoundingBox()
+void Entity::CalculateCollision()
 {
 	if (m_Model.get() == nullptr)
 		return;
 
-	auto maxFunction = [](float & variable, float & vectorVar)
+	float maxDistanceSqr = 0.0f;
+
+	auto maxFunction = [&](float & variable, float & vectorVar)
 	{
 		if (vectorVar > variable)
 		{
@@ -50,6 +52,11 @@ void Entity::CalculateBoundingBox()
 	{
 		for (auto vertex : mesh->Vertices)
 		{
+			float dist = vertex.LengthSqr();
+
+			if (dist > maxDistanceSqr)
+				maxDistanceSqr = dist;
+			
 			if (!maxFunction(max[0], vertex.x))
 				minFunction(min[0], vertex.x);
 			if (!maxFunction(max[1], vertex.y))
@@ -58,6 +65,8 @@ void Entity::CalculateBoundingBox()
 				minFunction(min[2], vertex.z);
 		}
 	}
+
+	m_Sphere = std::sqrt(maxDistanceSqr);
 
 	m_BoundingBox = Box(Vector(min[0], min[1], min[2]), Vector(min[0], max[1], min[2]), Vector(max[0], max[1], min[2]), Vector(max[0], min[1], min[2]), 
 					Vector(min[0], min[1], max[2]), Vector(min[0], max[1], max[2]), Vector(max[0], max[1], max[2]), Vector(max[0], min[1], max[2]));
