@@ -49,6 +49,9 @@ public:
 
 	const Box & GetBoundingBox() const { return m_BoundingBox; }
 	float GetCollisionRadius() const { return m_Sphere;  }
+
+	void SetPhysicsEnabled(bool physics) { m_Physics = physics; }
+	bool ShouldUsePhysics() const { return m_Physics;  }
 private:
 	void CalculateCollision();
 
@@ -58,6 +61,8 @@ private:
 	Vector m_Velocity;
 	Vector m_Position;
 	Angle m_Rotation;
+
+	bool m_Physics;
 
 	// Unique ID
 	ID m_EntityID;
