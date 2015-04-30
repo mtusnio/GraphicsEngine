@@ -110,6 +110,9 @@
     <ClCompile Include="src\collision\Octree.cpp">
       <Filter>Source Files\collision</Filter>
     </ClCompile>
+    <ClCompile Include="src\collision\CollisionManager.cpp">
+      <Filter>Source Files\collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entitysystem\IEntitySystem.h">
@@ -206,6 +209,12 @@
       <Filter>Header Files\entitysystem</Filter>
     </ClInclude>
     <ClInclude Include="src\collision\Octree.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision\CollisionManager.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision\ICollisionManager.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
   </ItemGroup>
