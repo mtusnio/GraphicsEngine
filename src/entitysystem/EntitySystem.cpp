@@ -4,6 +4,7 @@ EntitySystem::EntitySystem()
 {
 	m_Scene = nullptr;
 	m_LastID = Entity::INVALID_ID + 1;
+	m_Entities.reserve(200);
 }
 
 EntitySystem::~EntitySystem()
