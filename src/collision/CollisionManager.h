@@ -4,6 +4,9 @@
 #include "ICollisionManager.h"
 
 class IScene;
+class Entity;
+
+#include <vector>
 
 class CollisionManager
 {
@@ -12,6 +15,10 @@ public:
 	virtual ~CollisionManager();
 
 	virtual void Run();
+	virtual bool CheckCollision(const Entity & ent1, const Entity & ent2) const;
+private:
+
+	IScene * m_Scene;
 };
 
 #endif
