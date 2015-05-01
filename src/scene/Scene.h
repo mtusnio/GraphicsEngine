@@ -6,7 +6,7 @@
 #include "IScene.h"
 #include "../entitysystem/EntitySystem.h"
 
-#include "../physics/CollisionManager.h"
+#include "../physics/PhysicsManager.h"
 
 class Scene : public IScene
 {
@@ -35,7 +35,7 @@ public:
 private:
 	IGame * m_ParentGame;
 	EntitySystem m_EntitySystem;
-	CollisionManager m_CollisionManager;
+	PhysicsManager m_CollisionManager;
 
 	std::unordered_map<LightSource::Type, std::vector<const LightSource*> > m_LightSources;
 };

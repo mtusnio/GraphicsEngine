@@ -1,11 +1,11 @@
 #ifndef H_ICOLLISIONMANAGER
 #define H_ICOLLISIONMANAGER
 
-class ICollisionManager
+class IPhysicsManager
 {
 public:
-	ICollisionManager() { }
-	virtual ~ICollisionManager() { }
+	IPhysicsManager() { }
+	virtual ~IPhysicsManager() { }
 
 	virtual void Run() = 0;
 };

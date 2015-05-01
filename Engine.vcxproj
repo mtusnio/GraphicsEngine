@@ -80,7 +80,7 @@
     <ClCompile Include="src\game\CustomGame.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\main\main.cpp" />
-    <ClCompile Include="src\physics\CollisionManager.cpp" />
+    <ClCompile Include="src\physics\PhysicsManager.cpp" />
     <ClCompile Include="src\physics\Octree.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLProgram.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGLRenderer.cpp" />
@@ -106,8 +106,8 @@
     <ClInclude Include="src\math\Box.h" />
     <ClInclude Include="src\math\consts.h" />
     <ClInclude Include="src\math\Vector.h" />
-    <ClInclude Include="src\physics\CollisionManager.h" />
-    <ClInclude Include="src\physics\ICollisionManager.h" />
+    <ClInclude Include="src\physics\PhysicsManager.h" />
+    <ClInclude Include="src\physics\IPhysicsManager.h" />
     <ClInclude Include="src\physics\Octree.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />

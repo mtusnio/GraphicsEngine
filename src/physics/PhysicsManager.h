@@ -1,18 +1,18 @@
 #ifndef H_COLLISIONMANAGER
 #define H_COLLISIONMANAGER
 
-#include "ICollisionManager.h"
+#include "IPhysicsManager.h"
 
 class IScene;
 class Entity;
 
 #include <vector>
 
-class CollisionManager
+class PhysicsManager
 {
 public:
-	CollisionManager(IScene & scene);
-	virtual ~CollisionManager();
+	PhysicsManager(IScene & scene);
+	virtual ~PhysicsManager();
 
 	virtual void Run();
 	virtual bool CheckCollision(const Entity & ent1, const Entity & ent2) const;

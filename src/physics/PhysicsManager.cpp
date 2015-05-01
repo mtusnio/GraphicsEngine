@@ -1,18 +1,18 @@
-#include "CollisionManager.h"
+#include "PhysicsManager.h"
 #include "../scene/IScene.h"
 
-CollisionManager::CollisionManager(IScene & scene) :
+PhysicsManager::PhysicsManager(IScene & scene) :
 m_Scene(&scene)
 {
 
 }
 
-CollisionManager::~CollisionManager()
+PhysicsManager::~PhysicsManager()
 {
 
 }
 
-void CollisionManager::Run()
+void PhysicsManager::Run()
 {
 	auto entities = m_Scene->GetEntitySystem().GetEntities();
 
@@ -35,7 +35,7 @@ void CollisionManager::Run()
 	}
 }
 
-bool CollisionManager::CheckCollision(const Entity & ent1, const Entity & ent2) const
+bool PhysicsManager::CheckCollision(const Entity & ent1, const Entity & ent2) const
 {
 	Vector diff = ent2.GetPosition() - ent1.GetPosition();
 
@@ -48,7 +48,7 @@ bool CollisionManager::CheckCollision(const Entity & ent1, const Entity & ent2) 
 	return false;
 }
 
-void CollisionManager::GenerateResponse(const Entity & entity, Entity & affected)
+void PhysicsManager::GenerateResponse(const Entity & entity, Entity & affected)
 {
 	affected.SetVelocity(Vector());
 }
