@@ -95,10 +95,10 @@ Model::Mesh * ModelManager::LoadMesh(tinyobj::mesh_t & mesh, const std::vector<t
 	}
 #else
 	// Should be faster I guess?
-	pModelMesh->Vertices = std::move(*reinterpret_cast<std::vector<Vector>*>(&mesh.positions));
-	pModelMesh->Normals = std::move(*reinterpret_cast<std::vector<Vector>*>(&mesh.normals));
-	pModelMesh->UVs = std::move(*reinterpret_cast<std::vector<Model::Mesh::UV>*>(&mesh.texcoords));
-	pModelMesh->Indices = std::move(mesh.indices);
+	pModelMesh->Vertices = *reinterpret_cast<std::vector<Vector>*>(&mesh.positions);
+	pModelMesh->Normals = *reinterpret_cast<std::vector<Vector>*>(&mesh.normals);
+	pModelMesh->UVs = *reinterpret_cast<std::vector<Model::Mesh::UV>*>(&mesh.texcoords);
+	pModelMesh->Indices = mesh.indices;
 #endif
 
 	int prev = mesh.material_ids[0];
