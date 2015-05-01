@@ -76,6 +76,19 @@ void CustomGame::Start(GLFWwindow & window)
 	entity->SetPhysicsEnabled(true);
 	scene->GetEntitySystem().AddEntity(*entity);
 
+	// Create third scene
+	scene = new Scene(*this);
+
+	AddScene(scene);
+
+	ptr = GetModelManager().Cache("models/sponza.obj");
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, -4.0f));
+	scene->GetEntitySystem().AddEntity(*entity);
+
+
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
@@ -169,18 +182,28 @@ void CustomGame::HandleInput()
 	else if (!glfwGetKey(window, GLFW_KEY_ENTER))
 		enter = false;
 
-	if ((glfwGetKey(window, GLFW_KEY_O) && GetActiveSceneIndex() != 0 )|| (glfwGetKey(window, GLFW_KEY_P) && GetActiveSceneIndex() != 1))
+	std::array<int, 3> keyToScene = {
+		GLFW_KEY_I,
+		GLFW_KEY_O,
+		GLFW_KEY_P
+	};
+
+	for (size_t i = 0; i < keyToScene.size(); i++)
 	{
-		GetActiveScene()->UnregisterLight(m_Light);
-		for (LightSource & light : m_KeyLights)
-			GetActiveScene()->UnregisterLight(light);
+		if (GetActiveSceneIndex() != i && glfwGetKey(window, keyToScene[i]))
+		{
+			GetActiveScene()->UnregisterLight(m_Light);
+			for (LightSource & light : m_KeyLights)
+				GetActiveScene()->UnregisterLight(light);
 
-		SetActiveScene(glfwGetKey(window, GLFW_KEY_O) ? 0 : 1);
+			SetActiveScene(i);
 
-		GetActiveScene()->RegisterLight(m_Light, LightSource::SPOT);
+			GetActiveScene()->RegisterLight(m_Light, LightSource::SPOT);
 
-		m_RenderPosition = Vector();
-		m_RenderAngle = Angle();
+			m_RenderPosition = Vector();
+			m_RenderAngle = Angle();
+			break;
+		}
 	}
 
 		
