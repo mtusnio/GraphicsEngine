@@ -1,6 +1,7 @@
 ﻿#include "OpenGLRenderer.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -71,7 +72,7 @@ void OpenGLRenderer::StartRender(int x, int y, int width, int height) const
 void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
-	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
+	size_t lightCount = std::min(MAX_SPOTLIGHTS, (int)sources.size());
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFramebuffer);
 	
