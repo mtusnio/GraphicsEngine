@@ -6,6 +6,7 @@
 
 #include "../math/Vector.h"
 #include "../math/Angle.h"
+#include "../math/Box.h"
 
 class IEntitySystem;
 struct Model;
@@ -40,10 +41,20 @@ public:
 	void SetRotation(Angle & rotation) { m_Rotation = rotation; }
 
 	const Model * GetModel() const { return m_Model.get();  }
-	void SetModel(const std::shared_ptr<const Model> & model) { m_Model = model;  }
+	void SetModel(const std::shared_ptr<const Model> & model) { m_Model = model; }
+
+	void AddVelocity(const Vector & vel) { m_Velocity += vel;  }
+	void SetVelocity(const Vector & vel) { m_Velocity = vel; }
+	const Vector & GetVelocity() const { return m_Velocity;  }
+
+	void SetPhysicsEnabled(bool physics) { m_Physics = physics; }
+	bool ShouldUsePhysics() const { return m_Physics;  }
 private:
+	Vector m_Velocity;
 	Vector m_Position;
 	Angle m_Rotation;
+
+	bool m_Physics;
 
 	// Unique ID
 	ID m_EntityID;

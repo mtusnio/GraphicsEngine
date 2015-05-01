@@ -71,7 +71,12 @@ struct Vector
 
 	float Length() const
 	{
-		return sqrt(x * x + y * y + z * z);
+		return sqrt(LengthSqr());
+	}
+
+	float LengthSqr() const
+	{
+		return x * x + y * y + z * z;	
 	}
 
 	Vector Normalized() const

@@ -1,10 +1,14 @@
 #include "Scene.h"
 
+#include "../game/IGame.h"
+
 #include <algorithm>
 
-Scene::Scene(IGame & game)
+Scene::Scene(IGame & game) :
+m_ParentGame(&game),
+m_CollisionManager(*this)
 {
-	m_ParentGame = &game;
+	
 }
 
 Scene::~Scene()
@@ -14,12 +18,12 @@ Scene::~Scene()
 
 void Scene::SimulatePreFrame()
 {
-
+	m_CollisionManager.Run();
 }
 
 void Scene::SimulatePostFrame()
 {
-
+	
 }
 
 void Scene::RegisterLight(const LightSource & light, LightSource::Type type)

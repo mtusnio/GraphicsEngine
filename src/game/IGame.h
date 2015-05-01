@@ -7,8 +7,9 @@ struct GLFWwindow;
 #include <vector>
 #include "../assetmanagers/AssetManager.h"
 
+#include "Time.h"
+
 struct Model;
-struct Time;
 struct Texture;
 struct Shader;
 
@@ -32,6 +33,10 @@ public:
 
 	// Returns all scenes simulated in the game
 	virtual const std::vector<IScene*> & GetScenes() const = 0;
+
+	virtual void SetActiveScene(int sceneIndex) = 0;
+	virtual IScene * GetActiveScene() const = 0;
+	virtual int GetActiveSceneIndex() const = 0;
 
 	virtual AssetManager<Model> & GetModelManager() = 0;
 	virtual AssetManager<Texture> & GetTextureManager() = 0;

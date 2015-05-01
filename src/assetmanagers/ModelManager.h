@@ -15,6 +15,8 @@ private:
 
 	Model::Mesh * LoadMesh(tinyobj::mesh_t & mesh, const std::vector<tinyobj::material_t> & materials) const;
 	Material * LoadMaterial(const tinyobj::material_t & tinyMat) const;
+
+	void CalculateCollisions(Model & model) const;
 };
 
 #endif

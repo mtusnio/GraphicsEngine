@@ -13,9 +13,11 @@ CustomGame::CustomGame()
 	m_Light.Attenuation.Constant = 0.0f;
 	m_Light.Attenuation.Linear = 0.05f;
 	m_Light.Attenuation.Quadratic = 0.f;
-	m_Light.Exponent = 15.0f;
-	m_Light.Cone = 90.0f;
+	m_Light.Exponent = 8.0f;
+	m_Light.Cone = 140.0f;
 	m_Light.MaxDistance = 128.f;
+
+	_ASSERT(m_KeyLights.size() <= 3);
 
 	for (size_t i = 0; i < m_KeyLights.size(); i++)
 	{
@@ -42,9 +44,10 @@ void CustomGame::Start(GLFWwindow & window)
 
 	Scene * scene = new Scene(*this);
 
+	// Create first scene
 	AddScene(scene);
 	scene->RegisterLight(m_Light, LightSource::Type::SPOT);
-	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sponza.obj");
+	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sibenik.obj");
 
 	_ASSERT(ptr.get() != nullptr);
 
@@ -53,6 +56,38 @@ void CustomGame::Start(GLFWwindow & window)
 	entity->SetModel(ptr);
 	entity->SetPosition(Vector(0, 0, -2.0f));
 	scene->GetEntitySystem().AddEntity(*entity);
+
+	// Create second scene
+	scene = new Scene(*this);
+
+	AddScene(scene);
+
+	ptr = GetModelManager().Cache("models/plane.obj");
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, -4.0f));
+	scene->GetEntitySystem().AddEntity(*entity);
+
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, 8.0f));
+	entity->SetPhysicsEnabled(true);
+	scene->GetEntitySystem().AddEntity(*entity);
+
+	// Create third scene
+	scene = new Scene(*this);
+
+	AddScene(scene);
+
+	ptr = GetModelManager().Cache("models/sponza.obj");
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, -4.0f));
+	scene->GetEntitySystem().AddEntity(*entity);
+
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -146,5 +181,30 @@ void CustomGame::HandleInput()
 	}
 	else if (!glfwGetKey(window, GLFW_KEY_ENTER))
 		enter = false;
+
+	std::array<int, 3> keyToScene = {
+		GLFW_KEY_I,
+		GLFW_KEY_O,
+		GLFW_KEY_P
+	};
+
+	for (size_t i = 0; i < keyToScene.size(); i++)
+	{
+		if (GetActiveSceneIndex() != i && glfwGetKey(window, keyToScene[i]))
+		{
+			GetActiveScene()->UnregisterLight(m_Light);
+			for (LightSource & light : m_KeyLights)
+				GetActiveScene()->UnregisterLight(light);
+
+			SetActiveScene(i);
+
+			GetActiveScene()->RegisterLight(m_Light, LightSource::SPOT);
+
+			m_RenderPosition = Vector();
+			m_RenderAngle = Angle();
+			break;
+		}
+	}
+
 		
 }

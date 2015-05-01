@@ -18,7 +18,7 @@ m_ModelManager(*this)
 	m_TextureManager = new LoadablesManager<OpenGLTexture, Texture>(*this);
 	m_ShaderManager = new LoadablesManager<OpenGLShader, Shader>(*this);
 	m_Window = nullptr;
-
+	m_ActiveScene = 0;
 }
 
 Game::~Game()
@@ -71,7 +71,7 @@ void Game::Run()
 		scene->SimulatePreFrame();
 
 	if (m_Scenes.size() > 0)
-		m_Renderer->RenderScene(*m_Scenes[0], GetRenderPosition(), GetRenderAngle());
+		m_Renderer->RenderScene(*m_Scenes[m_ActiveScene], GetRenderPosition(), GetRenderAngle());
 
 	for (IScene * scene : m_Scenes)
 		scene->SimulatePostFrame();
@@ -90,11 +90,25 @@ void Game::AddScene(IScene * scene)
 void Game::RemoveScene(IScene * scene)
 {
 	m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());
+
+	if (m_ActiveScene >= (int)m_Scenes.size())
+		m_ActiveScene = 0;
 }
 
 const std::vector<IScene*> & Game::GetScenes() const
 {
 	return m_Scenes;
+}
+
+void Game::SetActiveScene(int sceneIndex)
+{
+	if (sceneIndex < 0 || sceneIndex >= (int)m_Scenes.size())
+	{
+		Log("Invalid scene index: " + std::to_string(sceneIndex));
+		return;
+	}
+
+	m_ActiveScene = sceneIndex;
 }
 
 void Game::Log(const std::string & msg)

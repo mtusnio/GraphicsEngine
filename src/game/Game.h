@@ -7,7 +7,6 @@
 
 #include "../assetmanagers/ModelManager.h"
 #include "../assetmanagers/LoadablesManager.h"
-#include "Time.h"
 
 class IRenderer;
 class IScene;
@@ -30,6 +29,13 @@ public:
 	virtual void RemoveScene(IScene * scene);
 
 	virtual const std::vector<IScene*> & GetScenes() const;
+	virtual void SetActiveScene(int sceneIndex);
+	virtual IScene * GetActiveScene() const { 
+		if (m_Scenes.size() == 0)
+			return nullptr;
+		return m_Scenes[m_ActiveScene];
+	}
+	virtual int GetActiveSceneIndex() const { return m_ActiveScene;  }
 
 	virtual AssetManager<Model> & GetModelManager() {return m_ModelManager; }
 	virtual AssetManager<Texture> & GetTextureManager() { return *m_TextureManager; }
@@ -54,6 +60,7 @@ private:
 	GLFWwindow * m_Window;
 
 	std::vector<IScene*> m_Scenes;
+	int m_ActiveScene;
 
 	ModelManager m_ModelManager;
 	AssetManager<Texture> * m_TextureManager;

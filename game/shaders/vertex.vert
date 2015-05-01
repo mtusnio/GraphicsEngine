@@ -25,7 +25,7 @@ void main()
 
     for(int i = 0; i < SpotlightCount; i++)
     {
-        ShadowCoord[i] = SpotlightMVP[i] * vec4(vertexPosition, 1.0f);
+        ShadowCoord[i] = SpotlightMVP[i] * vec4(vertexPosition + 0.05 * vertexNormal, 1.0f);
     }
     
     gl_Position = MVP * vec4(vertexPosition, 1.0f);

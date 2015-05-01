@@ -1,6 +1,7 @@
 ﻿#include "OpenGLRenderer.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -51,7 +52,7 @@ void OpenGLRenderer::RenderScene(const IScene & scene, const Vector & cameraPosi
 
 	
 	StartRender(0, 0, width, height);
-	glCullFace(GL_BACK);
+
 	glm::mat4 projection = glm::perspective(90.0f, aspect, NEAR, FAR);
 
 	RenderObjects(cameraPosition, cameraRotation, projection, scene, m_Program, true);
@@ -71,7 +72,7 @@ void OpenGLRenderer::StartRender(int x, int y, int width, int height) const
 void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 {
 	auto sources = scene.GetLightSources(LightSource::SPOT);
-	size_t lightCount = (int)fmin(MAX_SPOTLIGHTS, sources.size());
+	size_t lightCount = std::min(MAX_SPOTLIGHTS, (int)sources.size());
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFramebuffer);
 	
@@ -89,7 +90,7 @@ void OpenGLRenderer::RenderShadowmaps(const IScene & scene) const
 		}
 
 		StartRender(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
-		glCullFace(GL_FRONT);
+
 		const SpotLightSource * light = static_cast<const SpotLightSource*>(sources[i]);
 		
 		glm::mat4 projection = glm::perspective(light->Cone, 1.0f, NEAR, FAR);
