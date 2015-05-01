@@ -22,8 +22,8 @@ public:
 
 private:
 	static const int MAX_SPOTLIGHTS = 8;
-	static const int SHADOWMAP_WIDTH = 1024;
-	static const int SHADOWMAP_HEIGHT = 1024;
+	static const int SHADOWMAP_WIDTH = 4096;
+	static const int SHADOWMAP_HEIGHT = 4096;
 	static const float NEAR;
 	static const float FAR;
 
