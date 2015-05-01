@@ -20,7 +20,6 @@ in vec2 UV;
 in vec3 fragmentPosition;
 in vec3 fragmentNormal;
 in vec4 ShadowCoord[MAX_SPOTLIGHTS];
-in vec4 ShadowNormal[MAX_SPOTLIGHTS];
 
 out vec4 color;
 
@@ -72,12 +71,6 @@ vec3 CalculateSpotlightSpecular(Spotlight light, vec3 surfaceToLight, vec3 surfa
     return clamp(clr.xyz, 0.0, 1.0);
 }
 
-float CalculateShadow(sampler2DShadow shadowMap, vec4 shadowCoord, vec3 lightDirection, vec3 surfaceNormal, vec3 offsetNormal)
-{
-    float val = clamp(1.0 - dot(lightDirection, surfaceNormal), 0.001, 0.01);
-    shadowCoord.xyz += offsetNormal.xyz * val;
-    return textureProj(shadowMap, shadowCoord);
-}
 
 void main()
 {
@@ -97,7 +90,7 @@ void main()
         if(ang > Spotlights[i].Cone/2.0 || dist > Spotlights[i].MaxDistance)
             continue;
         
-        float shadow = CalculateShadow(Shadowmap[i], ShadowCoord[i], direction, normal.xyz, ShadowNormal[i].xyz);
+        float shadow = textureProj(Shadowmap[i], ShadowCoord[i]);
         specularColor += CalculateSpotlightSpecular(Spotlights[i], direction, surfaceToCamera, normal.xyz, dist) * shadow;
         diffuseColor += CalculateSpotlightDiffuse(Spotlights[i], direction, normal.xyz, dist)  * shadow;
         

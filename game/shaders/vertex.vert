@@ -11,7 +11,6 @@ out vec2 UV;
 out vec3 fragmentPosition;
 out vec3 fragmentNormal;
 out vec4 ShadowCoord[MAX_SPOTLIGHTS];
-out vec4 ShadowNormal[MAX_SPOTLIGHTS];
 
 uniform mat4 MVP;
 uniform int SpotlightCount;
@@ -26,8 +25,7 @@ void main()
 
     for(int i = 0; i < SpotlightCount; i++)
     {
-        ShadowCoord[i] = SpotlightMVP[i] * vec4(vertexPosition, 1.0f);
-        ShadowNormal[i] = SpotlightMVP[i] * vec4(vertexNormal, 0.0f);
+        ShadowCoord[i] = SpotlightMVP[i] * vec4(vertexPosition + 0.05 * vertexNormal, 1.0f);
     }
     
     gl_Position = MVP * vec4(vertexPosition, 1.0f);
