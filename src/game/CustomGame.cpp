@@ -13,8 +13,8 @@ CustomGame::CustomGame()
 	m_Light.Attenuation.Constant = 0.0f;
 	m_Light.Attenuation.Linear = 0.05f;
 	m_Light.Attenuation.Quadratic = 0.f;
-	m_Light.Exponent = 15.0f;
-	m_Light.Cone = 90.0f;
+	m_Light.Exponent = 8.0f;
+	m_Light.Cone = 140.0f;
 	m_Light.MaxDistance = 128.f;
 
 	_ASSERT(m_KeyLights.size() <= 3);
