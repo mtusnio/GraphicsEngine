@@ -44,6 +44,7 @@ void CustomGame::Start(GLFWwindow & window)
 
 	Scene * scene = new Scene(*this);
 
+	// Create first scene
 	AddScene(scene);
 	scene->RegisterLight(m_Light, LightSource::Type::SPOT);
 	std::shared_ptr<const Model> ptr = GetModelManager().Cache("models/sibenik.obj");
@@ -54,6 +55,25 @@ void CustomGame::Start(GLFWwindow & window)
 
 	entity->SetModel(ptr);
 	entity->SetPosition(Vector(0, 0, -2.0f));
+	scene->GetEntitySystem().AddEntity(*entity);
+
+	// Create second scene
+	scene = new Scene(*this);
+
+	AddScene(scene);
+
+	ptr = GetModelManager().Cache("models/plane.obj");
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, -4.0f));
+	scene->GetEntitySystem().AddEntity(*entity);
+
+	entity = new Entity();
+
+	entity->SetModel(ptr);
+	entity->SetPosition(Vector(0, 0, 8.0f));
+	entity->SetPhysicsEnabled(true);
 	scene->GetEntitySystem().AddEntity(*entity);
 
 	glfwSetInputMode(&window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -148,5 +168,20 @@ void CustomGame::HandleInput()
 	}
 	else if (!glfwGetKey(window, GLFW_KEY_ENTER))
 		enter = false;
+
+	if ((glfwGetKey(window, GLFW_KEY_O) && GetActiveSceneIndex() != 0 )|| (glfwGetKey(window, GLFW_KEY_P) && GetActiveSceneIndex() != 1))
+	{
+		GetActiveScene()->UnregisterLight(m_Light);
+		for (LightSource & light : m_KeyLights)
+			GetActiveScene()->UnregisterLight(light);
+
+		SetActiveScene(glfwGetKey(window, GLFW_KEY_O) ? 0 : 1);
+
+		GetActiveScene()->RegisterLight(m_Light, LightSource::SPOT);
+
+		m_RenderPosition = Vector();
+		m_RenderAngle = Angle();
+	}
+
 		
 }
