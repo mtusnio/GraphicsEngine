@@ -1,5 +1,7 @@
 #include "PhysicsManager.h"
+
 #include "../scene/IScene.h"
+#include "../renderer/Model.h"
 
 PhysicsManager::PhysicsManager(IScene & scene) :
 m_Scene(&scene)
@@ -33,11 +35,15 @@ void PhysicsManager::Run()
 	for (auto pair1 : entities)
 	{
 		Entity * main = pair1.second;
+
+		if (main->GetModel() == nullptr)
+			continue;
+
 		for (auto pair2 : entities)
 		{
 			Entity * coll = pair2.second;
 
-			if (main == coll)
+			if (main == coll || coll->GetModel() == nullptr)
 				continue;
 
 			if (coll->GetVelocity().LengthSqr() <= 0.25f)
@@ -53,8 +59,10 @@ bool PhysicsManager::CheckCollision(const Entity & ent1, const Entity & ent2) co
 {
 	Vector diff = ent2.GetPosition() - ent1.GetPosition();
 
-	float radius1 = ent1.GetCollisionRadius() * ent1.GetCollisionRadius();
-	float radius2 = ent2.GetCollisionRadius() * ent2.GetCollisionRadius();
+	float radius1 = ent1.GetModel()->CollisionSphere;
+	radius1 *= radius1;
+	float radius2 = ent2.GetModel()->CollisionSphere;
+	radius2 *= radius2;
 
 	if (diff.LengthSqr() <= radius1 + radius2)
 		return true;

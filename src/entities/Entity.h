@@ -41,23 +41,15 @@ public:
 	void SetRotation(Angle & rotation) { m_Rotation = rotation; }
 
 	const Model * GetModel() const { return m_Model.get();  }
-	void SetModel(const std::shared_ptr<const Model> & model);
+	void SetModel(const std::shared_ptr<const Model> & model) { m_Model = model; }
 
 	void AddVelocity(const Vector & vel) { m_Velocity += vel;  }
 	void SetVelocity(const Vector & vel) { m_Velocity = vel; }
 	const Vector & GetVelocity() const { return m_Velocity;  }
 
-	const Box & GetBoundingBox() const { return m_BoundingBox; }
-	float GetCollisionRadius() const { return m_Sphere;  }
-
 	void SetPhysicsEnabled(bool physics) { m_Physics = physics; }
 	bool ShouldUsePhysics() const { return m_Physics;  }
 private:
-	void CalculateCollision();
-
-	float m_Sphere;
-	Box m_BoundingBox;
-
 	Vector m_Velocity;
 	Vector m_Position;
 	Angle m_Rotation;

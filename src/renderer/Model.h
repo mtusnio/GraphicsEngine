@@ -7,6 +7,7 @@
 #include "Material.h"
 
 #include "../math/Vector.h"
+#include "../math/Box.h"
 #include "VertexArrayObject.h"
 
 struct Model
@@ -40,6 +41,7 @@ struct Model
 		// Stores materials per indice
 		std::vector<std::pair<Range, Material*>> Materials;
 		std::vector<VertexArrayObject*> VAOs;
+
 	};
 
 	~Model()
@@ -49,6 +51,8 @@ struct Model
 	}
 
 	std::vector<Mesh*> Meshes;
+	float CollisionSphere;
+	Box BoundingBox;
 };
 
 

@@ -175,3 +175,52 @@ Material * ModelManager::LoadMaterial(const tinyobj::material_t & tinyMat) const
 
 	return material;
 }
+
+void ModelManager::CalculateCollisions(Model & model) const
+{
+	float maxDistanceSqr = 0.0f;
+
+	auto maxFunction = [&](float & variable, float & vectorVar)
+	{
+		if (vectorVar > variable)
+		{
+			variable = vectorVar;
+			return true;
+		}
+		return false;
+	};
+	auto minFunction = [](float & variable, float & vectorVar)
+	{
+		if (vectorVar < variable)
+			variable = vectorVar;
+	};
+
+
+	auto meshes = model.Meshes;
+
+	float max[3] = { 0.0f, 0.0f, 0.0f };
+	float min[3] = { 0.0f, 0.0f, 0.0f };
+
+	for (Model::Mesh * mesh : meshes)
+	{
+		for (auto vertex : mesh->Vertices)
+		{
+			float dist = vertex.LengthSqr();
+
+			if (dist > maxDistanceSqr)
+				maxDistanceSqr = dist;
+
+			if (!maxFunction(max[0], vertex.x))
+				minFunction(min[0], vertex.x);
+			if (!maxFunction(max[1], vertex.y))
+				minFunction(min[1], vertex.y);
+			if (!maxFunction(max[2], vertex.z))
+				minFunction(min[2], vertex.z);
+		}
+	}
+
+	model.CollisionSphere = std::sqrt(maxDistanceSqr);
+
+	model.BoundingBox = Box(Vector(min[0], min[1], min[2]), Vector(min[0], max[1], min[2]), Vector(max[0], max[1], min[2]), Vector(max[0], min[1], min[2]),
+		Vector(min[0], min[1], max[2]), Vector(min[0], max[1], max[2]), Vector(max[0], max[1], max[2]), Vector(max[0], min[1], max[2]));
+}
