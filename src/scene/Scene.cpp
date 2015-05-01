@@ -23,21 +23,7 @@ void Scene::SimulatePreFrame()
 
 void Scene::SimulatePostFrame()
 {
-	auto entities = m_EntitySystem.GetEntities();
-
-	Time time = m_ParentGame->GetTime();
-
-	for (auto pair : entities)
-	{
-		Entity * ent = pair.second;
-		
-		if (!ent->ShouldUsePhysics())
-			continue;
-
-		ent->SetPosition(ent->GetPosition() + ent->GetVelocity() * time.Delta);
-		
-		ent->AddVelocity(Vector(0, 0, -3) * time.Delta);
-	}
+	
 }
 
 void Scene::RegisterLight(const LightSource & light, LightSource::Type type)

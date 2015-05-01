@@ -16,6 +16,20 @@ void PhysicsManager::Run()
 {
 	auto entities = m_Scene->GetEntitySystem().GetEntities();
 
+	Time time = m_Scene->GetGame().GetTime();
+
+	for (auto pair : entities)
+	{
+		Entity * ent = pair.second;
+
+		if (!ent->ShouldUsePhysics())
+			continue;
+
+		ent->SetPosition(ent->GetPosition() + ent->GetVelocity() * time.Delta);
+
+		ent->AddVelocity(Vector(0, 0, -3) * time.Delta);
+	}
+
 	for (auto pair1 : entities)
 	{
 		Entity * main = pair1.second;
