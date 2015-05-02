@@ -60,10 +60,7 @@ vec3 CalculateSpotlightDiffuse(Spotlight light, vec3 surfaceToLight, vec3 normal
 }
 
 vec3 CalculateSpotlightSpecular(Spotlight light, vec3 surfaceToLight, vec3 surfaceToCamera, vec3 normal, float dist)
-{
-    if(dot(normal, surfaceToLight) <= 0)
-        return vec3(0.0);
-        
+{        
     vec3 clr = CalculateIntensity(light, surfaceToLight) * light.Color * pow(max(0.0, dot(reflect(-surfaceToLight, normal), surfaceToCamera)), shininess);
     
     clr = clr/CalculateAttenuation(light, dist);
