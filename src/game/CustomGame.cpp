@@ -156,7 +156,7 @@ void CustomGame::HandleInput()
 	else if (glfwGetKey(window, GLFW_KEY_3))
 		key = 2;
 
-	IScene * scene = GetScenes()[0];
+	IScene * scene = GetActiveScene();
 	if (key != -1)
 	{
 		
